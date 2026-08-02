@@ -113,9 +113,15 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
   The generator avoids a second copy as ORM objects; it does not avoid holding
   the source text. Changing this means parsers accepting a line iterator, and
   `ijson` for CloudTrail's bundled form.
-- **Postgres unverified.** All 30 tests run on SQLite. The global unique index
-  on `dedup_hash` and the `ix_event_triage` time-window queries are the two
-  places the engines could diverge.
+- **SQLite discards timezone offsets.** `DateTime(timezone=True)` stores
+  wall-clock time and returns naive datetimes; Postgres returns aware ones.
+  Timestamps are normalized to UTC on write and re-stamped UTC on read, so
+  both engines agree — but any code path that persists a non-UTC aware
+  datetime without going through `Event.from_normalized` will be wrong on
+  SQLite only.
+- **Postgres unverified.** The suite runs on SQLite. The global unique index
+  on `dedup_hash` and the `ix_event_triage` time-window queries are where the
+  engines could still diverge.
 
 ## Build order
 

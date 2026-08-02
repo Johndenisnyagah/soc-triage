@@ -7,12 +7,14 @@ wrong rather than broken loudly.
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy import select
 
 from app.detection.engine import run_rules
 from app.detection.library import BruteForceAuthentication, InvalidUserEnumeration
 from app.ingest.schema import ActorType, Category, NormalizedEvent, Outcome, SourceType
-from app.models import Event, EventEntity
+from app.models import Event, EventEntity, Ingest
 
 SSHD_LOG = """\
 May  5 02:10:11 webserver01 sshd[1001]: Failed password for root from 203.0.113.5 port 54321 ssh2
@@ -76,6 +78,54 @@ def test_round_tripped_timestamps_are_timezone_aware(client, db):
         assert event.timestamp is not None
         assert event.timestamp.tzinfo is not None
         assert event.timestamp.utcoffset().total_seconds() == 0
+
+
+def test_non_utc_timestamp_round_trips_as_the_same_instant(db):
+    """An aware non-UTC datetime must come back as the same moment, not the
+    same wall clock.
+
+    SQLite stores `DateTime(timezone=True)` as wall-clock text and discards the
+    offset, so persisting 06:41 +02:00 unconverted would store "06:41", and
+    to_normalized's UTC re-stamp would hand detection 06:41 UTC -- an event
+    moved two hours into the future, silently, on one engine only.
+    """
+    plus_two = timezone(timedelta(hours=2))
+    original = datetime(2026, 8, 2, 6, 41, 7, tzinfo=plus_two)  # 04:41:07 UTC
+
+    ingest = Ingest(
+        filename="tz.log", source_type="syslog_sshd", detected_confidence=1.0
+    )
+    db.add(ingest)
+    db.flush()
+
+    db.add(
+        Event.from_normalized(
+            NormalizedEvent(
+                source_type=SourceType.SYSLOG_SSHD,
+                raw="synthetic +02:00 event",
+                source_event_id="tz:1",
+                timestamp=original,
+                category=Category.AUTHENTICATION,
+                action="login",
+                outcome=Outcome.FAILURE,
+                actor_name="root",
+                actor_type=ActorType.USER,
+                source_ip="203.0.113.5",
+                host="webserver01",
+            ),
+            ingest.id,
+        )
+    )
+    db.commit()
+
+    restored = db.scalars(select(Event)).one().to_normalized()
+
+    # Same instant -- aware datetime equality compares absolute time.
+    assert restored.timestamp == original
+    assert restored.timestamp.utcoffset().total_seconds() == 0
+    # And explicitly not the same wall clock: 06:41 +02:00 is 04:41 UTC.
+    assert restored.timestamp.hour == 4
+    assert original.hour == 6
 
 
 def test_extra_survives_the_json_column(client, db):

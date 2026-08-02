@@ -45,6 +45,26 @@ def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def _to_utc(value: datetime | None) -> datetime | None:
+    """Normalize to UTC before persisting, and after loading.
+
+    SQLite's `DateTime(timezone=True)` stores wall-clock time and throws the
+    offset away, so a `+02:00` event written as-is comes back claiming to be
+    two hours later than it was. Converting on write means the naive value in
+    the column is always UTC, which is what makes re-stamping it UTC on read
+    correct rather than merely well-formed.
+
+    Naive input is treated as already-UTC: `ParseContext.assume_tz` defaults to
+    UTC and parsers attach it, so a naive timestamp reaching here means nobody
+    ever knew the zone. Guessing anything else would move the event.
+    """
+    if value is None:
+        return None
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
+
+
 class Ingest(Base):
     """One upload. Owns the events parsed out of it.
 
@@ -129,7 +149,7 @@ class Event(Base):
             source_type=str(event.source_type),
             raw=event.raw,
             dedup_hash=event.dedup_hash(),
-            timestamp=event.timestamp,
+            timestamp=_to_utc(event.timestamp),
             category=str(event.category),
             action=event.action,
             outcome=str(event.outcome),
@@ -165,15 +185,13 @@ class Event(Base):
           7 says timestamps are tz-aware, and a rule comparing an aware to a
           naive datetime raises TypeError, so naive values are re-stamped UTC
           rather than left to detonate on whichever engine is not under test.
+          That re-stamp is only correct because `from_normalized` converted to
+          UTC on the way in -- the two halves have to stay in step.
         """
-        timestamp = self.timestamp
-        if timestamp is not None and timestamp.tzinfo is None:
-            timestamp = timestamp.replace(tzinfo=timezone.utc)
-
         return NormalizedEvent(
             source_type=SourceType(self.source_type),
             raw=self.raw,
-            timestamp=timestamp,
+            timestamp=_to_utc(self.timestamp),
             category=Category(self.category),
             action=self.action,
             outcome=Outcome(self.outcome),
