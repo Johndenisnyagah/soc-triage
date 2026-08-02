@@ -30,7 +30,7 @@ are next.
 
 - [x] **Ingest layer** — normalized event schema, confidence-based parser registry, sshd and CloudTrail parsers
 - [x] **Persistence** — event/entity models, ingest endpoint, global deduplication
-- [ ] **Detection** — source-agnostic rules over event windows
+- [x] **Detection** — source-agnostic rules over event windows
 - [ ] **Correlation** — incident grouping by entity key and time window
 - [ ] **MITRE ATT&CK mapping** — static rule mapping, LLM proposal, catalog validation
 - [ ] **LLM enrichment** — summaries with confidence-gated deterministic fallback

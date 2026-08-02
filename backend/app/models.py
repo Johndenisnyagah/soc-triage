@@ -32,6 +32,13 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from app.database import Base
+from app.ingest.schema import (
+    ActorType,
+    Category,
+    NormalizedEvent,
+    Outcome,
+    SourceType,
+)
 
 
 def _utcnow() -> datetime:
@@ -136,6 +143,49 @@ class Event(Base):
             target_resource=event.target_resource,
             extra=event.extra,
             entity_links=[EventEntity(entity_key=k) for k in event.entity_keys()],
+        )
+
+    def to_normalized(self) -> "NormalizedEvent":
+        """Rebuild the schema object detection rules operate on.
+
+        The inverse of `from_normalized`, and the reason detection can run over
+        persisted rows rather than parser output -- which is decision 13: dedup
+        is part of the semantics, so rules must see what survived it.
+
+        Two asymmetries are deliberate:
+
+        * `source_event_id` is not a column, so it does not come back. Nothing
+          in the detection layer reads it -- it exists to disambiguate the
+          dedup hash at write time, and that job is finished once the row is
+          stored. A round-tripped event therefore cannot reproduce its own
+          `dedup_hash()`; use the stored `dedup_hash` column instead.
+
+        * SQLite has no timezone type, so `DateTime(timezone=True)` hands back
+          a naive datetime there while Postgres returns an aware one. Decision
+          7 says timestamps are tz-aware, and a rule comparing an aware to a
+          naive datetime raises TypeError, so naive values are re-stamped UTC
+          rather than left to detonate on whichever engine is not under test.
+        """
+        timestamp = self.timestamp
+        if timestamp is not None and timestamp.tzinfo is None:
+            timestamp = timestamp.replace(tzinfo=timezone.utc)
+
+        return NormalizedEvent(
+            source_type=SourceType(self.source_type),
+            raw=self.raw,
+            timestamp=timestamp,
+            category=Category(self.category),
+            action=self.action,
+            outcome=Outcome(self.outcome),
+            actor_name=self.actor_name,
+            actor_id=self.actor_id,
+            actor_type=ActorType(self.actor_type),
+            source_ip=self.source_ip,
+            source_port=self.source_port,
+            user_agent=self.user_agent,
+            host=self.host,
+            target_resource=self.target_resource,
+            extra=self.extra or {},
         )
 
 

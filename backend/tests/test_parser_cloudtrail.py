@@ -102,6 +102,85 @@ def test_happy_path():
     assert not any(k.startswith("ip:") for k in describe.entity_keys())
 
 
+def test_policy_arn_is_promoted_out_of_request_parameters():
+    """The admin-policy rule needs the ARN to tell privilege escalation from
+    routine housekeeping, so it cannot stay buried in `raw`."""
+    content = json.dumps(
+        {
+            "Records": [
+                {
+                    "eventVersion": "1.08",
+                    "userIdentity": {"type": "IAMUser", "userName": "deploy"},
+                    "eventTime": "2024-05-05T02:14:00Z",
+                    "eventSource": "iam.amazonaws.com",
+                    "eventName": "AttachUserPolicy",
+                    "awsRegion": "us-east-1",
+                    "requestParameters": {
+                        "userName": "deploy",
+                        "policyArn": "arn:aws:iam::aws:policy/AdministratorAccess",
+                    },
+                    "recipientAccountId": "123456789012",
+                    "eventID": "evt-4",
+                }
+            ]
+        }
+    )
+
+    event = next(CloudTrailParser().parse(content, ParseContext()))
+
+    assert event.action == "policy_attach"
+    assert event.extra["policy_arn"] == "arn:aws:iam::aws:policy/AdministratorAccess"
+
+
+def test_absent_or_malformed_request_parameters_yield_a_null_policy_arn():
+    """requestParameters is free-form per API: null for many calls, and not
+    necessarily an object in a malformed export. Neither may raise."""
+    records = [
+        # No requestParameters at all.
+        {
+            "eventVersion": "1.08",
+            "userIdentity": {"type": "IAMUser", "userName": "deploy"},
+            "eventTime": "2024-05-05T02:15:00Z",
+            "eventSource": "iam.amazonaws.com",
+            "eventName": "ListUsers",
+            "awsRegion": "us-east-1",
+            "recipientAccountId": "123456789012",
+            "eventID": "evt-5",
+        },
+        # Explicitly null, which real CloudTrail emits constantly.
+        {
+            "eventVersion": "1.08",
+            "userIdentity": {"type": "IAMUser", "userName": "deploy"},
+            "eventTime": "2024-05-05T02:16:00Z",
+            "eventSource": "signin.amazonaws.com",
+            "eventName": "ConsoleLogin",
+            "awsRegion": "us-east-1",
+            "requestParameters": None,
+            "recipientAccountId": "123456789012",
+            "eventID": "evt-6",
+        },
+        # Wrong shape entirely: must be a null ARN, not a recorded error.
+        {
+            "eventVersion": "1.08",
+            "userIdentity": {"type": "IAMUser", "userName": "deploy"},
+            "eventTime": "2024-05-05T02:17:00Z",
+            "eventSource": "iam.amazonaws.com",
+            "eventName": "AttachUserPolicy",
+            "awsRegion": "us-east-1",
+            "requestParameters": "not-an-object",
+            "recipientAccountId": "123456789012",
+            "eventID": "evt-7",
+        },
+    ]
+    ctx = ParseContext()
+
+    events = list(CloudTrailParser().parse(json.dumps({"Records": records}), ctx))
+
+    assert len(events) == 3
+    assert ctx.stats.errors == []
+    assert all(e.extra["policy_arn"] is None for e in events)
+
+
 def test_json_lines_form_is_accepted():
     lines = "\n".join(
         json.dumps(r) for r in json.loads(HAPPY)["Records"]

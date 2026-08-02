@@ -132,6 +132,12 @@ class CloudTrailParser(BaseParser):
         event_name = record.get("eventName", "unknown")
         event_source = record.get("eventSource", "")
 
+        # requestParameters is free-form per API and may be null or, in a
+        # malformed export, not an object at all. Normalise before reaching in.
+        request = record.get("requestParameters")
+        if not isinstance(request, dict):
+            request = {}
+
         category, action = _EVENT_MAP.get(
             event_name,
             (_SOURCE_CATEGORY.get(event_source, Category.OTHER), _snake(event_name)),
@@ -157,6 +163,11 @@ class CloudTrailParser(BaseParser):
                 "event_id": record.get("eventID"),
                 "error_code": record.get("errorCode"),
                 "error_message": record.get("errorMessage"),
+                # Promoted out of requestParameters because a detection rule
+                # needs it: "a policy was attached" and "AdministratorAccess
+                # was attached" are very different findings, and the ARN is
+                # the only thing that separates them.
+                "policy_arn": request.get("policyArn"),
                 "mfa_authenticated": (
                     identity.get("sessionContext", {})
                     .get("attributes", {})

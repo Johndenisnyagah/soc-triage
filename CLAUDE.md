@@ -78,6 +78,20 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     per-ingest attribution is ever needed, add an `ingest_events` join table;
     do not weaken dedup.
 
+12. **Rules emit Findings; correlation makes Incidents.** Rules are pure
+    functions over a time-ordered, entity-scoped event sequence — no DB, no
+    clock, no network. The engine groups by entity key once, before any rule
+    runs. Because an event carries several entity keys, one burst produces
+    identical findings under `ip:`, `user:`, and `host:`; collapsing those
+    (same rule, same evidence, most specific key wins) is correlation's job,
+    not the engine's.
+
+13. **Detection runs over persisted events, never over parser output.**
+    Dedup is part of the semantics: two sshd lines describing one connection
+    attempt share a `dedup_hash` and collapse to one row. Any tool that runs
+    rules over freshly parsed events will double-count and disagree with
+    production.
+
 ## Open questions
 
 - `host` for CloudTrail is currently `recipientAccountId`, which conflates
@@ -107,7 +121,7 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 
 1. Ingest layer — schema, registry, sshd + cloudtrail parsers ✅
 2. ORM migration — replace narrow `Event`, add `event_entities` ✅
-3. Detection layer — port the 4 LogLens rules to be source-agnostic
+3. Detection layer — port the 4 LogLens rules to be source-agnostic ✅
 4. Correlation — group incidents by entity key + time window
 5. ATT&CK mapping with catalog validation
 6. LLM enrichment + confidence-gated fallback
