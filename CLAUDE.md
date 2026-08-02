@@ -82,15 +82,51 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     functions over a time-ordered, entity-scoped event sequence — no DB, no
     clock, no network. The engine groups by entity key once, before any rule
     runs. Because an event carries several entity keys, one burst produces
-    identical findings under `ip:`, `user:`, and `host:`; collapsing those
-    (same rule, same evidence, most specific key wins) is correlation's job,
-    not the engine's.
+    overlapping findings under `ip:`, `user:`, and `host:` — nested slices of
+    one attack rather than exact copies, since each group is scoped to its own
+    entity. Collapsing those (same rule, evidence contained in a broader copy,
+    most specific key wins) is correlation's job, not the engine's.
 
 13. **Detection runs over persisted events, never over parser output.**
     Dedup is part of the semantics: two sshd lines describing one connection
     attempt share a `dedup_hash` and collapse to one row. Any tool that runs
     rules over freshly parsed events will double-count and disagree with
     production.
+
+14. **Correlation is connected components over evidence keys within a time
+    gap.** One mechanism, not three. Findings join when they share any entity
+    key their *evidence* touches — not merely the key they were filed under —
+    and a silence longer than `max_gap` breaks the chain. Fan-out collapse
+    (decision 12) and cross-source chaining fall out of the same union-find
+    pass; special-casing them would be two algorithms disagreeing at the edges.
+    Joining is transitive, so an incident can span entities that never appear
+    together in one event.
+
+    **Noise is measured by co-occurrence breadth, never frequency.** A key
+    seen alongside more than `MAX_COOCCURRING_KEYS` distinct other entities is
+    ambient and is excluded from joining. Frequency is the intuitive metric and
+    is exactly wrong: in any batch dominated by one intrusion the attacker's IP
+    is the most frequent key, so a frequency threshold suppresses the key that
+    should do the joining. Breadth splits the cases correctly — `user:root`
+    across forty hosts is ambient, `ip:203.0.113.5` across one host and one
+    account is identifying however often it appears. Suppressed keys are still
+    recorded on the incident: not joining on a key is not the same as
+    discarding it. `MAX_COOCCURRING_KEYS = 12` is an unvalidated guess and the
+    first knob to turn against real data.
+
+    **Severity comes from distinct ATT&CK tactic breadth, not finding count.**
+    One step up at three distinct tactics, two at five, over the highest
+    finding severity. Summing would let the decision-12 fan-out inflate an
+    incident by counting the same burst three times; taking the max alone would
+    rank a full kill chain level with its loudest step. Twenty brute-force
+    findings are one tactic and one story; brute force → persistence → defense
+    evasion is three and a real intrusion.
+
+    The ladder is deliberately slower than one step per tactic. Two tactics is
+    the ordinary shape of a real intrusion — credential access into persistence
+    covers most of them — so if two reached the top rung nearly every genuine
+    incident would be CRITICAL and the label would stop discriminating.
+    Escalation has to be rare to mean anything.
 
 ## Open questions
 
@@ -128,7 +164,7 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 1. Ingest layer — schema, registry, sshd + cloudtrail parsers ✅
 2. ORM migration — replace narrow `Event`, add `event_entities` ✅
 3. Detection layer — port the 4 LogLens rules to be source-agnostic ✅
-4. Correlation — group incidents by entity key + time window
+4. Correlation — group incidents by entity key + time window ✅
 5. ATT&CK mapping with catalog validation
 6. LLM enrichment + confidence-gated fallback
 7. Windows Security parser

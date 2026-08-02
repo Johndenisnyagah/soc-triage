@@ -16,7 +16,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from app.detection.rules import DetectionContext, Finding, Rule
+from app.detection.rules import DetectionContext, Finding, Rule, Severity
 from app.ingest.schema import (
     ActorType,
     Category,
@@ -131,6 +131,31 @@ def policy_attached(
 
 
 # -- running a rule in isolation --------------------------------------------
+
+
+def finding(
+    *,
+    rule_id: str = "test_rule",
+    entity_key: str = DEFAULT_ENTITY,
+    evidence: list[NormalizedEvent] | None = None,
+    severity: Severity = Severity.HIGH,
+    technique: str | None = "T1110",
+    title: str | None = None,
+) -> Finding:
+    """A Finding built directly, for correlation tests.
+
+    Correlation consumes findings, so its tests must not have to run the engine
+    to produce them -- otherwise a rule threshold change would break a
+    correlation test that has nothing to do with rules.
+    """
+    return Finding(
+        rule_id=rule_id,
+        title=title or f"synthetic {rule_id}",
+        severity=severity,
+        entity_key=entity_key,
+        evidence=list(evidence if evidence is not None else [auth_failure(0)]),
+        technique=technique,
+    )
 
 
 def findings(

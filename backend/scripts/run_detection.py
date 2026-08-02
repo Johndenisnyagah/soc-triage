@@ -66,6 +66,7 @@ elif not args.no_ingest:
 from fastapi.testclient import TestClient  # noqa: E402
 
 from app.database import SessionLocal  # noqa: E402
+from app.detection.correlation import correlate  # noqa: E402
 from app.detection.engine import run_rules  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import Event  # noqa: E402
@@ -104,35 +105,48 @@ def load_events() -> list:
 
 def report(events: list) -> None:
     result = run_rules(events)
+    incidents = correlate(result.findings)
+
     s = result.stats
     print(
         f"\nstats: events_in={s.events_in} no_timestamp={s.events_without_timestamp} "
-        f"entities={s.entities} rules={s.rules_run} findings={s.findings}\n"
+        f"entities={s.entities} rules={s.rules_run} findings={s.findings} "
+        f"incidents={len(incidents)}\n"
     )
 
-    grouped = result.by_entity()
-    for entity_key in sorted(grouped, key=lambda k: (-len(grouped[k]), k)):
-        found = sorted(grouped[entity_key], key=lambda f: (-f.severity, f.rule_id))
-        label = f"{entity_key}   ({len(found)} finding{'s' if len(found) != 1 else ''})"
-        print(f"{'=' * 78}\n{label}\n{'=' * 78}")
-        for finding in found:
-            sources = sorted({str(e.source_type) for e in finding.evidence})
-            span = ""
+    for incident in incidents:
+        span = ""
+        if incident.first_seen and incident.last_seen:
+            span = f"{incident.first_seen:%H:%M:%S}-{incident.last_seen:%H:%M:%S}"
+        sources = sorted(
+            {str(e.source_type) for f in incident.findings for e in f.evidence}
+        )
+        print("=" * 78)
+        print(f"{incident.incident_id}  [{incident.severity.name}]  {incident.primary_entity}")
+        print("=" * 78)
+        print(f"  when      {span}")
+        print(f"  sources   {'+'.join(sources)}")
+        print(f"  tactics   {', '.join(sorted(incident.tactics)) or '-'}")
+        # Every key the incident touched, including any suppressed for joining.
+        print(f"  entities  {', '.join(sorted(incident.entity_keys))}")
+        print(f"  findings  {len(incident.findings)}")
+        for finding in incident.findings:
+            fspan = ""
             if finding.first_seen and finding.last_seen:
-                span = f"  {finding.first_seen:%H:%M:%S}-{finding.last_seen:%H:%M:%S}"
+                fspan = f"  {finding.first_seen:%H:%M:%S}-{finding.last_seen:%H:%M:%S}"
             print(
-                f"  [{finding.severity.name:8}] {finding.technique or '-':10} {finding.title}"
+                f"    [{finding.severity.name:8}] {finding.technique or '-':10} "
+                f"{finding.title}"
             )
             print(
-                f"             rule={finding.rule_id}  "
-                f"evidence={len(finding.evidence)}{span}"
+                f"               rule={finding.rule_id}  "
+                f"evidence={len(finding.evidence)}{fspan}"
             )
-            print(f"             sources={'+'.join(sources)}")
             meta = ", ".join(
                 f"{k}={v}" for k, v in finding.metadata.items() if v is not None
             )
             if meta:
-                print(f"             {meta}")
+                print(f"               {meta}")
         print()
 
 
