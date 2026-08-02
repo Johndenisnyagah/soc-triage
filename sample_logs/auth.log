@@ -1,0 +1,30 @@
+Aug  2 03:14:01 webserver01 CRON[2841]: pam_unix(cron:session): session opened for user root by (uid=0)
+Aug  2 03:14:01 webserver01 CRON[2841]: pam_unix(cron:session): session closed for user root
+Aug  2 03:17:22 webserver01 systemd[1]: Started Daily apt download activities.
+Aug  2 03:19:44 webserver01 sshd[2903]: Accepted publickey for ubuntu from 198.51.100.23 port 51022 ssh2: RSA SHA256:9pJk3vQm1sXbN7yTgW2cFhL8oRdE5aZuI0nMpKvBxCw
+Aug  2 03:19:44 webserver01 sshd[2903]: pam_unix(sshd:session): session opened for user ubuntu by (uid=0)
+Aug  2 03:26:10 webserver01 sshd[2903]: pam_unix(sshd:session): session closed for user ubuntu
+Aug  2 04:02:11 webserver01 systemd[1]: Starting Cleanup of Temporary Directories...
+Aug  2 04:41:07 webserver01 sshd[3311]: Failed password for root from 203.0.113.5 port 44102 ssh2
+Aug  2 04:41:07 webserver01 sshd[3312]: Failed password for root from 203.0.113.5 port 44118 ssh2
+Aug  2 04:41:08 webserver01 sshd[3313]: Failed password for root from 203.0.113.5 port 44126 ssh2
+Aug  2 04:41:08 webserver01 sshd[3314]: Failed password for root from 203.0.113.5 port 44134 ssh2
+Aug  2 04:41:09 webserver01 sshd[3315]: Failed password for root from 203.0.113.5 port 44150 ssh2
+Aug  2 04:41:09 webserver01 sshd[3316]: Failed password for root from 203.0.113.5 port 44163 ssh2
+Aug  2 04:41:10 webserver01 sshd[3317]: Failed password for root from 203.0.113.5 port 44171 ssh2
+Aug  2 04:41:10 webserver01 sshd[3318]: Failed password for root from 203.0.113.5 port 44188 ssh2
+Aug  2 04:41:11 webserver01 sshd[3318]: Connection closed by authenticating user root 203.0.113.5 port 44188 [preauth]
+Aug  2 04:41:14 webserver01 sshd[3321]: Invalid user admin from 203.0.113.5 port 44210
+Aug  2 04:41:15 webserver01 sshd[3321]: Failed password for invalid user admin from 203.0.113.5 port 44210 ssh2
+Aug  2 04:41:17 webserver01 sshd[3324]: Invalid user oracle from 203.0.113.5 port 44228
+Aug  2 04:41:18 webserver01 sshd[3324]: Failed password for invalid user oracle from 203.0.113.5 port 44228 ssh2
+Aug  2 04:41:20 webserver01 sshd[3327]: Invalid user postgres from 203.0.113.5 port 44245
+Aug  2 04:41:21 webserver01 sshd[3327]: Failed password for invalid user postgres from 203.0.113.5 port 44245 ssh2
+Aug  2 04:41:23 webserver01 sshd[3330]: Failed password for deploy from 203.0.113.5 port 44262 ssh2
+Aug  2 04:41:24 webserver01 sshd[3331]: Failed password for deploy from 203.0.113.5 port 44277 ssh2
+Aug  2 04:41:29 webserver01 sshd[3334]: Accepted password for deploy from 203.0.113.5 port 44301 ssh2
+Aug  2 04:41:29 webserver01 sshd[3334]: pam_unix(sshd:session): session opened for user deploy by (uid=0)
+Aug  2 04:41:35 webserver01 sudo:   deploy : TTY=pts/1 ; PWD=/home/deploy ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+Aug  2 04:42:02 webserver01 CRON[3350]: pam_unix(cron:session): session opened for user root by (uid=0)
+Aug  2 04:45:01 webserver01 systemd[1]: Finished Cleanup of Temporary Directories.
+Aug  2 04:52:13 webserver01 sshd[3361]: Received disconnect from 203.0.113.5 port 44301:11: disconnected by user

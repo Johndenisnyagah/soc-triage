@@ -118,6 +118,11 @@ async def ingest_file(
             },
         )
 
+    # Match the rounding the 422 branch already applies to best_confidence.
+    # sniff() arithmetic yields values like 0.8600000000000001; storing and
+    # reporting that verbatim is float noise, not precision.
+    confidence = round(confidence, 3)
+
     ctx_kwargs: dict = {"filename": file.filename}
     if default_year is not None:
         ctx_kwargs["default_year"] = default_year

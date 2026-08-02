@@ -66,8 +66,8 @@ indexed query.
 ## Quick start
 
 ```bash
-git clone https://github.com/Johndenisnyagah/soc-triage.git
-cd soc-triage/backend
+git clone https://github.com/Johndenisnyagah/soc-triage-.git
+cd soc-triage-/backend
 
 python -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate
@@ -88,6 +88,36 @@ curl -F "file=@../sample_logs/auth.log" http://localhost:8000/api/ingest
 The response includes the ingest id and parse statistics — lines read, events
 emitted, lines skipped, and duplicates skipped — so a partially malformed upload
 reports exactly what was dropped rather than failing silently.
+
+```json
+{
+  "ingest_id": 1,
+  "filename": "auth.log",
+  "source_type": "syslog_sshd",
+  "detected_confidence": 0.86,
+  "events_persisted": 18,
+  "duplicates_skipped": 0,
+  "stats": { "lines_read": 30, "events_emitted": 18, "lines_skipped": 12, "errors": [] }
+}
+```
+
+The twelve skipped lines are the CRON, systemd, and sshd session lines the sshd
+parser recognises as syslog but does not model as authentication events. Running
+the same command a second time returns `events_persisted: 0` and
+`duplicates_skipped: 18` — deduplication is global, so re-ingesting a file is
+idempotent.
+
+`sample_logs/cloudtrail.json` covers the second parser, and deliberately shares a
+source IP and username with `auth.log`:
+
+```bash
+curl -F "file=@../sample_logs/cloudtrail.json" http://localhost:8000/api/ingest
+```
+
+Both files together produce a single entity key `ip:203.0.113.5` spanning 27
+events across both sources — an SSH brute-force burst, a successful SSH login,
+then AWS console logins and IAM changes from that same address. That is the
+cross-source correlation the detection and incident layers are being built on.
 
 ## Design decisions
 
