@@ -40,6 +40,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 
+from app.detection import attack
 from app.detection.rules import Finding, Severity
 
 # Sort floor for findings carrying no usable timestamp. Aware, not naive:
@@ -56,30 +57,6 @@ DEFAULT_MAX_GAP = timedelta(hours=1)
 # is treated as ambient rather than identifying, and is not used to join.
 # Unvalidated -- see the module docstring. Tune this before tuning anything else.
 MAX_COOCCURRING_KEYS = 12
-
-# Minimal static map; replaced by the real ATT&CK catalog at the mapping stage.
-#
-# TODO(build order step 5 -- "ATT&CK mapping with catalog validation"): replace
-# this dict with lookups against the real ATT&CK STIX catalog. Three things this
-# placeholder gets wrong and the catalog gets right:
-#   * Coverage. Any technique absent here contributes no tactic, so an incident
-#     silently under-escalates -- `_severity` counts tactics, and an unmapped
-#     technique looks identical to a technique with no tactic.
-#   * Sub-technique inheritance. "T1562.008" is hardcoded alongside its parent
-#     "T1562" because nothing here understands that a sub-technique inherits its
-#     parent's tactics.
-#   * Multiple tactics. A technique can belong to several; this maps each to
-#     exactly one, so tactic breadth is undercounted wherever that matters.
-# Per decision 8, the catalog is also what validates any technique ID the LLM
-# proposes -- so this table and that validation should read the same source.
-TECHNIQUE_TACTIC = {
-    "T1110": "credential-access",
-    "T1087": "discovery",
-    "T1098": "persistence",
-    "T1562": "defense-evasion",
-    "T1562.008": "defense-evasion",
-    "T1078": "initial-access",
-}
 
 _KEY_PRECEDENCE = ("principal:", "ip:", "host:", "user:")
 
@@ -262,10 +239,13 @@ def correlate(
     for n, group in enumerate(groups.values(), start=1):
         keys = {f.entity_key for f in group}
         group = _collapse_fanout(group)
+        # `f.technique` only, never `f.proposed_technique`. Severity is a
+        # function of this set, so reading a model-supplied technique here would
+        # let the LLM escalate an incident -- re-scoring by another name.
+        # Unvalidated IDs contribute nothing: `tactics_for` returns empty for
+        # unknown and deprecated alike.
         tactics = {
-            TECHNIQUE_TACTIC[f.technique]
-            for f in group
-            if f.technique and f.technique in TECHNIQUE_TACTIC
+            tactic for f in group for tactic in attack.tactics_for(f.technique)
         }
         incidents.append(
             Incident(

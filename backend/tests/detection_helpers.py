@@ -140,6 +140,7 @@ def finding(
     evidence: list[NormalizedEvent] | None = None,
     severity: Severity = Severity.HIGH,
     technique: str | None = "T1110",
+    proposed_technique: str | None = None,
     title: str | None = None,
 ) -> Finding:
     """A Finding built directly, for correlation tests.
@@ -155,6 +156,7 @@ def finding(
         entity_key=entity_key,
         evidence=list(evidence if evidence is not None else [auth_failure(0)]),
         technique=technique,
+        proposed_technique=proposed_technique,
     )
 
 

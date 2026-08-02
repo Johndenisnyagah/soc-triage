@@ -51,6 +51,22 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
    unmapped cases, but any ID it returns is checked against the ATT&CK STIX
    data and rejected on failure. Never trust a model-generated technique ID.
 
+   Validation alone is not enough, because a *valid* proposed technique would
+   still be dangerous: severity counts distinct tactics (decision 14), so a
+   model-supplied technique reaching the tactic set escalates the incident —
+   the LLM re-scoring without ever writing a score, and decision 1 broken
+   indirectly. Proposals therefore live in `Finding.proposed_technique`, and
+   `correlate()` reads `Finding.technique` only. Displayed and enriched from,
+   never counted.
+
+   The validator rejects unknown *and* deprecated IDs identically, because
+   both mean "attribute no tactic". This is not theoretical: ATT&CK retired
+   the entire `T1562 Impair Defenses` family in favour of `T1685`, and the
+   `cloud_logging_disabled` rule was still statically mapped to `T1562.008`.
+   A stale mapping looks correct in the source and silently under-escalates
+   every incident containing it, so `test_attack_catalog.py` asserts every
+   registered rule's technique still resolves and still yields a tactic.
+
 9. **Playbooks are retrieved, not generated.** A local YAML library keyed by
    technique ID. The LLM selects and contextualizes; it does not invent
    response steps.
@@ -128,6 +144,21 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     incident would be CRITICAL and the label would stop discriminating.
     Escalation has to be rare to mean anything.
 
+    **A technique contributes all of its tactics, and multi-mapping is the
+    known weakness.** Breadth works as a severity proxy only while tactics are
+    roughly independent, and ATT&CK maps many techniques to several — T1098
+    Account Manipulation covers persistence and privilege-escalation, and 54
+    other techniques share that exact pair. So one technique can move an
+    incident two-fifths of the way up the ladder, and two rules can reach the
+    three-tactic rung where three would otherwise be needed. Counting one
+    tactic per technique was rejected as worse: it undercounts genuine breadth
+    and picks arbitrarily which tactic to honour. What keeps this tolerable is
+    that the rung sits at three, so no single technique can escalate alone.
+    The v19 Defense Evasion split is the case to watch — it moved techniques
+    into `stealth` and `defense-impairment`, and nothing lands in both today;
+    a release that starts dual-mapping across that pair would escalate the
+    defence-related rules a rung without detecting anything new.
+
 ## Open questions
 
 - `host` for CloudTrail is currently `recipientAccountId`, which conflates
@@ -165,7 +196,8 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 2. ORM migration — replace narrow `Event`, add `event_entities` ✅
 3. Detection layer — port the 4 LogLens rules to be source-agnostic ✅
 4. Correlation — group incidents by entity key + time window ✅
-5. ATT&CK mapping with catalog validation
+5. ATT&CK mapping with catalog validation ✅ (catalog + validator; LLM
+   proposal path deliberately not built yet)
 6. LLM enrichment + confidence-gated fallback
 7. Windows Security parser
 8. Exec reports + playbooks

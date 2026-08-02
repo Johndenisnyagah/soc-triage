@@ -262,8 +262,19 @@ def test_one_tactic_does_not_escalate():
     assert incident.severity is Severity.MEDIUM
 
 
-#: One technique per tactic in TECHNIQUE_TACTIC, so a test can dial up breadth.
-_BY_TACTIC = ["T1110", "T1087", "T1098", "T1562.008", "T1078"]
+#: Real, active, single-tactic techniques -- one per tactic, so N findings
+#: contribute exactly N tactics. Verified by the guard below rather than
+#: assumed: several ATT&CK techniques span multiple tactics (T1078 spans four),
+#: which would make these counts silently wrong.
+_BY_TACTIC = ["T1110", "T1007", "T1136", "T1068", "T1001"]
+
+
+def test_tactic_fixtures_are_one_tactic_each():
+    """Guards the arithmetic every escalation test below depends on."""
+    from app.detection.attack import tactics_for
+
+    assert [len(tactics_for(t)) for t in _BY_TACTIC] == [1] * len(_BY_TACTIC)
+    assert len({tactics_for(t)[0] for t in _BY_TACTIC}) == len(_BY_TACTIC)
 
 
 def _spread(count: int, severity: Severity = Severity.MEDIUM) -> list:
@@ -316,6 +327,138 @@ def test_escalation_clamps_at_critical():
     incident = correlate(_spread(5, severity=Severity.CRITICAL))[0]
 
     assert incident.severity is Severity.CRITICAL
+
+
+# ---------------------------------------------------------------------------
+# Multi-tactic techniques
+# ---------------------------------------------------------------------------
+
+
+def test_a_dual_mapped_technique_contributes_both_its_tactics():
+    """Pins the choice: all of a technique's tactics count, not one.
+
+    T1098 Account Manipulation maps to persistence *and* privilege-escalation.
+    Counting one would undercount breadth; counting both means a single
+    technique moves the incident two-fifths of the way up the ladder on its
+    own. Tactic breadth as a severity proxy assumes tactics are roughly
+    independent, and multi-mapping weakens that -- see decision 14.
+    """
+    incident = correlate(
+        [finding(rule_id="a", severity=Severity.MEDIUM, technique="T1098")]
+    )[0]
+
+    assert incident.tactics == {"persistence", "privilege-escalation"}
+    # Two tactics is below the escalation rung, so one technique alone still
+    # cannot escalate. That is the property that keeps this tolerable.
+    assert incident.severity is Severity.MEDIUM
+
+
+def test_dual_mapping_reaches_the_escalation_rung_a_rule_sooner():
+    """Two rules, three tactics. With single-mapped techniques this would take
+    three rules, so dual-mapping does buy an escalation earlier -- the concrete
+    cost of the choice above."""
+    incident = correlate(
+        [
+            finding(rule_id="a", severity=Severity.MEDIUM, technique="T1110",
+                    evidence=[auth_failure(0)]),
+            finding(rule_id="b", severity=Severity.MEDIUM, technique="T1098",
+                    evidence=[auth_failure(60)]),
+        ]
+    )[0]
+
+    assert incident.tactics == {
+        "credential-access",
+        "persistence",
+        "privilege-escalation",
+    }
+    assert incident.severity is Severity.HIGH
+
+
+def test_no_technique_maps_to_both_stealth_and_defense_impairment():
+    """Guards an assumption about the v19 Defense Evasion split.
+
+    The split moved techniques from `defense-evasion` into `stealth` and
+    `defense-impairment`, but in v19.1 no technique lands in both. If a future
+    release starts dual-mapping across that pair, incidents built from the
+    defence-related rules would escalate a rung without anything new being
+    detected -- and this test is where that shows up.
+    """
+    from app.detection.attack import default_catalog
+
+    both = [
+        tid
+        for tid, entry in default_catalog().entries()
+        if not entry["deprecated"]
+        and {"stealth", "defense-impairment"} <= set(entry["tactics"])
+    ]
+
+    assert both == []
+
+
+# ---------------------------------------------------------------------------
+# Proposed techniques must not reach severity
+# ---------------------------------------------------------------------------
+
+
+def test_a_proposed_technique_cannot_change_incident_severity():
+    """Decision 1, defended at the one place it could be violated silently.
+
+    Severity is a function of distinct tactic count. If a model-supplied
+    technique reached the tactic set it would add a tactic, escalate the
+    incident, and re-score it -- the LLM deciding severity without ever writing
+    a number. So `proposed_technique` is carried separately and correlation
+    reads `technique` only.
+
+    Four proposed techniques spanning four fresh tactics, which under the
+    ladder would be two full steps of escalation if they counted.
+    """
+    plain = _spread(1)
+    enriched = [
+        finding(
+            rule_id=f"r{n}",
+            severity=Severity.MEDIUM,
+            technique="T1110" if n == 0 else None,
+            proposed_technique=proposed,
+            evidence=[auth_failure(n * 60)],
+        )
+        for n, proposed in enumerate(["T1007", "T1136", "T1068", "T1001"])
+    ]
+
+    baseline = correlate(plain)[0]
+    incident = correlate(enriched)[0]
+
+    assert incident.tactics == baseline.tactics == {"credential-access"}
+    assert incident.severity is baseline.severity is Severity.MEDIUM
+
+
+def test_a_proposed_technique_is_preserved_on_the_finding():
+    """Excluded from severity, not discarded -- enrichment and display still
+    need it, and an analyst should see what was proposed."""
+    incident = correlate(
+        [finding(rule_id="a", technique=None, proposed_technique="T1078")]
+    )[0]
+
+    assert incident.findings[0].proposed_technique == "T1078"
+    assert incident.findings[0].technique is None
+    assert incident.tactics == set()
+
+
+def test_a_proposed_technique_cannot_rescue_a_deprecated_static_one():
+    """The stale-mapping case: a rule pointing at a retired technique
+    contributes no tactic, and a proposal must not quietly fill the gap."""
+    incident = correlate(
+        [
+            finding(
+                rule_id="a",
+                severity=Severity.HIGH,
+                technique="T1562.008",  # deprecated
+                proposed_technique="T1685.002",  # its live replacement
+            )
+        ]
+    )[0]
+
+    assert incident.tactics == set()
+    assert incident.severity is Severity.HIGH
 
 
 def test_unmapped_technique_contributes_no_tactic():

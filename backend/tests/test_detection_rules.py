@@ -304,7 +304,8 @@ def test_logging_disabled_fires_on_one_event():
     result = findings(CloudLoggingDisabled(), [logging_stopped(0)])
 
     assert len(result) == 1
-    assert result[0].technique == "T1562.008"
+    # T1685.002, not the retired T1562.008 -- see CloudLoggingDisabled.
+    assert result[0].technique == "T1685.002"
     assert len(result[0].evidence) == 1
     assert result[0].metadata["outcome"] == "success"
 

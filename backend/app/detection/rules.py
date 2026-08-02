@@ -58,10 +58,18 @@ class Finding:
     entity_key: str
     evidence: list[NormalizedEvent]
 
-    # Statically mapped at rule-definition time. The LLM may propose a
-    # technique only when this is None, and its proposal is validated against
-    # the ATT&CK catalog before use.
+    # Statically mapped at rule-definition time. This is the *only* field
+    # correlation reads when computing tactics, and therefore the only one that
+    # can affect incident severity.
     technique: str | None = None
+
+    # Set by the enrichment stage when `technique` is None. Kept in a separate
+    # field rather than filling `technique` because severity is derived from
+    # distinct tactic count (decision 14): a model-supplied technique landing in
+    # `technique` would add a tactic, escalate the incident, and re-score it --
+    # violating decision 1 through the back door rather than by writing a score.
+    # Display it, enrich from it, never let it reach `_severity`.
+    proposed_technique: str | None = None
 
     metadata: dict = field(default_factory=dict)
 

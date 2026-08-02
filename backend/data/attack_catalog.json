@@ -1,0 +1,7974 @@
+{
+ "_meta": {
+  "active_count": 697,
+  "attack_spec_version": "3.3.0",
+  "bundle_id": "bundle--6a1237ca-4d75-413b-90d1-afacde81fed0",
+  "content_last_modified": "2026-05-12T15:12:00.727Z",
+  "deprecated_count": 161,
+  "fetched_at": "2026-08-02T16:13:59Z",
+  "generator": "scripts/build_attack_catalog.py",
+  "source": "https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v19.1/enterprise-attack/enterprise-attack.json",
+  "source_commit": "68d2992ea01249fc72e966f569a0d0b663d98581",
+  "source_ref": "ATT&CK-v19.1",
+  "source_repo": "mitre/cti",
+  "stix_spec_version": "2.0",
+  "subtechnique_count": 493,
+  "technique_count": 858
+ },
+ "techniques": {
+  "T1001": {
+   "deprecated": false,
+   "name": "Data Obfuscation",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1001"
+  },
+  "T1001.001": {
+   "deprecated": false,
+   "name": "Junk Data",
+   "parent_id": "T1001",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1001/001"
+  },
+  "T1001.002": {
+   "deprecated": false,
+   "name": "Steganography",
+   "parent_id": "T1001",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1001/002"
+  },
+  "T1001.003": {
+   "deprecated": false,
+   "name": "Protocol or Service Impersonation",
+   "parent_id": "T1001",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1001/003"
+  },
+  "T1002": {
+   "deprecated": true,
+   "name": "Data Compressed",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1002"
+  },
+  "T1003": {
+   "deprecated": false,
+   "name": "OS Credential Dumping",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1003"
+  },
+  "T1003.001": {
+   "deprecated": false,
+   "name": "LSASS Memory",
+   "parent_id": "T1003",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1003/001"
+  },
+  "T1003.002": {
+   "deprecated": false,
+   "name": "Security Account Manager",
+   "parent_id": "T1003",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1003/002"
+  },
+  "T1003.003": {
+   "deprecated": false,
+   "name": "NTDS",
+   "parent_id": "T1003",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1003/003"
+  },
+  "T1003.004": {
+   "deprecated": false,
+   "name": "LSA Secrets",
+   "parent_id": "T1003",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1003/004"
+  },
+  "T1003.005": {
+   "deprecated": false,
+   "name": "Cached Domain Credentials",
+   "parent_id": "T1003",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1003/005"
+  },
+  "T1003.006": {
+   "deprecated": false,
+   "name": "DCSync",
+   "parent_id": "T1003",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1003/006"
+  },
+  "T1003.007": {
+   "deprecated": false,
+   "name": "Proc Filesystem",
+   "parent_id": "T1003",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1003/007"
+  },
+  "T1003.008": {
+   "deprecated": false,
+   "name": "/etc/passwd and /etc/shadow",
+   "parent_id": "T1003",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1003/008"
+  },
+  "T1004": {
+   "deprecated": true,
+   "name": "Winlogon Helper DLL",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1004"
+  },
+  "T1005": {
+   "deprecated": false,
+   "name": "Data from Local System",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1005"
+  },
+  "T1006": {
+   "deprecated": false,
+   "name": "Direct Volume Access",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1006"
+  },
+  "T1007": {
+   "deprecated": false,
+   "name": "System Service Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1007"
+  },
+  "T1008": {
+   "deprecated": false,
+   "name": "Fallback Channels",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1008"
+  },
+  "T1009": {
+   "deprecated": true,
+   "name": "Binary Padding",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1009"
+  },
+  "T1010": {
+   "deprecated": false,
+   "name": "Application Window Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1010"
+  },
+  "T1011": {
+   "deprecated": false,
+   "name": "Exfiltration Over Other Network Medium",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1011"
+  },
+  "T1011.001": {
+   "deprecated": false,
+   "name": "Exfiltration Over Bluetooth",
+   "parent_id": "T1011",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1011/001"
+  },
+  "T1012": {
+   "deprecated": false,
+   "name": "Query Registry",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1012"
+  },
+  "T1013": {
+   "deprecated": true,
+   "name": "Port Monitors",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1013"
+  },
+  "T1014": {
+   "deprecated": false,
+   "name": "Rootkit",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1014"
+  },
+  "T1015": {
+   "deprecated": true,
+   "name": "Accessibility Features",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1015"
+  },
+  "T1016": {
+   "deprecated": false,
+   "name": "System Network Configuration Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1016"
+  },
+  "T1016.001": {
+   "deprecated": false,
+   "name": "Internet Connection Discovery",
+   "parent_id": "T1016",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1016/001"
+  },
+  "T1016.002": {
+   "deprecated": false,
+   "name": "Wi-Fi Discovery",
+   "parent_id": "T1016",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1016/002"
+  },
+  "T1017": {
+   "deprecated": true,
+   "name": "Application Deployment Software",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1017"
+  },
+  "T1018": {
+   "deprecated": false,
+   "name": "Remote System Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1018"
+  },
+  "T1019": {
+   "deprecated": true,
+   "name": "System Firmware",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1019"
+  },
+  "T1020": {
+   "deprecated": false,
+   "name": "Automated Exfiltration",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1020"
+  },
+  "T1020.001": {
+   "deprecated": false,
+   "name": "Traffic Duplication",
+   "parent_id": "T1020",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1020/001"
+  },
+  "T1021": {
+   "deprecated": false,
+   "name": "Remote Services",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1021"
+  },
+  "T1021.001": {
+   "deprecated": false,
+   "name": "Remote Desktop Protocol",
+   "parent_id": "T1021",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1021/001"
+  },
+  "T1021.002": {
+   "deprecated": false,
+   "name": "SMB/Windows Admin Shares",
+   "parent_id": "T1021",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1021/002"
+  },
+  "T1021.003": {
+   "deprecated": false,
+   "name": "Distributed Component Object Model",
+   "parent_id": "T1021",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1021/003"
+  },
+  "T1021.004": {
+   "deprecated": false,
+   "name": "SSH",
+   "parent_id": "T1021",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1021/004"
+  },
+  "T1021.005": {
+   "deprecated": false,
+   "name": "VNC",
+   "parent_id": "T1021",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1021/005"
+  },
+  "T1021.006": {
+   "deprecated": false,
+   "name": "Windows Remote Management",
+   "parent_id": "T1021",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1021/006"
+  },
+  "T1021.007": {
+   "deprecated": false,
+   "name": "Cloud Services",
+   "parent_id": "T1021",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1021/007"
+  },
+  "T1021.008": {
+   "deprecated": false,
+   "name": "Direct Cloud VM Connections",
+   "parent_id": "T1021",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1021/008"
+  },
+  "T1022": {
+   "deprecated": true,
+   "name": "Data Encrypted",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1022"
+  },
+  "T1023": {
+   "deprecated": true,
+   "name": "Shortcut Modification",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1023"
+  },
+  "T1024": {
+   "deprecated": true,
+   "name": "Custom Cryptographic Protocol",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1024"
+  },
+  "T1025": {
+   "deprecated": false,
+   "name": "Data from Removable Media",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1025"
+  },
+  "T1026": {
+   "deprecated": true,
+   "name": "Multiband Communication",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1026"
+  },
+  "T1027": {
+   "deprecated": false,
+   "name": "Obfuscated Files or Information",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027"
+  },
+  "T1027.001": {
+   "deprecated": false,
+   "name": "Binary Padding",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/001"
+  },
+  "T1027.002": {
+   "deprecated": false,
+   "name": "Software Packing",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/002"
+  },
+  "T1027.003": {
+   "deprecated": false,
+   "name": "Steganography",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/003"
+  },
+  "T1027.004": {
+   "deprecated": false,
+   "name": "Compile After Delivery",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/004"
+  },
+  "T1027.005": {
+   "deprecated": false,
+   "name": "Indicator Removal from Tools",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/005"
+  },
+  "T1027.006": {
+   "deprecated": false,
+   "name": "HTML Smuggling",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/006"
+  },
+  "T1027.007": {
+   "deprecated": false,
+   "name": "Dynamic API Resolution",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/007"
+  },
+  "T1027.008": {
+   "deprecated": false,
+   "name": "Stripped Payloads",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/008"
+  },
+  "T1027.009": {
+   "deprecated": false,
+   "name": "Embedded Payloads",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/009"
+  },
+  "T1027.010": {
+   "deprecated": false,
+   "name": "Command Obfuscation",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/010"
+  },
+  "T1027.011": {
+   "deprecated": false,
+   "name": "Fileless Storage",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/011"
+  },
+  "T1027.012": {
+   "deprecated": false,
+   "name": "LNK Icon Smuggling",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/012"
+  },
+  "T1027.013": {
+   "deprecated": false,
+   "name": "Encrypted/Encoded File",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/013"
+  },
+  "T1027.014": {
+   "deprecated": false,
+   "name": "Polymorphic Code",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/014"
+  },
+  "T1027.015": {
+   "deprecated": false,
+   "name": "Compression",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/015"
+  },
+  "T1027.016": {
+   "deprecated": false,
+   "name": "Junk Code Insertion",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/016"
+  },
+  "T1027.017": {
+   "deprecated": false,
+   "name": "SVG Smuggling",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/017"
+  },
+  "T1027.018": {
+   "deprecated": false,
+   "name": "Invisible Unicode",
+   "parent_id": "T1027",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1027/018"
+  },
+  "T1028": {
+   "deprecated": true,
+   "name": "Windows Remote Management",
+   "parent_id": null,
+   "tactics": [
+    "execution",
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1028"
+  },
+  "T1029": {
+   "deprecated": false,
+   "name": "Scheduled Transfer",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1029"
+  },
+  "T1030": {
+   "deprecated": false,
+   "name": "Data Transfer Size Limits",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1030"
+  },
+  "T1031": {
+   "deprecated": true,
+   "name": "Modify Existing Service",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1031"
+  },
+  "T1032": {
+   "deprecated": true,
+   "name": "Standard Cryptographic Protocol",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1032"
+  },
+  "T1033": {
+   "deprecated": false,
+   "name": "System Owner/User Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1033"
+  },
+  "T1034": {
+   "deprecated": true,
+   "name": "Path Interception",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1034"
+  },
+  "T1035": {
+   "deprecated": true,
+   "name": "Service Execution",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1035"
+  },
+  "T1036": {
+   "deprecated": false,
+   "name": "Masquerading",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036"
+  },
+  "T1036.001": {
+   "deprecated": false,
+   "name": "Invalid Code Signature",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/001"
+  },
+  "T1036.002": {
+   "deprecated": false,
+   "name": "Right-to-Left Override",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/002"
+  },
+  "T1036.003": {
+   "deprecated": false,
+   "name": "Rename Legitimate Utilities",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/003"
+  },
+  "T1036.004": {
+   "deprecated": false,
+   "name": "Masquerade Task or Service",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/004"
+  },
+  "T1036.005": {
+   "deprecated": false,
+   "name": "Match Legitimate Resource Name or Location",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/005"
+  },
+  "T1036.006": {
+   "deprecated": false,
+   "name": "Space after Filename",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/006"
+  },
+  "T1036.007": {
+   "deprecated": false,
+   "name": "Double File Extension",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/007"
+  },
+  "T1036.008": {
+   "deprecated": false,
+   "name": "Masquerade File Type",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/008"
+  },
+  "T1036.009": {
+   "deprecated": false,
+   "name": "Break Process Trees",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/009"
+  },
+  "T1036.010": {
+   "deprecated": false,
+   "name": "Masquerade Account Name",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/010"
+  },
+  "T1036.011": {
+   "deprecated": false,
+   "name": "Overwrite Process Arguments",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/011"
+  },
+  "T1036.012": {
+   "deprecated": false,
+   "name": "Browser Fingerprint",
+   "parent_id": "T1036",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1036/012"
+  },
+  "T1037": {
+   "deprecated": false,
+   "name": "Boot or Logon Initialization Scripts",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1037"
+  },
+  "T1037.001": {
+   "deprecated": false,
+   "name": "Logon Script (Windows)",
+   "parent_id": "T1037",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1037/001"
+  },
+  "T1037.002": {
+   "deprecated": false,
+   "name": "Login Hook",
+   "parent_id": "T1037",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1037/002"
+  },
+  "T1037.003": {
+   "deprecated": false,
+   "name": "Network Logon Script",
+   "parent_id": "T1037",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1037/003"
+  },
+  "T1037.004": {
+   "deprecated": false,
+   "name": "RC Scripts",
+   "parent_id": "T1037",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1037/004"
+  },
+  "T1037.005": {
+   "deprecated": false,
+   "name": "Startup Items",
+   "parent_id": "T1037",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1037/005"
+  },
+  "T1038": {
+   "deprecated": true,
+   "name": "DLL Search Order Hijacking",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation",
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1038"
+  },
+  "T1039": {
+   "deprecated": false,
+   "name": "Data from Network Shared Drive",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1039"
+  },
+  "T1040": {
+   "deprecated": false,
+   "name": "Network Sniffing",
+   "parent_id": null,
+   "tactics": [
+    "credential-access",
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1040"
+  },
+  "T1041": {
+   "deprecated": false,
+   "name": "Exfiltration Over C2 Channel",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1041"
+  },
+  "T1042": {
+   "deprecated": true,
+   "name": "Change Default File Association",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1042"
+  },
+  "T1043": {
+   "deprecated": true,
+   "name": "Commonly Used Port",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1043"
+  },
+  "T1044": {
+   "deprecated": true,
+   "name": "File System Permissions Weakness",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1044"
+  },
+  "T1045": {
+   "deprecated": true,
+   "name": "Software Packing",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1045"
+  },
+  "T1046": {
+   "deprecated": false,
+   "name": "Network Service Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1046"
+  },
+  "T1047": {
+   "deprecated": false,
+   "name": "Windows Management Instrumentation",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1047"
+  },
+  "T1048": {
+   "deprecated": false,
+   "name": "Exfiltration Over Alternative Protocol",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1048"
+  },
+  "T1048.001": {
+   "deprecated": false,
+   "name": "Exfiltration Over Symmetric Encrypted Non-C2 Protocol",
+   "parent_id": "T1048",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1048/001"
+  },
+  "T1048.002": {
+   "deprecated": false,
+   "name": "Exfiltration Over Asymmetric Encrypted Non-C2 Protocol",
+   "parent_id": "T1048",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1048/002"
+  },
+  "T1048.003": {
+   "deprecated": false,
+   "name": "Exfiltration Over Unencrypted Non-C2 Protocol",
+   "parent_id": "T1048",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1048/003"
+  },
+  "T1049": {
+   "deprecated": false,
+   "name": "System Network Connections Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1049"
+  },
+  "T1050": {
+   "deprecated": true,
+   "name": "New Service",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1050"
+  },
+  "T1051": {
+   "deprecated": true,
+   "name": "Shared Webroot",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1051"
+  },
+  "T1052": {
+   "deprecated": false,
+   "name": "Exfiltration Over Physical Medium",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1052"
+  },
+  "T1052.001": {
+   "deprecated": false,
+   "name": "Exfiltration over USB",
+   "parent_id": "T1052",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1052/001"
+  },
+  "T1053": {
+   "deprecated": false,
+   "name": "Scheduled Task/Job",
+   "parent_id": null,
+   "tactics": [
+    "execution",
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1053"
+  },
+  "T1053.001": {
+   "deprecated": true,
+   "name": "At (Linux)",
+   "parent_id": "T1053",
+   "tactics": [
+    "execution",
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1053/001"
+  },
+  "T1053.002": {
+   "deprecated": false,
+   "name": "At",
+   "parent_id": "T1053",
+   "tactics": [
+    "execution",
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1053/002"
+  },
+  "T1053.003": {
+   "deprecated": false,
+   "name": "Cron",
+   "parent_id": "T1053",
+   "tactics": [
+    "execution",
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1053/003"
+  },
+  "T1053.004": {
+   "deprecated": true,
+   "name": "Launchd",
+   "parent_id": "T1053",
+   "tactics": [
+    "execution",
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1053/004"
+  },
+  "T1053.005": {
+   "deprecated": false,
+   "name": "Scheduled Task",
+   "parent_id": "T1053",
+   "tactics": [
+    "execution",
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1053/005"
+  },
+  "T1053.006": {
+   "deprecated": false,
+   "name": "Systemd Timers",
+   "parent_id": "T1053",
+   "tactics": [
+    "execution",
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1053/006"
+  },
+  "T1053.007": {
+   "deprecated": false,
+   "name": "Container Orchestration Job",
+   "parent_id": "T1053",
+   "tactics": [
+    "execution",
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1053/007"
+  },
+  "T1054": {
+   "deprecated": true,
+   "name": "Indicator Blocking",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1054"
+  },
+  "T1055": {
+   "deprecated": false,
+   "name": "Process Injection",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055"
+  },
+  "T1055.001": {
+   "deprecated": false,
+   "name": "Dynamic-link Library Injection",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/001"
+  },
+  "T1055.002": {
+   "deprecated": false,
+   "name": "Portable Executable Injection",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/002"
+  },
+  "T1055.003": {
+   "deprecated": false,
+   "name": "Thread Execution Hijacking",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/003"
+  },
+  "T1055.004": {
+   "deprecated": false,
+   "name": "Asynchronous Procedure Call",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/004"
+  },
+  "T1055.005": {
+   "deprecated": false,
+   "name": "Thread Local Storage",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/005"
+  },
+  "T1055.008": {
+   "deprecated": false,
+   "name": "Ptrace System Calls",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/008"
+  },
+  "T1055.009": {
+   "deprecated": false,
+   "name": "Proc Memory",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/009"
+  },
+  "T1055.011": {
+   "deprecated": false,
+   "name": "Extra Window Memory Injection",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/011"
+  },
+  "T1055.012": {
+   "deprecated": false,
+   "name": "Process Hollowing",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/012"
+  },
+  "T1055.013": {
+   "deprecated": false,
+   "name": "Process Doppelg\u00e4nging",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/013"
+  },
+  "T1055.014": {
+   "deprecated": false,
+   "name": "VDSO Hijacking",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/014"
+  },
+  "T1055.015": {
+   "deprecated": false,
+   "name": "ListPlanting",
+   "parent_id": "T1055",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1055/015"
+  },
+  "T1056": {
+   "deprecated": false,
+   "name": "Input Capture",
+   "parent_id": null,
+   "tactics": [
+    "collection",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1056"
+  },
+  "T1056.001": {
+   "deprecated": false,
+   "name": "Keylogging",
+   "parent_id": "T1056",
+   "tactics": [
+    "collection",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1056/001"
+  },
+  "T1056.002": {
+   "deprecated": false,
+   "name": "GUI Input Capture",
+   "parent_id": "T1056",
+   "tactics": [
+    "collection",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1056/002"
+  },
+  "T1056.003": {
+   "deprecated": false,
+   "name": "Web Portal Capture",
+   "parent_id": "T1056",
+   "tactics": [
+    "collection",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1056/003"
+  },
+  "T1056.004": {
+   "deprecated": false,
+   "name": "Credential API Hooking",
+   "parent_id": "T1056",
+   "tactics": [
+    "collection",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1056/004"
+  },
+  "T1057": {
+   "deprecated": false,
+   "name": "Process Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1057"
+  },
+  "T1058": {
+   "deprecated": true,
+   "name": "Service Registry Permissions Weakness",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1058"
+  },
+  "T1059": {
+   "deprecated": false,
+   "name": "Command and Scripting Interpreter",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059"
+  },
+  "T1059.001": {
+   "deprecated": false,
+   "name": "PowerShell",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/001"
+  },
+  "T1059.002": {
+   "deprecated": false,
+   "name": "AppleScript",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/002"
+  },
+  "T1059.003": {
+   "deprecated": false,
+   "name": "Windows Command Shell",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/003"
+  },
+  "T1059.004": {
+   "deprecated": false,
+   "name": "Unix Shell",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/004"
+  },
+  "T1059.005": {
+   "deprecated": false,
+   "name": "Visual Basic",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/005"
+  },
+  "T1059.006": {
+   "deprecated": false,
+   "name": "Python",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/006"
+  },
+  "T1059.007": {
+   "deprecated": false,
+   "name": "JavaScript",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/007"
+  },
+  "T1059.008": {
+   "deprecated": false,
+   "name": "Network Device CLI",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/008"
+  },
+  "T1059.009": {
+   "deprecated": false,
+   "name": "Cloud API",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/009"
+  },
+  "T1059.010": {
+   "deprecated": false,
+   "name": "AutoHotKey & AutoIT",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/010"
+  },
+  "T1059.011": {
+   "deprecated": false,
+   "name": "Lua",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/011"
+  },
+  "T1059.012": {
+   "deprecated": false,
+   "name": "Hypervisor CLI",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/012"
+  },
+  "T1059.013": {
+   "deprecated": false,
+   "name": "Container CLI/API",
+   "parent_id": "T1059",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1059/013"
+  },
+  "T1060": {
+   "deprecated": true,
+   "name": "Registry Run Keys / Startup Folder",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1060"
+  },
+  "T1061": {
+   "deprecated": true,
+   "name": "Graphical User Interface",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1061"
+  },
+  "T1062": {
+   "deprecated": true,
+   "name": "Hypervisor",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1062"
+  },
+  "T1063": {
+   "deprecated": true,
+   "name": "Security Software Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1063"
+  },
+  "T1064": {
+   "deprecated": true,
+   "name": "Scripting",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1064"
+  },
+  "T1065": {
+   "deprecated": true,
+   "name": "Uncommonly Used Port",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1065"
+  },
+  "T1066": {
+   "deprecated": true,
+   "name": "Indicator Removal from Tools",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1066"
+  },
+  "T1067": {
+   "deprecated": true,
+   "name": "Bootkit",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1067"
+  },
+  "T1068": {
+   "deprecated": false,
+   "name": "Exploitation for Privilege Escalation",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1068"
+  },
+  "T1069": {
+   "deprecated": false,
+   "name": "Permission Groups Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1069"
+  },
+  "T1069.001": {
+   "deprecated": false,
+   "name": "Local Groups",
+   "parent_id": "T1069",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1069/001"
+  },
+  "T1069.002": {
+   "deprecated": false,
+   "name": "Domain Groups",
+   "parent_id": "T1069",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1069/002"
+  },
+  "T1069.003": {
+   "deprecated": false,
+   "name": "Cloud Groups",
+   "parent_id": "T1069",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1069/003"
+  },
+  "T1070": {
+   "deprecated": false,
+   "name": "Indicator Removal",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070"
+  },
+  "T1070.001": {
+   "deprecated": true,
+   "name": "Clear Windows Event Logs",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/001"
+  },
+  "T1070.002": {
+   "deprecated": true,
+   "name": "Clear Linux or Mac System Logs",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/002"
+  },
+  "T1070.003": {
+   "deprecated": false,
+   "name": "Clear Command History",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/003"
+  },
+  "T1070.004": {
+   "deprecated": false,
+   "name": "File Deletion",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/004"
+  },
+  "T1070.005": {
+   "deprecated": false,
+   "name": "Network Share Connection Removal",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/005"
+  },
+  "T1070.006": {
+   "deprecated": false,
+   "name": "Timestomp",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/006"
+  },
+  "T1070.007": {
+   "deprecated": false,
+   "name": "Clear Network Connection History and Configurations",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/007"
+  },
+  "T1070.008": {
+   "deprecated": false,
+   "name": "Clear Mailbox Data",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/008"
+  },
+  "T1070.009": {
+   "deprecated": false,
+   "name": "Clear Persistence",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/009"
+  },
+  "T1070.010": {
+   "deprecated": false,
+   "name": "Relocate Malware",
+   "parent_id": "T1070",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1070/010"
+  },
+  "T1071": {
+   "deprecated": false,
+   "name": "Application Layer Protocol",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1071"
+  },
+  "T1071.001": {
+   "deprecated": false,
+   "name": "Web Protocols",
+   "parent_id": "T1071",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1071/001"
+  },
+  "T1071.002": {
+   "deprecated": false,
+   "name": "File Transfer Protocols",
+   "parent_id": "T1071",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1071/002"
+  },
+  "T1071.003": {
+   "deprecated": false,
+   "name": "Mail Protocols",
+   "parent_id": "T1071",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1071/003"
+  },
+  "T1071.004": {
+   "deprecated": false,
+   "name": "DNS",
+   "parent_id": "T1071",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1071/004"
+  },
+  "T1071.005": {
+   "deprecated": false,
+   "name": "Publish/Subscribe Protocols",
+   "parent_id": "T1071",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1071/005"
+  },
+  "T1072": {
+   "deprecated": false,
+   "name": "Software Deployment Tools",
+   "parent_id": null,
+   "tactics": [
+    "execution",
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1072"
+  },
+  "T1073": {
+   "deprecated": true,
+   "name": "DLL Side-Loading",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1073"
+  },
+  "T1074": {
+   "deprecated": false,
+   "name": "Data Staged",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1074"
+  },
+  "T1074.001": {
+   "deprecated": false,
+   "name": "Local Data Staging",
+   "parent_id": "T1074",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1074/001"
+  },
+  "T1074.002": {
+   "deprecated": false,
+   "name": "Remote Data Staging",
+   "parent_id": "T1074",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1074/002"
+  },
+  "T1075": {
+   "deprecated": true,
+   "name": "Pass the Hash",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1075"
+  },
+  "T1076": {
+   "deprecated": true,
+   "name": "Remote Desktop Protocol",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1076"
+  },
+  "T1077": {
+   "deprecated": true,
+   "name": "Windows Admin Shares",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1077"
+  },
+  "T1078": {
+   "deprecated": false,
+   "name": "Valid Accounts",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence",
+    "privilege-escalation",
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1078"
+  },
+  "T1078.001": {
+   "deprecated": false,
+   "name": "Default Accounts",
+   "parent_id": "T1078",
+   "tactics": [
+    "stealth",
+    "persistence",
+    "privilege-escalation",
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1078/001"
+  },
+  "T1078.002": {
+   "deprecated": false,
+   "name": "Domain Accounts",
+   "parent_id": "T1078",
+   "tactics": [
+    "stealth",
+    "persistence",
+    "privilege-escalation",
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1078/002"
+  },
+  "T1078.003": {
+   "deprecated": false,
+   "name": "Local Accounts",
+   "parent_id": "T1078",
+   "tactics": [
+    "stealth",
+    "persistence",
+    "privilege-escalation",
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1078/003"
+  },
+  "T1078.004": {
+   "deprecated": false,
+   "name": "Cloud Accounts",
+   "parent_id": "T1078",
+   "tactics": [
+    "stealth",
+    "persistence",
+    "privilege-escalation",
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1078/004"
+  },
+  "T1079": {
+   "deprecated": true,
+   "name": "Multilayer Encryption",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1079"
+  },
+  "T1080": {
+   "deprecated": false,
+   "name": "Taint Shared Content",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1080"
+  },
+  "T1081": {
+   "deprecated": true,
+   "name": "Credentials in Files",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1081"
+  },
+  "T1082": {
+   "deprecated": false,
+   "name": "System Information Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1082"
+  },
+  "T1083": {
+   "deprecated": false,
+   "name": "File and Directory Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1083"
+  },
+  "T1084": {
+   "deprecated": true,
+   "name": "Windows Management Instrumentation Event Subscription",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1084"
+  },
+  "T1085": {
+   "deprecated": true,
+   "name": "Rundll32",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1085"
+  },
+  "T1086": {
+   "deprecated": true,
+   "name": "PowerShell",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1086"
+  },
+  "T1087": {
+   "deprecated": false,
+   "name": "Account Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1087"
+  },
+  "T1087.001": {
+   "deprecated": false,
+   "name": "Local Account",
+   "parent_id": "T1087",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1087/001"
+  },
+  "T1087.002": {
+   "deprecated": false,
+   "name": "Domain Account",
+   "parent_id": "T1087",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1087/002"
+  },
+  "T1087.003": {
+   "deprecated": false,
+   "name": "Email Account",
+   "parent_id": "T1087",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1087/003"
+  },
+  "T1087.004": {
+   "deprecated": false,
+   "name": "Cloud Account",
+   "parent_id": "T1087",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1087/004"
+  },
+  "T1088": {
+   "deprecated": true,
+   "name": "Bypass User Account Control",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1088"
+  },
+  "T1089": {
+   "deprecated": true,
+   "name": "Disabling Security Tools",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1089"
+  },
+  "T1090": {
+   "deprecated": false,
+   "name": "Proxy",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1090"
+  },
+  "T1090.001": {
+   "deprecated": false,
+   "name": "Internal Proxy",
+   "parent_id": "T1090",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1090/001"
+  },
+  "T1090.002": {
+   "deprecated": false,
+   "name": "External Proxy",
+   "parent_id": "T1090",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1090/002"
+  },
+  "T1090.003": {
+   "deprecated": false,
+   "name": "Multi-hop Proxy",
+   "parent_id": "T1090",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1090/003"
+  },
+  "T1090.004": {
+   "deprecated": false,
+   "name": "Domain Fronting",
+   "parent_id": "T1090",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1090/004"
+  },
+  "T1091": {
+   "deprecated": false,
+   "name": "Replication Through Removable Media",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement",
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1091"
+  },
+  "T1092": {
+   "deprecated": false,
+   "name": "Communication Through Removable Media",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1092"
+  },
+  "T1093": {
+   "deprecated": true,
+   "name": "Process Hollowing",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1093"
+  },
+  "T1094": {
+   "deprecated": true,
+   "name": "Custom Command and Control Protocol",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1094"
+  },
+  "T1095": {
+   "deprecated": false,
+   "name": "Non-Application Layer Protocol",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1095"
+  },
+  "T1096": {
+   "deprecated": true,
+   "name": "NTFS File Attributes",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1096"
+  },
+  "T1097": {
+   "deprecated": true,
+   "name": "Pass the Ticket",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1097"
+  },
+  "T1098": {
+   "deprecated": false,
+   "name": "Account Manipulation",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1098"
+  },
+  "T1098.001": {
+   "deprecated": false,
+   "name": "Additional Cloud Credentials",
+   "parent_id": "T1098",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1098/001"
+  },
+  "T1098.002": {
+   "deprecated": false,
+   "name": "Additional Email Delegate Permissions",
+   "parent_id": "T1098",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1098/002"
+  },
+  "T1098.003": {
+   "deprecated": false,
+   "name": "Additional Cloud Roles",
+   "parent_id": "T1098",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1098/003"
+  },
+  "T1098.004": {
+   "deprecated": false,
+   "name": "SSH Authorized Keys",
+   "parent_id": "T1098",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1098/004"
+  },
+  "T1098.005": {
+   "deprecated": false,
+   "name": "Device Registration",
+   "parent_id": "T1098",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1098/005"
+  },
+  "T1098.006": {
+   "deprecated": false,
+   "name": "Additional Container Cluster Roles",
+   "parent_id": "T1098",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1098/006"
+  },
+  "T1098.007": {
+   "deprecated": false,
+   "name": "Additional Local or Domain Groups",
+   "parent_id": "T1098",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1098/007"
+  },
+  "T1099": {
+   "deprecated": true,
+   "name": "Timestomp",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1099"
+  },
+  "T1100": {
+   "deprecated": true,
+   "name": "Web Shell",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1100"
+  },
+  "T1101": {
+   "deprecated": true,
+   "name": "Security Support Provider",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1101"
+  },
+  "T1102": {
+   "deprecated": false,
+   "name": "Web Service",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1102"
+  },
+  "T1102.001": {
+   "deprecated": false,
+   "name": "Dead Drop Resolver",
+   "parent_id": "T1102",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1102/001"
+  },
+  "T1102.002": {
+   "deprecated": false,
+   "name": "Bidirectional Communication",
+   "parent_id": "T1102",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1102/002"
+  },
+  "T1102.003": {
+   "deprecated": false,
+   "name": "One-Way Communication",
+   "parent_id": "T1102",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1102/003"
+  },
+  "T1103": {
+   "deprecated": true,
+   "name": "AppInit DLLs",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1103"
+  },
+  "T1104": {
+   "deprecated": false,
+   "name": "Multi-Stage Channels",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1104"
+  },
+  "T1105": {
+   "deprecated": false,
+   "name": "Ingress Tool Transfer",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1105"
+  },
+  "T1106": {
+   "deprecated": false,
+   "name": "Native API",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1106"
+  },
+  "T1107": {
+   "deprecated": true,
+   "name": "File Deletion",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1107"
+  },
+  "T1108": {
+   "deprecated": true,
+   "name": "Redundant Access",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1108"
+  },
+  "T1109": {
+   "deprecated": true,
+   "name": "Component Firmware",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1109"
+  },
+  "T1110": {
+   "deprecated": false,
+   "name": "Brute Force",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1110"
+  },
+  "T1110.001": {
+   "deprecated": false,
+   "name": "Password Guessing",
+   "parent_id": "T1110",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1110/001"
+  },
+  "T1110.002": {
+   "deprecated": false,
+   "name": "Password Cracking",
+   "parent_id": "T1110",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1110/002"
+  },
+  "T1110.003": {
+   "deprecated": false,
+   "name": "Password Spraying",
+   "parent_id": "T1110",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1110/003"
+  },
+  "T1110.004": {
+   "deprecated": false,
+   "name": "Credential Stuffing",
+   "parent_id": "T1110",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1110/004"
+  },
+  "T1111": {
+   "deprecated": false,
+   "name": "Multi-Factor Authentication Interception",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1111"
+  },
+  "T1112": {
+   "deprecated": false,
+   "name": "Modify Registry",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1112"
+  },
+  "T1113": {
+   "deprecated": false,
+   "name": "Screen Capture",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1113"
+  },
+  "T1114": {
+   "deprecated": false,
+   "name": "Email Collection",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1114"
+  },
+  "T1114.001": {
+   "deprecated": false,
+   "name": "Local Email Collection",
+   "parent_id": "T1114",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1114/001"
+  },
+  "T1114.002": {
+   "deprecated": false,
+   "name": "Remote Email Collection",
+   "parent_id": "T1114",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1114/002"
+  },
+  "T1114.003": {
+   "deprecated": false,
+   "name": "Email Forwarding Rule",
+   "parent_id": "T1114",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1114/003"
+  },
+  "T1115": {
+   "deprecated": false,
+   "name": "Clipboard Data",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1115"
+  },
+  "T1116": {
+   "deprecated": true,
+   "name": "Code Signing",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1116"
+  },
+  "T1117": {
+   "deprecated": true,
+   "name": "Regsvr32",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1117"
+  },
+  "T1118": {
+   "deprecated": true,
+   "name": "InstallUtil",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1118"
+  },
+  "T1119": {
+   "deprecated": false,
+   "name": "Automated Collection",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1119"
+  },
+  "T1120": {
+   "deprecated": false,
+   "name": "Peripheral Device Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1120"
+  },
+  "T1121": {
+   "deprecated": true,
+   "name": "Regsvcs/Regasm",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1121"
+  },
+  "T1122": {
+   "deprecated": true,
+   "name": "Component Object Model Hijacking",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1122"
+  },
+  "T1123": {
+   "deprecated": false,
+   "name": "Audio Capture",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1123"
+  },
+  "T1124": {
+   "deprecated": false,
+   "name": "System Time Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1124"
+  },
+  "T1125": {
+   "deprecated": false,
+   "name": "Video Capture",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1125"
+  },
+  "T1126": {
+   "deprecated": true,
+   "name": "Network Share Connection Removal",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1126"
+  },
+  "T1127": {
+   "deprecated": false,
+   "name": "Trusted Developer Utilities Proxy Execution",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1127"
+  },
+  "T1127.001": {
+   "deprecated": false,
+   "name": "MSBuild",
+   "parent_id": "T1127",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1127/001"
+  },
+  "T1127.002": {
+   "deprecated": false,
+   "name": "ClickOnce",
+   "parent_id": "T1127",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1127/002"
+  },
+  "T1127.003": {
+   "deprecated": false,
+   "name": "JamPlus",
+   "parent_id": "T1127",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1127/003"
+  },
+  "T1128": {
+   "deprecated": true,
+   "name": "Netsh Helper DLL",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1128"
+  },
+  "T1129": {
+   "deprecated": false,
+   "name": "Shared Modules",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1129"
+  },
+  "T1130": {
+   "deprecated": true,
+   "name": "Install Root Certificate",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1130"
+  },
+  "T1131": {
+   "deprecated": true,
+   "name": "Authentication Package",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1131"
+  },
+  "T1132": {
+   "deprecated": false,
+   "name": "Data Encoding",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1132"
+  },
+  "T1132.001": {
+   "deprecated": false,
+   "name": "Standard Encoding",
+   "parent_id": "T1132",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1132/001"
+  },
+  "T1132.002": {
+   "deprecated": false,
+   "name": "Non-Standard Encoding",
+   "parent_id": "T1132",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1132/002"
+  },
+  "T1133": {
+   "deprecated": false,
+   "name": "External Remote Services",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1133"
+  },
+  "T1134": {
+   "deprecated": false,
+   "name": "Access Token Manipulation",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1134"
+  },
+  "T1134.001": {
+   "deprecated": false,
+   "name": "Token Impersonation/Theft",
+   "parent_id": "T1134",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1134/001"
+  },
+  "T1134.002": {
+   "deprecated": false,
+   "name": "Create Process with Token",
+   "parent_id": "T1134",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1134/002"
+  },
+  "T1134.003": {
+   "deprecated": false,
+   "name": "Make and Impersonate Token",
+   "parent_id": "T1134",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1134/003"
+  },
+  "T1134.004": {
+   "deprecated": false,
+   "name": "Parent PID Spoofing",
+   "parent_id": "T1134",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1134/004"
+  },
+  "T1134.005": {
+   "deprecated": false,
+   "name": "SID-History Injection",
+   "parent_id": "T1134",
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1134/005"
+  },
+  "T1135": {
+   "deprecated": false,
+   "name": "Network Share Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1135"
+  },
+  "T1136": {
+   "deprecated": false,
+   "name": "Create Account",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1136"
+  },
+  "T1136.001": {
+   "deprecated": false,
+   "name": "Local Account",
+   "parent_id": "T1136",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1136/001"
+  },
+  "T1136.002": {
+   "deprecated": false,
+   "name": "Domain Account",
+   "parent_id": "T1136",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1136/002"
+  },
+  "T1136.003": {
+   "deprecated": false,
+   "name": "Cloud Account",
+   "parent_id": "T1136",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1136/003"
+  },
+  "T1137": {
+   "deprecated": false,
+   "name": "Office Application Startup",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1137"
+  },
+  "T1137.001": {
+   "deprecated": false,
+   "name": "Office Template Macros",
+   "parent_id": "T1137",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1137/001"
+  },
+  "T1137.002": {
+   "deprecated": false,
+   "name": "Office Test",
+   "parent_id": "T1137",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1137/002"
+  },
+  "T1137.003": {
+   "deprecated": false,
+   "name": "Outlook Forms",
+   "parent_id": "T1137",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1137/003"
+  },
+  "T1137.004": {
+   "deprecated": false,
+   "name": "Outlook Home Page",
+   "parent_id": "T1137",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1137/004"
+  },
+  "T1137.005": {
+   "deprecated": false,
+   "name": "Outlook Rules",
+   "parent_id": "T1137",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1137/005"
+  },
+  "T1137.006": {
+   "deprecated": false,
+   "name": "Add-ins",
+   "parent_id": "T1137",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1137/006"
+  },
+  "T1138": {
+   "deprecated": true,
+   "name": "Application Shimming",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1138"
+  },
+  "T1139": {
+   "deprecated": true,
+   "name": "Bash History",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1139"
+  },
+  "T1140": {
+   "deprecated": false,
+   "name": "Deobfuscate/Decode Files or Information",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1140"
+  },
+  "T1141": {
+   "deprecated": true,
+   "name": "Input Prompt",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1141"
+  },
+  "T1142": {
+   "deprecated": true,
+   "name": "Keychain",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1142"
+  },
+  "T1143": {
+   "deprecated": true,
+   "name": "Hidden Window",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1143"
+  },
+  "T1144": {
+   "deprecated": true,
+   "name": "Gatekeeper Bypass",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1144"
+  },
+  "T1145": {
+   "deprecated": true,
+   "name": "Private Keys",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1145"
+  },
+  "T1146": {
+   "deprecated": true,
+   "name": "Clear Command History",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1146"
+  },
+  "T1147": {
+   "deprecated": true,
+   "name": "Hidden Users",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1147"
+  },
+  "T1148": {
+   "deprecated": true,
+   "name": "HISTCONTROL",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1148"
+  },
+  "T1149": {
+   "deprecated": true,
+   "name": "LC_MAIN Hijacking",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1149"
+  },
+  "T1150": {
+   "deprecated": true,
+   "name": "Plist Modification",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1150"
+  },
+  "T1151": {
+   "deprecated": true,
+   "name": "Space after Filename",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1151"
+  },
+  "T1152": {
+   "deprecated": true,
+   "name": "Launchctl",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1152"
+  },
+  "T1153": {
+   "deprecated": true,
+   "name": "Source",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1153"
+  },
+  "T1154": {
+   "deprecated": true,
+   "name": "Trap",
+   "parent_id": null,
+   "tactics": [
+    "execution",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1154"
+  },
+  "T1155": {
+   "deprecated": true,
+   "name": "AppleScript",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1155"
+  },
+  "T1156": {
+   "deprecated": true,
+   "name": "Malicious Shell Modification",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1156"
+  },
+  "T1157": {
+   "deprecated": true,
+   "name": "Dylib Hijacking",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1157"
+  },
+  "T1158": {
+   "deprecated": true,
+   "name": "Hidden Files and Directories",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1158"
+  },
+  "T1159": {
+   "deprecated": true,
+   "name": "Launch Agent",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1159"
+  },
+  "T1160": {
+   "deprecated": true,
+   "name": "Launch Daemon",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1160"
+  },
+  "T1161": {
+   "deprecated": true,
+   "name": "LC_LOAD_DYLIB Addition",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1161"
+  },
+  "T1162": {
+   "deprecated": true,
+   "name": "Login Item",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1162"
+  },
+  "T1163": {
+   "deprecated": true,
+   "name": "Rc.common",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1163"
+  },
+  "T1164": {
+   "deprecated": true,
+   "name": "Re-opened Applications",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1164"
+  },
+  "T1165": {
+   "deprecated": true,
+   "name": "Startup Items",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1165"
+  },
+  "T1166": {
+   "deprecated": true,
+   "name": "Setuid and Setgid",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1166"
+  },
+  "T1167": {
+   "deprecated": true,
+   "name": "Securityd Memory",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1167"
+  },
+  "T1168": {
+   "deprecated": true,
+   "name": "Local Job Scheduling",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1168"
+  },
+  "T1169": {
+   "deprecated": true,
+   "name": "Sudo",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1169"
+  },
+  "T1170": {
+   "deprecated": true,
+   "name": "Mshta",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1170"
+  },
+  "T1171": {
+   "deprecated": true,
+   "name": "LLMNR/NBT-NS Poisoning and Relay",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1171"
+  },
+  "T1172": {
+   "deprecated": true,
+   "name": "Domain Fronting",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1172"
+  },
+  "T1173": {
+   "deprecated": true,
+   "name": "Dynamic Data Exchange",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1173"
+  },
+  "T1174": {
+   "deprecated": true,
+   "name": "Password Filter DLL",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1174"
+  },
+  "T1175": {
+   "deprecated": true,
+   "name": "Component Object Model and Distributed COM",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1175"
+  },
+  "T1176": {
+   "deprecated": false,
+   "name": "Software Extensions",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1176"
+  },
+  "T1176.001": {
+   "deprecated": false,
+   "name": "Browser Extensions",
+   "parent_id": "T1176",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1176/001"
+  },
+  "T1176.002": {
+   "deprecated": false,
+   "name": "IDE Extensions",
+   "parent_id": "T1176",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1176/002"
+  },
+  "T1177": {
+   "deprecated": true,
+   "name": "LSASS Driver",
+   "parent_id": null,
+   "tactics": [
+    "execution",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1177"
+  },
+  "T1178": {
+   "deprecated": true,
+   "name": "SID-History Injection",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1178"
+  },
+  "T1179": {
+   "deprecated": true,
+   "name": "Hooking",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1179"
+  },
+  "T1180": {
+   "deprecated": true,
+   "name": "Screensaver",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1180"
+  },
+  "T1181": {
+   "deprecated": true,
+   "name": "Extra Window Memory Injection",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1181"
+  },
+  "T1182": {
+   "deprecated": true,
+   "name": "AppCert DLLs",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1182"
+  },
+  "T1183": {
+   "deprecated": true,
+   "name": "Image File Execution Options Injection",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation",
+    "persistence",
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1183"
+  },
+  "T1184": {
+   "deprecated": true,
+   "name": "SSH Hijacking",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1184"
+  },
+  "T1185": {
+   "deprecated": false,
+   "name": "Browser Session Hijacking",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1185"
+  },
+  "T1186": {
+   "deprecated": true,
+   "name": "Process Doppelg\u00e4nging",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1186"
+  },
+  "T1187": {
+   "deprecated": false,
+   "name": "Forced Authentication",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1187"
+  },
+  "T1188": {
+   "deprecated": true,
+   "name": "Multi-hop Proxy",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1188"
+  },
+  "T1189": {
+   "deprecated": false,
+   "name": "Drive-by Compromise",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1189"
+  },
+  "T1190": {
+   "deprecated": false,
+   "name": "Exploit Public-Facing Application",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1190"
+  },
+  "T1191": {
+   "deprecated": true,
+   "name": "CMSTP",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1191"
+  },
+  "T1192": {
+   "deprecated": true,
+   "name": "Spearphishing Link",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1192"
+  },
+  "T1193": {
+   "deprecated": true,
+   "name": "Spearphishing Attachment",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1193"
+  },
+  "T1194": {
+   "deprecated": true,
+   "name": "Spearphishing via Service",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1194"
+  },
+  "T1195": {
+   "deprecated": false,
+   "name": "Supply Chain Compromise",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1195"
+  },
+  "T1195.001": {
+   "deprecated": false,
+   "name": "Compromise Software Dependencies and Development Tools",
+   "parent_id": "T1195",
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1195/001"
+  },
+  "T1195.002": {
+   "deprecated": false,
+   "name": "Compromise Software Supply Chain",
+   "parent_id": "T1195",
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1195/002"
+  },
+  "T1195.003": {
+   "deprecated": false,
+   "name": "Compromise Hardware Supply Chain",
+   "parent_id": "T1195",
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1195/003"
+  },
+  "T1196": {
+   "deprecated": true,
+   "name": "Control Panel Items",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1196"
+  },
+  "T1197": {
+   "deprecated": false,
+   "name": "BITS Jobs",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1197"
+  },
+  "T1198": {
+   "deprecated": true,
+   "name": "SIP and Trust Provider Hijacking",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1198"
+  },
+  "T1199": {
+   "deprecated": false,
+   "name": "Trusted Relationship",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1199"
+  },
+  "T1200": {
+   "deprecated": false,
+   "name": "Hardware Additions",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1200"
+  },
+  "T1201": {
+   "deprecated": false,
+   "name": "Password Policy Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1201"
+  },
+  "T1202": {
+   "deprecated": false,
+   "name": "Indirect Command Execution",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1202"
+  },
+  "T1203": {
+   "deprecated": false,
+   "name": "Exploitation for Client Execution",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1203"
+  },
+  "T1204": {
+   "deprecated": false,
+   "name": "User Execution",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1204"
+  },
+  "T1204.001": {
+   "deprecated": false,
+   "name": "Malicious Link",
+   "parent_id": "T1204",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1204/001"
+  },
+  "T1204.002": {
+   "deprecated": false,
+   "name": "Malicious File",
+   "parent_id": "T1204",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1204/002"
+  },
+  "T1204.003": {
+   "deprecated": false,
+   "name": "Malicious Image",
+   "parent_id": "T1204",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1204/003"
+  },
+  "T1204.004": {
+   "deprecated": false,
+   "name": "Malicious Copy and Paste",
+   "parent_id": "T1204",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1204/004"
+  },
+  "T1204.005": {
+   "deprecated": false,
+   "name": "Malicious Library",
+   "parent_id": "T1204",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1204/005"
+  },
+  "T1205": {
+   "deprecated": false,
+   "name": "Traffic Signaling",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence",
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1205"
+  },
+  "T1205.001": {
+   "deprecated": false,
+   "name": "Port Knocking",
+   "parent_id": "T1205",
+   "tactics": [
+    "stealth",
+    "persistence",
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1205/001"
+  },
+  "T1205.002": {
+   "deprecated": false,
+   "name": "Socket Filters",
+   "parent_id": "T1205",
+   "tactics": [
+    "stealth",
+    "persistence",
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1205/002"
+  },
+  "T1206": {
+   "deprecated": true,
+   "name": "Sudo Caching",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1206"
+  },
+  "T1207": {
+   "deprecated": false,
+   "name": "Rogue Domain Controller",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1207"
+  },
+  "T1208": {
+   "deprecated": true,
+   "name": "Kerberoasting",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1208"
+  },
+  "T1209": {
+   "deprecated": true,
+   "name": "Time Providers",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1209"
+  },
+  "T1210": {
+   "deprecated": false,
+   "name": "Exploitation of Remote Services",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1210"
+  },
+  "T1211": {
+   "deprecated": false,
+   "name": "Exploitation for Stealth",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1211"
+  },
+  "T1212": {
+   "deprecated": false,
+   "name": "Exploitation for Credential Access",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1212"
+  },
+  "T1213": {
+   "deprecated": false,
+   "name": "Data from Information Repositories",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1213"
+  },
+  "T1213.001": {
+   "deprecated": false,
+   "name": "Confluence",
+   "parent_id": "T1213",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1213/001"
+  },
+  "T1213.002": {
+   "deprecated": false,
+   "name": "Sharepoint",
+   "parent_id": "T1213",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1213/002"
+  },
+  "T1213.003": {
+   "deprecated": false,
+   "name": "Code Repositories",
+   "parent_id": "T1213",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1213/003"
+  },
+  "T1213.004": {
+   "deprecated": false,
+   "name": "Customer Relationship Management Software",
+   "parent_id": "T1213",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1213/004"
+  },
+  "T1213.005": {
+   "deprecated": false,
+   "name": "Messaging Applications",
+   "parent_id": "T1213",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1213/005"
+  },
+  "T1213.006": {
+   "deprecated": false,
+   "name": "Databases",
+   "parent_id": "T1213",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1213/006"
+  },
+  "T1214": {
+   "deprecated": true,
+   "name": "Credentials in Registry",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1214"
+  },
+  "T1215": {
+   "deprecated": true,
+   "name": "Kernel Modules and Extensions",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1215"
+  },
+  "T1216": {
+   "deprecated": false,
+   "name": "System Script Proxy Execution",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1216"
+  },
+  "T1216.001": {
+   "deprecated": false,
+   "name": "PubPrn",
+   "parent_id": "T1216",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1216/001"
+  },
+  "T1216.002": {
+   "deprecated": false,
+   "name": "SyncAppvPublishingServer",
+   "parent_id": "T1216",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1216/002"
+  },
+  "T1217": {
+   "deprecated": false,
+   "name": "Browser Information Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1217"
+  },
+  "T1218": {
+   "deprecated": false,
+   "name": "System Binary Proxy Execution",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218"
+  },
+  "T1218.001": {
+   "deprecated": false,
+   "name": "Compiled HTML File",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/001"
+  },
+  "T1218.002": {
+   "deprecated": false,
+   "name": "Control Panel",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/002"
+  },
+  "T1218.003": {
+   "deprecated": false,
+   "name": "CMSTP",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/003"
+  },
+  "T1218.004": {
+   "deprecated": false,
+   "name": "InstallUtil",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/004"
+  },
+  "T1218.005": {
+   "deprecated": false,
+   "name": "Mshta",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/005"
+  },
+  "T1218.007": {
+   "deprecated": false,
+   "name": "Msiexec",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/007"
+  },
+  "T1218.008": {
+   "deprecated": false,
+   "name": "Odbcconf",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/008"
+  },
+  "T1218.009": {
+   "deprecated": false,
+   "name": "Regsvcs/Regasm",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/009"
+  },
+  "T1218.010": {
+   "deprecated": false,
+   "name": "Regsvr32",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/010"
+  },
+  "T1218.011": {
+   "deprecated": false,
+   "name": "Rundll32",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/011"
+  },
+  "T1218.012": {
+   "deprecated": false,
+   "name": "Verclsid",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/012"
+  },
+  "T1218.013": {
+   "deprecated": false,
+   "name": "Mavinject",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/013"
+  },
+  "T1218.014": {
+   "deprecated": false,
+   "name": "MMC",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/014"
+  },
+  "T1218.015": {
+   "deprecated": false,
+   "name": "Electron Applications",
+   "parent_id": "T1218",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1218/015"
+  },
+  "T1219": {
+   "deprecated": false,
+   "name": "Remote Access Tools",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1219"
+  },
+  "T1219.001": {
+   "deprecated": false,
+   "name": "IDE Tunneling",
+   "parent_id": "T1219",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1219/001"
+  },
+  "T1219.002": {
+   "deprecated": false,
+   "name": "Remote Desktop Software",
+   "parent_id": "T1219",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1219/002"
+  },
+  "T1219.003": {
+   "deprecated": false,
+   "name": "Remote Access Hardware",
+   "parent_id": "T1219",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1219/003"
+  },
+  "T1220": {
+   "deprecated": false,
+   "name": "XSL Script Processing",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1220"
+  },
+  "T1221": {
+   "deprecated": false,
+   "name": "Template Injection",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1221"
+  },
+  "T1222": {
+   "deprecated": false,
+   "name": "File and Directory Permissions Modification",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1222"
+  },
+  "T1222.001": {
+   "deprecated": false,
+   "name": "Windows Permissions",
+   "parent_id": "T1222",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1222/001"
+  },
+  "T1222.002": {
+   "deprecated": false,
+   "name": "Linux and Mac Permissions",
+   "parent_id": "T1222",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1222/002"
+  },
+  "T1223": {
+   "deprecated": true,
+   "name": "Compiled HTML File",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1223"
+  },
+  "T1480": {
+   "deprecated": false,
+   "name": "Execution Guardrails",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1480"
+  },
+  "T1480.001": {
+   "deprecated": false,
+   "name": "Environmental Keying",
+   "parent_id": "T1480",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1480/001"
+  },
+  "T1480.002": {
+   "deprecated": false,
+   "name": "Mutual Exclusion",
+   "parent_id": "T1480",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1480/002"
+  },
+  "T1482": {
+   "deprecated": false,
+   "name": "Domain Trust Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1482"
+  },
+  "T1483": {
+   "deprecated": true,
+   "name": "Domain Generation Algorithms",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1483"
+  },
+  "T1484": {
+   "deprecated": false,
+   "name": "Domain or Tenant Policy Modification",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1484"
+  },
+  "T1484.001": {
+   "deprecated": false,
+   "name": "Group Policy Modification",
+   "parent_id": "T1484",
+   "tactics": [
+    "defense-impairment",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1484/001"
+  },
+  "T1484.002": {
+   "deprecated": false,
+   "name": "Trust Modification",
+   "parent_id": "T1484",
+   "tactics": [
+    "defense-impairment",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1484/002"
+  },
+  "T1485": {
+   "deprecated": false,
+   "name": "Data Destruction",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1485"
+  },
+  "T1485.001": {
+   "deprecated": false,
+   "name": "Lifecycle-Triggered Deletion",
+   "parent_id": "T1485",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1485/001"
+  },
+  "T1486": {
+   "deprecated": false,
+   "name": "Data Encrypted for Impact",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1486"
+  },
+  "T1487": {
+   "deprecated": true,
+   "name": "Disk Structure Wipe",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1487"
+  },
+  "T1488": {
+   "deprecated": true,
+   "name": "Disk Content Wipe",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1488"
+  },
+  "T1489": {
+   "deprecated": false,
+   "name": "Service Stop",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1489"
+  },
+  "T1490": {
+   "deprecated": false,
+   "name": "Inhibit System Recovery",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1490"
+  },
+  "T1491": {
+   "deprecated": false,
+   "name": "Defacement",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1491"
+  },
+  "T1491.001": {
+   "deprecated": false,
+   "name": "Internal Defacement",
+   "parent_id": "T1491",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1491/001"
+  },
+  "T1491.002": {
+   "deprecated": false,
+   "name": "External Defacement",
+   "parent_id": "T1491",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1491/002"
+  },
+  "T1492": {
+   "deprecated": true,
+   "name": "Stored Data Manipulation",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1492"
+  },
+  "T1493": {
+   "deprecated": true,
+   "name": "Transmitted Data Manipulation",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1493"
+  },
+  "T1494": {
+   "deprecated": true,
+   "name": "Runtime Data Manipulation",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1494"
+  },
+  "T1495": {
+   "deprecated": false,
+   "name": "Firmware Corruption",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1495"
+  },
+  "T1496": {
+   "deprecated": false,
+   "name": "Resource Hijacking",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1496"
+  },
+  "T1496.001": {
+   "deprecated": false,
+   "name": "Compute Hijacking",
+   "parent_id": "T1496",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1496/001"
+  },
+  "T1496.002": {
+   "deprecated": false,
+   "name": "Bandwidth Hijacking",
+   "parent_id": "T1496",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1496/002"
+  },
+  "T1496.003": {
+   "deprecated": false,
+   "name": "SMS Pumping",
+   "parent_id": "T1496",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1496/003"
+  },
+  "T1496.004": {
+   "deprecated": false,
+   "name": "Cloud Service Hijacking",
+   "parent_id": "T1496",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1496/004"
+  },
+  "T1497": {
+   "deprecated": false,
+   "name": "Virtualization/Sandbox Evasion",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1497"
+  },
+  "T1497.001": {
+   "deprecated": false,
+   "name": "System Checks",
+   "parent_id": "T1497",
+   "tactics": [
+    "stealth",
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1497/001"
+  },
+  "T1497.002": {
+   "deprecated": false,
+   "name": "User Activity Based Checks",
+   "parent_id": "T1497",
+   "tactics": [
+    "stealth",
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1497/002"
+  },
+  "T1497.003": {
+   "deprecated": false,
+   "name": "Time Based Checks",
+   "parent_id": "T1497",
+   "tactics": [
+    "stealth",
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1497/003"
+  },
+  "T1498": {
+   "deprecated": false,
+   "name": "Network Denial of Service",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1498"
+  },
+  "T1498.001": {
+   "deprecated": false,
+   "name": "Direct Network Flood",
+   "parent_id": "T1498",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1498/001"
+  },
+  "T1498.002": {
+   "deprecated": false,
+   "name": "Reflection Amplification",
+   "parent_id": "T1498",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1498/002"
+  },
+  "T1499": {
+   "deprecated": false,
+   "name": "Endpoint Denial of Service",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1499"
+  },
+  "T1499.001": {
+   "deprecated": false,
+   "name": "OS Exhaustion Flood",
+   "parent_id": "T1499",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1499/001"
+  },
+  "T1499.002": {
+   "deprecated": false,
+   "name": "Service Exhaustion Flood",
+   "parent_id": "T1499",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1499/002"
+  },
+  "T1499.003": {
+   "deprecated": false,
+   "name": "Application Exhaustion Flood",
+   "parent_id": "T1499",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1499/003"
+  },
+  "T1499.004": {
+   "deprecated": false,
+   "name": "Application or System Exploitation",
+   "parent_id": "T1499",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1499/004"
+  },
+  "T1500": {
+   "deprecated": true,
+   "name": "Compile After Delivery",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1500"
+  },
+  "T1501": {
+   "deprecated": true,
+   "name": "Systemd Service",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1501"
+  },
+  "T1502": {
+   "deprecated": true,
+   "name": "Parent PID Spoofing",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1502"
+  },
+  "T1503": {
+   "deprecated": true,
+   "name": "Credentials from Web Browsers",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1503"
+  },
+  "T1504": {
+   "deprecated": true,
+   "name": "PowerShell Profile",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1504"
+  },
+  "T1505": {
+   "deprecated": false,
+   "name": "Server Software Component",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1505"
+  },
+  "T1505.001": {
+   "deprecated": false,
+   "name": "SQL Stored Procedures",
+   "parent_id": "T1505",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1505/001"
+  },
+  "T1505.002": {
+   "deprecated": false,
+   "name": "Transport Agent",
+   "parent_id": "T1505",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1505/002"
+  },
+  "T1505.003": {
+   "deprecated": false,
+   "name": "Web Shell",
+   "parent_id": "T1505",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1505/003"
+  },
+  "T1505.004": {
+   "deprecated": false,
+   "name": "IIS Components",
+   "parent_id": "T1505",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1505/004"
+  },
+  "T1505.005": {
+   "deprecated": false,
+   "name": "Terminal Services DLL",
+   "parent_id": "T1505",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1505/005"
+  },
+  "T1505.006": {
+   "deprecated": false,
+   "name": "vSphere Installation Bundles",
+   "parent_id": "T1505",
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1505/006"
+  },
+  "T1506": {
+   "deprecated": true,
+   "name": "Web Session Cookie",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1506"
+  },
+  "T1514": {
+   "deprecated": true,
+   "name": "Elevated Execution with Prompt",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1514"
+  },
+  "T1518": {
+   "deprecated": false,
+   "name": "Software Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1518"
+  },
+  "T1518.001": {
+   "deprecated": false,
+   "name": "Security Software Discovery",
+   "parent_id": "T1518",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1518/001"
+  },
+  "T1518.002": {
+   "deprecated": false,
+   "name": "Backup Software Discovery",
+   "parent_id": "T1518",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1518/002"
+  },
+  "T1519": {
+   "deprecated": true,
+   "name": "Emond",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1519"
+  },
+  "T1522": {
+   "deprecated": true,
+   "name": "Cloud Instance Metadata API",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1522"
+  },
+  "T1525": {
+   "deprecated": false,
+   "name": "Implant Internal Image",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1525"
+  },
+  "T1526": {
+   "deprecated": false,
+   "name": "Cloud Service Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1526"
+  },
+  "T1527": {
+   "deprecated": true,
+   "name": "Application Access Token",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1527"
+  },
+  "T1528": {
+   "deprecated": false,
+   "name": "Steal Application Access Token",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1528"
+  },
+  "T1529": {
+   "deprecated": false,
+   "name": "System Shutdown/Reboot",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1529"
+  },
+  "T1530": {
+   "deprecated": false,
+   "name": "Data from Cloud Storage",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1530"
+  },
+  "T1531": {
+   "deprecated": false,
+   "name": "Account Access Removal",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1531"
+  },
+  "T1534": {
+   "deprecated": false,
+   "name": "Internal Spearphishing",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1534"
+  },
+  "T1535": {
+   "deprecated": false,
+   "name": "Unused/Unsupported Cloud Regions",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1535"
+  },
+  "T1536": {
+   "deprecated": true,
+   "name": "Revert Cloud Instance",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1536"
+  },
+  "T1537": {
+   "deprecated": false,
+   "name": "Transfer Data to Cloud Account",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1537"
+  },
+  "T1538": {
+   "deprecated": false,
+   "name": "Cloud Service Dashboard",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1538"
+  },
+  "T1539": {
+   "deprecated": false,
+   "name": "Steal Web Session Cookie",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1539"
+  },
+  "T1542": {
+   "deprecated": false,
+   "name": "Pre-OS Boot",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1542"
+  },
+  "T1542.001": {
+   "deprecated": false,
+   "name": "System Firmware",
+   "parent_id": "T1542",
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1542/001"
+  },
+  "T1542.002": {
+   "deprecated": false,
+   "name": "Component Firmware",
+   "parent_id": "T1542",
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1542/002"
+  },
+  "T1542.003": {
+   "deprecated": false,
+   "name": "Bootkit",
+   "parent_id": "T1542",
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1542/003"
+  },
+  "T1542.004": {
+   "deprecated": false,
+   "name": "ROMMONkit",
+   "parent_id": "T1542",
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1542/004"
+  },
+  "T1542.005": {
+   "deprecated": false,
+   "name": "TFTP Boot",
+   "parent_id": "T1542",
+   "tactics": [
+    "stealth",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1542/005"
+  },
+  "T1543": {
+   "deprecated": false,
+   "name": "Create or Modify System Process",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1543"
+  },
+  "T1543.001": {
+   "deprecated": false,
+   "name": "Launch Agent",
+   "parent_id": "T1543",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1543/001"
+  },
+  "T1543.002": {
+   "deprecated": false,
+   "name": "Systemd Service",
+   "parent_id": "T1543",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1543/002"
+  },
+  "T1543.003": {
+   "deprecated": false,
+   "name": "Windows Service",
+   "parent_id": "T1543",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1543/003"
+  },
+  "T1543.004": {
+   "deprecated": false,
+   "name": "Launch Daemon",
+   "parent_id": "T1543",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1543/004"
+  },
+  "T1543.005": {
+   "deprecated": false,
+   "name": "Container Service",
+   "parent_id": "T1543",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1543/005"
+  },
+  "T1546": {
+   "deprecated": false,
+   "name": "Event Triggered Execution",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546"
+  },
+  "T1546.001": {
+   "deprecated": false,
+   "name": "Change Default File Association",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/001"
+  },
+  "T1546.002": {
+   "deprecated": false,
+   "name": "Screensaver",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/002"
+  },
+  "T1546.003": {
+   "deprecated": false,
+   "name": "Windows Management Instrumentation Event Subscription",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/003"
+  },
+  "T1546.004": {
+   "deprecated": false,
+   "name": "Unix Shell Configuration Modification",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/004"
+  },
+  "T1546.005": {
+   "deprecated": false,
+   "name": "Trap",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/005"
+  },
+  "T1546.006": {
+   "deprecated": false,
+   "name": "LC_LOAD_DYLIB Addition",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/006"
+  },
+  "T1546.007": {
+   "deprecated": false,
+   "name": "Netsh Helper DLL",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/007"
+  },
+  "T1546.008": {
+   "deprecated": false,
+   "name": "Accessibility Features",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/008"
+  },
+  "T1546.009": {
+   "deprecated": false,
+   "name": "AppCert DLLs",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/009"
+  },
+  "T1546.010": {
+   "deprecated": false,
+   "name": "AppInit DLLs",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/010"
+  },
+  "T1546.011": {
+   "deprecated": false,
+   "name": "Application Shimming",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/011"
+  },
+  "T1546.012": {
+   "deprecated": false,
+   "name": "Image File Execution Options Injection",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/012"
+  },
+  "T1546.013": {
+   "deprecated": false,
+   "name": "PowerShell Profile",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/013"
+  },
+  "T1546.014": {
+   "deprecated": false,
+   "name": "Emond",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/014"
+  },
+  "T1546.015": {
+   "deprecated": false,
+   "name": "Component Object Model Hijacking",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/015"
+  },
+  "T1546.016": {
+   "deprecated": false,
+   "name": "Installer Packages",
+   "parent_id": "T1546",
+   "tactics": [
+    "privilege-escalation",
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/016"
+  },
+  "T1546.017": {
+   "deprecated": false,
+   "name": "Udev Rules",
+   "parent_id": "T1546",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/017"
+  },
+  "T1546.018": {
+   "deprecated": false,
+   "name": "Python Startup Hooks",
+   "parent_id": "T1546",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1546/018"
+  },
+  "T1547": {
+   "deprecated": false,
+   "name": "Boot or Logon Autostart Execution",
+   "parent_id": null,
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547"
+  },
+  "T1547.001": {
+   "deprecated": false,
+   "name": "Registry Run Keys / Startup Folder",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/001"
+  },
+  "T1547.002": {
+   "deprecated": false,
+   "name": "Authentication Package",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/002"
+  },
+  "T1547.003": {
+   "deprecated": false,
+   "name": "Time Providers",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/003"
+  },
+  "T1547.004": {
+   "deprecated": false,
+   "name": "Winlogon Helper DLL",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/004"
+  },
+  "T1547.005": {
+   "deprecated": false,
+   "name": "Security Support Provider",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/005"
+  },
+  "T1547.006": {
+   "deprecated": false,
+   "name": "Kernel Modules and Extensions",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/006"
+  },
+  "T1547.007": {
+   "deprecated": false,
+   "name": "Re-opened Applications",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/007"
+  },
+  "T1547.008": {
+   "deprecated": false,
+   "name": "LSASS Driver",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/008"
+  },
+  "T1547.009": {
+   "deprecated": false,
+   "name": "Shortcut Modification",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/009"
+  },
+  "T1547.010": {
+   "deprecated": false,
+   "name": "Port Monitors",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/010"
+  },
+  "T1547.011": {
+   "deprecated": true,
+   "name": "Plist Modification",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/011"
+  },
+  "T1547.012": {
+   "deprecated": false,
+   "name": "Print Processors",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/012"
+  },
+  "T1547.013": {
+   "deprecated": false,
+   "name": "XDG Autostart Entries",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/013"
+  },
+  "T1547.014": {
+   "deprecated": false,
+   "name": "Active Setup",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/014"
+  },
+  "T1547.015": {
+   "deprecated": false,
+   "name": "Login Items",
+   "parent_id": "T1547",
+   "tactics": [
+    "persistence",
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1547/015"
+  },
+  "T1548": {
+   "deprecated": false,
+   "name": "Abuse Elevation Control Mechanism",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1548"
+  },
+  "T1548.001": {
+   "deprecated": false,
+   "name": "Setuid and Setgid",
+   "parent_id": "T1548",
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1548/001"
+  },
+  "T1548.002": {
+   "deprecated": false,
+   "name": "Bypass User Account Control",
+   "parent_id": "T1548",
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1548/002"
+  },
+  "T1548.003": {
+   "deprecated": false,
+   "name": "Sudo and Sudo Caching",
+   "parent_id": "T1548",
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1548/003"
+  },
+  "T1548.004": {
+   "deprecated": false,
+   "name": "Elevated Execution with Prompt",
+   "parent_id": "T1548",
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1548/004"
+  },
+  "T1548.005": {
+   "deprecated": false,
+   "name": "Temporary Elevated Cloud Access",
+   "parent_id": "T1548",
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1548/005"
+  },
+  "T1548.006": {
+   "deprecated": false,
+   "name": "TCC Manipulation",
+   "parent_id": "T1548",
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1548/006"
+  },
+  "T1550": {
+   "deprecated": false,
+   "name": "Use Alternate Authentication Material",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1550"
+  },
+  "T1550.001": {
+   "deprecated": false,
+   "name": "Application Access Token",
+   "parent_id": "T1550",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1550/001"
+  },
+  "T1550.002": {
+   "deprecated": false,
+   "name": "Pass the Hash",
+   "parent_id": "T1550",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1550/002"
+  },
+  "T1550.003": {
+   "deprecated": false,
+   "name": "Pass the Ticket",
+   "parent_id": "T1550",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1550/003"
+  },
+  "T1550.004": {
+   "deprecated": false,
+   "name": "Web Session Cookie",
+   "parent_id": "T1550",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1550/004"
+  },
+  "T1552": {
+   "deprecated": false,
+   "name": "Unsecured Credentials",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1552"
+  },
+  "T1552.001": {
+   "deprecated": false,
+   "name": "Credentials In Files",
+   "parent_id": "T1552",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1552/001"
+  },
+  "T1552.002": {
+   "deprecated": false,
+   "name": "Credentials in Registry",
+   "parent_id": "T1552",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1552/002"
+  },
+  "T1552.003": {
+   "deprecated": false,
+   "name": "Shell History",
+   "parent_id": "T1552",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1552/003"
+  },
+  "T1552.004": {
+   "deprecated": false,
+   "name": "Private Keys",
+   "parent_id": "T1552",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1552/004"
+  },
+  "T1552.005": {
+   "deprecated": false,
+   "name": "Cloud Instance Metadata API",
+   "parent_id": "T1552",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1552/005"
+  },
+  "T1552.006": {
+   "deprecated": false,
+   "name": "Group Policy Preferences",
+   "parent_id": "T1552",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1552/006"
+  },
+  "T1552.007": {
+   "deprecated": false,
+   "name": "Container API",
+   "parent_id": "T1552",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1552/007"
+  },
+  "T1552.008": {
+   "deprecated": false,
+   "name": "Chat Messages",
+   "parent_id": "T1552",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1552/008"
+  },
+  "T1553": {
+   "deprecated": false,
+   "name": "Subvert Trust Controls",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1553"
+  },
+  "T1553.001": {
+   "deprecated": false,
+   "name": "Gatekeeper Bypass",
+   "parent_id": "T1553",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1553/001"
+  },
+  "T1553.002": {
+   "deprecated": false,
+   "name": "Code Signing",
+   "parent_id": "T1553",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1553/002"
+  },
+  "T1553.003": {
+   "deprecated": false,
+   "name": "SIP and Trust Provider Hijacking",
+   "parent_id": "T1553",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1553/003"
+  },
+  "T1553.004": {
+   "deprecated": false,
+   "name": "Install Root Certificate",
+   "parent_id": "T1553",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1553/004"
+  },
+  "T1553.005": {
+   "deprecated": false,
+   "name": "Mark-of-the-Web Bypass",
+   "parent_id": "T1553",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1553/005"
+  },
+  "T1553.006": {
+   "deprecated": false,
+   "name": "Code Signing Policy Modification",
+   "parent_id": "T1553",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1553/006"
+  },
+  "T1554": {
+   "deprecated": false,
+   "name": "Compromise Host Software Binary",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1554"
+  },
+  "T1555": {
+   "deprecated": false,
+   "name": "Credentials from Password Stores",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1555"
+  },
+  "T1555.001": {
+   "deprecated": false,
+   "name": "Keychain",
+   "parent_id": "T1555",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1555/001"
+  },
+  "T1555.002": {
+   "deprecated": false,
+   "name": "Securityd Memory",
+   "parent_id": "T1555",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1555/002"
+  },
+  "T1555.003": {
+   "deprecated": false,
+   "name": "Credentials from Web Browsers",
+   "parent_id": "T1555",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1555/003"
+  },
+  "T1555.004": {
+   "deprecated": false,
+   "name": "Windows Credential Manager",
+   "parent_id": "T1555",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1555/004"
+  },
+  "T1555.005": {
+   "deprecated": false,
+   "name": "Password Managers",
+   "parent_id": "T1555",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1555/005"
+  },
+  "T1555.006": {
+   "deprecated": false,
+   "name": "Cloud Secrets Management Stores",
+   "parent_id": "T1555",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1555/006"
+  },
+  "T1556": {
+   "deprecated": false,
+   "name": "Modify Authentication Process",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556"
+  },
+  "T1556.001": {
+   "deprecated": false,
+   "name": "Domain Controller Authentication",
+   "parent_id": "T1556",
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556/001"
+  },
+  "T1556.002": {
+   "deprecated": false,
+   "name": "Password Filter DLL",
+   "parent_id": "T1556",
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556/002"
+  },
+  "T1556.003": {
+   "deprecated": false,
+   "name": "Pluggable Authentication Modules",
+   "parent_id": "T1556",
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556/003"
+  },
+  "T1556.004": {
+   "deprecated": false,
+   "name": "Network Device Authentication",
+   "parent_id": "T1556",
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556/004"
+  },
+  "T1556.005": {
+   "deprecated": false,
+   "name": "Reversible Encryption",
+   "parent_id": "T1556",
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556/005"
+  },
+  "T1556.006": {
+   "deprecated": false,
+   "name": "Multi-Factor Authentication",
+   "parent_id": "T1556",
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556/006"
+  },
+  "T1556.007": {
+   "deprecated": false,
+   "name": "Hybrid Identity",
+   "parent_id": "T1556",
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556/007"
+  },
+  "T1556.008": {
+   "deprecated": false,
+   "name": "Network Provider DLL",
+   "parent_id": "T1556",
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556/008"
+  },
+  "T1556.009": {
+   "deprecated": false,
+   "name": "Conditional Access Policies",
+   "parent_id": "T1556",
+   "tactics": [
+    "defense-impairment",
+    "persistence",
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1556/009"
+  },
+  "T1557": {
+   "deprecated": false,
+   "name": "Adversary-in-the-Middle",
+   "parent_id": null,
+   "tactics": [
+    "credential-access",
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1557"
+  },
+  "T1557.001": {
+   "deprecated": false,
+   "name": "Name Resolution Poisoning and SMB Relay",
+   "parent_id": "T1557",
+   "tactics": [
+    "credential-access",
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1557/001"
+  },
+  "T1557.002": {
+   "deprecated": false,
+   "name": "ARP Cache Poisoning",
+   "parent_id": "T1557",
+   "tactics": [
+    "credential-access",
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1557/002"
+  },
+  "T1557.003": {
+   "deprecated": false,
+   "name": "DHCP Spoofing",
+   "parent_id": "T1557",
+   "tactics": [
+    "credential-access",
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1557/003"
+  },
+  "T1557.004": {
+   "deprecated": false,
+   "name": "Evil Twin",
+   "parent_id": "T1557",
+   "tactics": [
+    "credential-access",
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1557/004"
+  },
+  "T1558": {
+   "deprecated": false,
+   "name": "Steal or Forge Kerberos Tickets",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1558"
+  },
+  "T1558.001": {
+   "deprecated": false,
+   "name": "Golden Ticket",
+   "parent_id": "T1558",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1558/001"
+  },
+  "T1558.002": {
+   "deprecated": false,
+   "name": "Silver Ticket",
+   "parent_id": "T1558",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1558/002"
+  },
+  "T1558.003": {
+   "deprecated": false,
+   "name": "Kerberoasting",
+   "parent_id": "T1558",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1558/003"
+  },
+  "T1558.004": {
+   "deprecated": false,
+   "name": "AS-REP Roasting",
+   "parent_id": "T1558",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1558/004"
+  },
+  "T1558.005": {
+   "deprecated": false,
+   "name": "Ccache Files",
+   "parent_id": "T1558",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1558/005"
+  },
+  "T1559": {
+   "deprecated": false,
+   "name": "Inter-Process Communication",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1559"
+  },
+  "T1559.001": {
+   "deprecated": false,
+   "name": "Component Object Model",
+   "parent_id": "T1559",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1559/001"
+  },
+  "T1559.002": {
+   "deprecated": false,
+   "name": "Dynamic Data Exchange",
+   "parent_id": "T1559",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1559/002"
+  },
+  "T1559.003": {
+   "deprecated": false,
+   "name": "XPC Services",
+   "parent_id": "T1559",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1559/003"
+  },
+  "T1560": {
+   "deprecated": false,
+   "name": "Archive Collected Data",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1560"
+  },
+  "T1560.001": {
+   "deprecated": false,
+   "name": "Archive via Utility",
+   "parent_id": "T1560",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1560/001"
+  },
+  "T1560.002": {
+   "deprecated": false,
+   "name": "Archive via Library",
+   "parent_id": "T1560",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1560/002"
+  },
+  "T1560.003": {
+   "deprecated": false,
+   "name": "Archive via Custom Method",
+   "parent_id": "T1560",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1560/003"
+  },
+  "T1561": {
+   "deprecated": false,
+   "name": "Disk Wipe",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1561"
+  },
+  "T1561.001": {
+   "deprecated": false,
+   "name": "Disk Content Wipe",
+   "parent_id": "T1561",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1561/001"
+  },
+  "T1561.002": {
+   "deprecated": false,
+   "name": "Disk Structure Wipe",
+   "parent_id": "T1561",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1561/002"
+  },
+  "T1562": {
+   "deprecated": true,
+   "name": "Impair Defenses",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562"
+  },
+  "T1562.001": {
+   "deprecated": true,
+   "name": "Disable or Modify Tools",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/001"
+  },
+  "T1562.002": {
+   "deprecated": true,
+   "name": "Disable Windows Event Logging",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/002"
+  },
+  "T1562.003": {
+   "deprecated": true,
+   "name": "Impair Command History Logging",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/003"
+  },
+  "T1562.004": {
+   "deprecated": true,
+   "name": "Disable or Modify System Firewall",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/004"
+  },
+  "T1562.006": {
+   "deprecated": true,
+   "name": "Indicator Blocking",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/006"
+  },
+  "T1562.007": {
+   "deprecated": true,
+   "name": "Disable or Modify Cloud Firewall",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/007"
+  },
+  "T1562.008": {
+   "deprecated": true,
+   "name": "Disable or Modify Cloud Logs",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/008"
+  },
+  "T1562.009": {
+   "deprecated": true,
+   "name": "Safe Mode Boot",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/009"
+  },
+  "T1562.010": {
+   "deprecated": true,
+   "name": "Downgrade Attack",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/010"
+  },
+  "T1562.011": {
+   "deprecated": true,
+   "name": "Spoof Security Alerting",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/011"
+  },
+  "T1562.012": {
+   "deprecated": true,
+   "name": "Disable or Modify Linux Audit System",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/012"
+  },
+  "T1562.013": {
+   "deprecated": true,
+   "name": "Disable or Modify Network Device Firewall",
+   "parent_id": "T1562",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1562/013"
+  },
+  "T1563": {
+   "deprecated": false,
+   "name": "Remote Service Session Hijacking",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1563"
+  },
+  "T1563.001": {
+   "deprecated": false,
+   "name": "SSH Hijacking",
+   "parent_id": "T1563",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1563/001"
+  },
+  "T1563.002": {
+   "deprecated": false,
+   "name": "RDP Hijacking",
+   "parent_id": "T1563",
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1563/002"
+  },
+  "T1564": {
+   "deprecated": false,
+   "name": "Hide Artifacts",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564"
+  },
+  "T1564.001": {
+   "deprecated": false,
+   "name": "Hidden Files and Directories",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/001"
+  },
+  "T1564.002": {
+   "deprecated": false,
+   "name": "Hidden Users",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/002"
+  },
+  "T1564.003": {
+   "deprecated": false,
+   "name": "Hidden Window",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/003"
+  },
+  "T1564.004": {
+   "deprecated": false,
+   "name": "NTFS File Attributes",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/004"
+  },
+  "T1564.005": {
+   "deprecated": false,
+   "name": "Hidden File System",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/005"
+  },
+  "T1564.006": {
+   "deprecated": false,
+   "name": "Run Virtual Instance",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/006"
+  },
+  "T1564.007": {
+   "deprecated": false,
+   "name": "VBA Stomping",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/007"
+  },
+  "T1564.008": {
+   "deprecated": false,
+   "name": "Email Hiding Rules",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/008"
+  },
+  "T1564.009": {
+   "deprecated": false,
+   "name": "Resource Forking",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/009"
+  },
+  "T1564.010": {
+   "deprecated": false,
+   "name": "Process Argument Spoofing",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/010"
+  },
+  "T1564.011": {
+   "deprecated": false,
+   "name": "Ignore Process Interrupts",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/011"
+  },
+  "T1564.012": {
+   "deprecated": false,
+   "name": "File/Path Exclusions",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/012"
+  },
+  "T1564.013": {
+   "deprecated": false,
+   "name": "Bind Mounts",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/013"
+  },
+  "T1564.014": {
+   "deprecated": false,
+   "name": "Extended Attributes",
+   "parent_id": "T1564",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1564/014"
+  },
+  "T1565": {
+   "deprecated": false,
+   "name": "Data Manipulation",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1565"
+  },
+  "T1565.001": {
+   "deprecated": false,
+   "name": "Stored Data Manipulation",
+   "parent_id": "T1565",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1565/001"
+  },
+  "T1565.002": {
+   "deprecated": false,
+   "name": "Transmitted Data Manipulation",
+   "parent_id": "T1565",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1565/002"
+  },
+  "T1565.003": {
+   "deprecated": false,
+   "name": "Runtime Data Manipulation",
+   "parent_id": "T1565",
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1565/003"
+  },
+  "T1566": {
+   "deprecated": false,
+   "name": "Phishing",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1566"
+  },
+  "T1566.001": {
+   "deprecated": false,
+   "name": "Spearphishing Attachment",
+   "parent_id": "T1566",
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1566/001"
+  },
+  "T1566.002": {
+   "deprecated": false,
+   "name": "Spearphishing Link",
+   "parent_id": "T1566",
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1566/002"
+  },
+  "T1566.003": {
+   "deprecated": false,
+   "name": "Spearphishing via Service",
+   "parent_id": "T1566",
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1566/003"
+  },
+  "T1566.004": {
+   "deprecated": false,
+   "name": "Spearphishing Voice",
+   "parent_id": "T1566",
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1566/004"
+  },
+  "T1567": {
+   "deprecated": false,
+   "name": "Exfiltration Over Web Service",
+   "parent_id": null,
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1567"
+  },
+  "T1567.001": {
+   "deprecated": false,
+   "name": "Exfiltration to Code Repository",
+   "parent_id": "T1567",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1567/001"
+  },
+  "T1567.002": {
+   "deprecated": false,
+   "name": "Exfiltration to Cloud Storage",
+   "parent_id": "T1567",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1567/002"
+  },
+  "T1567.003": {
+   "deprecated": false,
+   "name": "Exfiltration to Text Storage Sites",
+   "parent_id": "T1567",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1567/003"
+  },
+  "T1567.004": {
+   "deprecated": false,
+   "name": "Exfiltration Over Webhook",
+   "parent_id": "T1567",
+   "tactics": [
+    "exfiltration"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1567/004"
+  },
+  "T1568": {
+   "deprecated": false,
+   "name": "Dynamic Resolution",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1568"
+  },
+  "T1568.001": {
+   "deprecated": false,
+   "name": "Fast Flux DNS",
+   "parent_id": "T1568",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1568/001"
+  },
+  "T1568.002": {
+   "deprecated": false,
+   "name": "Domain Generation Algorithms",
+   "parent_id": "T1568",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1568/002"
+  },
+  "T1568.003": {
+   "deprecated": false,
+   "name": "DNS Calculation",
+   "parent_id": "T1568",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1568/003"
+  },
+  "T1569": {
+   "deprecated": false,
+   "name": "System Services",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1569"
+  },
+  "T1569.001": {
+   "deprecated": false,
+   "name": "Launchctl",
+   "parent_id": "T1569",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1569/001"
+  },
+  "T1569.002": {
+   "deprecated": false,
+   "name": "Service Execution",
+   "parent_id": "T1569",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1569/002"
+  },
+  "T1569.003": {
+   "deprecated": false,
+   "name": "Systemctl",
+   "parent_id": "T1569",
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1569/003"
+  },
+  "T1570": {
+   "deprecated": false,
+   "name": "Lateral Tool Transfer",
+   "parent_id": null,
+   "tactics": [
+    "lateral-movement"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1570"
+  },
+  "T1571": {
+   "deprecated": false,
+   "name": "Non-Standard Port",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1571"
+  },
+  "T1572": {
+   "deprecated": false,
+   "name": "Protocol Tunneling",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1572"
+  },
+  "T1573": {
+   "deprecated": false,
+   "name": "Encrypted Channel",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1573"
+  },
+  "T1573.001": {
+   "deprecated": false,
+   "name": "Symmetric Cryptography",
+   "parent_id": "T1573",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1573/001"
+  },
+  "T1573.002": {
+   "deprecated": false,
+   "name": "Asymmetric Cryptography",
+   "parent_id": "T1573",
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1573/002"
+  },
+  "T1574": {
+   "deprecated": false,
+   "name": "Hijack Execution Flow",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574"
+  },
+  "T1574.001": {
+   "deprecated": false,
+   "name": "DLL",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/001"
+  },
+  "T1574.002": {
+   "deprecated": true,
+   "name": "DLL Side-Loading",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/002"
+  },
+  "T1574.004": {
+   "deprecated": false,
+   "name": "Dylib Hijacking",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/004"
+  },
+  "T1574.005": {
+   "deprecated": false,
+   "name": "Executable Installer File Permissions Weakness",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/005"
+  },
+  "T1574.006": {
+   "deprecated": false,
+   "name": "Dynamic Linker Hijacking",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/006"
+  },
+  "T1574.007": {
+   "deprecated": false,
+   "name": "Path Interception by PATH Environment Variable",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/007"
+  },
+  "T1574.008": {
+   "deprecated": false,
+   "name": "Path Interception by Search Order Hijacking",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/008"
+  },
+  "T1574.009": {
+   "deprecated": false,
+   "name": "Path Interception by Unquoted Path",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/009"
+  },
+  "T1574.010": {
+   "deprecated": false,
+   "name": "Services File Permissions Weakness",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/010"
+  },
+  "T1574.011": {
+   "deprecated": false,
+   "name": "Services Registry Permissions Weakness",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/011"
+  },
+  "T1574.012": {
+   "deprecated": false,
+   "name": "COR_PROFILER",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/012"
+  },
+  "T1574.013": {
+   "deprecated": false,
+   "name": "KernelCallbackTable",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/013"
+  },
+  "T1574.014": {
+   "deprecated": false,
+   "name": "AppDomainManager",
+   "parent_id": "T1574",
+   "tactics": [
+    "stealth",
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1574/014"
+  },
+  "T1578": {
+   "deprecated": false,
+   "name": "Modify Cloud Compute Infrastructure",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1578"
+  },
+  "T1578.001": {
+   "deprecated": false,
+   "name": "Create Snapshot",
+   "parent_id": "T1578",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1578/001"
+  },
+  "T1578.002": {
+   "deprecated": false,
+   "name": "Create Cloud Instance",
+   "parent_id": "T1578",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1578/002"
+  },
+  "T1578.003": {
+   "deprecated": false,
+   "name": "Delete Cloud Instance",
+   "parent_id": "T1578",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1578/003"
+  },
+  "T1578.004": {
+   "deprecated": false,
+   "name": "Revert Cloud Instance",
+   "parent_id": "T1578",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1578/004"
+  },
+  "T1578.005": {
+   "deprecated": false,
+   "name": "Modify Cloud Compute Configurations",
+   "parent_id": "T1578",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1578/005"
+  },
+  "T1580": {
+   "deprecated": false,
+   "name": "Cloud Infrastructure Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1580"
+  },
+  "T1583": {
+   "deprecated": false,
+   "name": "Acquire Infrastructure",
+   "parent_id": null,
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1583"
+  },
+  "T1583.001": {
+   "deprecated": false,
+   "name": "Domains",
+   "parent_id": "T1583",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1583/001"
+  },
+  "T1583.002": {
+   "deprecated": false,
+   "name": "DNS Server",
+   "parent_id": "T1583",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1583/002"
+  },
+  "T1583.003": {
+   "deprecated": false,
+   "name": "Virtual Private Server",
+   "parent_id": "T1583",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1583/003"
+  },
+  "T1583.004": {
+   "deprecated": false,
+   "name": "Server",
+   "parent_id": "T1583",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1583/004"
+  },
+  "T1583.005": {
+   "deprecated": false,
+   "name": "Botnet",
+   "parent_id": "T1583",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1583/005"
+  },
+  "T1583.006": {
+   "deprecated": false,
+   "name": "Web Services",
+   "parent_id": "T1583",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1583/006"
+  },
+  "T1583.007": {
+   "deprecated": false,
+   "name": "Serverless",
+   "parent_id": "T1583",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1583/007"
+  },
+  "T1583.008": {
+   "deprecated": false,
+   "name": "Malvertising",
+   "parent_id": "T1583",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1583/008"
+  },
+  "T1584": {
+   "deprecated": false,
+   "name": "Compromise Infrastructure",
+   "parent_id": null,
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1584"
+  },
+  "T1584.001": {
+   "deprecated": false,
+   "name": "Domains",
+   "parent_id": "T1584",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1584/001"
+  },
+  "T1584.002": {
+   "deprecated": false,
+   "name": "DNS Server",
+   "parent_id": "T1584",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1584/002"
+  },
+  "T1584.003": {
+   "deprecated": false,
+   "name": "Virtual Private Server",
+   "parent_id": "T1584",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1584/003"
+  },
+  "T1584.004": {
+   "deprecated": false,
+   "name": "Server",
+   "parent_id": "T1584",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1584/004"
+  },
+  "T1584.005": {
+   "deprecated": false,
+   "name": "Botnet",
+   "parent_id": "T1584",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1584/005"
+  },
+  "T1584.006": {
+   "deprecated": false,
+   "name": "Web Services",
+   "parent_id": "T1584",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1584/006"
+  },
+  "T1584.007": {
+   "deprecated": false,
+   "name": "Serverless",
+   "parent_id": "T1584",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1584/007"
+  },
+  "T1584.008": {
+   "deprecated": false,
+   "name": "Network Devices",
+   "parent_id": "T1584",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1584/008"
+  },
+  "T1585": {
+   "deprecated": false,
+   "name": "Establish Accounts",
+   "parent_id": null,
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1585"
+  },
+  "T1585.001": {
+   "deprecated": false,
+   "name": "Social Media Accounts",
+   "parent_id": "T1585",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1585/001"
+  },
+  "T1585.002": {
+   "deprecated": false,
+   "name": "Email Accounts",
+   "parent_id": "T1585",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1585/002"
+  },
+  "T1585.003": {
+   "deprecated": false,
+   "name": "Cloud Accounts",
+   "parent_id": "T1585",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1585/003"
+  },
+  "T1586": {
+   "deprecated": false,
+   "name": "Compromise Accounts",
+   "parent_id": null,
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1586"
+  },
+  "T1586.001": {
+   "deprecated": false,
+   "name": "Social Media Accounts",
+   "parent_id": "T1586",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1586/001"
+  },
+  "T1586.002": {
+   "deprecated": false,
+   "name": "Email Accounts",
+   "parent_id": "T1586",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1586/002"
+  },
+  "T1586.003": {
+   "deprecated": false,
+   "name": "Cloud Accounts",
+   "parent_id": "T1586",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1586/003"
+  },
+  "T1587": {
+   "deprecated": false,
+   "name": "Develop Capabilities",
+   "parent_id": null,
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1587"
+  },
+  "T1587.001": {
+   "deprecated": false,
+   "name": "Malware",
+   "parent_id": "T1587",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1587/001"
+  },
+  "T1587.002": {
+   "deprecated": false,
+   "name": "Code Signing Certificates",
+   "parent_id": "T1587",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1587/002"
+  },
+  "T1587.003": {
+   "deprecated": false,
+   "name": "Digital Certificates",
+   "parent_id": "T1587",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1587/003"
+  },
+  "T1587.004": {
+   "deprecated": false,
+   "name": "Exploits",
+   "parent_id": "T1587",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1587/004"
+  },
+  "T1588": {
+   "deprecated": false,
+   "name": "Obtain Capabilities",
+   "parent_id": null,
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1588"
+  },
+  "T1588.001": {
+   "deprecated": false,
+   "name": "Malware",
+   "parent_id": "T1588",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1588/001"
+  },
+  "T1588.002": {
+   "deprecated": false,
+   "name": "Tool",
+   "parent_id": "T1588",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1588/002"
+  },
+  "T1588.003": {
+   "deprecated": false,
+   "name": "Code Signing Certificates",
+   "parent_id": "T1588",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1588/003"
+  },
+  "T1588.004": {
+   "deprecated": false,
+   "name": "Digital Certificates",
+   "parent_id": "T1588",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1588/004"
+  },
+  "T1588.005": {
+   "deprecated": false,
+   "name": "Exploits",
+   "parent_id": "T1588",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1588/005"
+  },
+  "T1588.006": {
+   "deprecated": false,
+   "name": "Vulnerabilities",
+   "parent_id": "T1588",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1588/006"
+  },
+  "T1588.007": {
+   "deprecated": false,
+   "name": "Artificial Intelligence",
+   "parent_id": "T1588",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1588/007"
+  },
+  "T1589": {
+   "deprecated": false,
+   "name": "Gather Victim Identity Information",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1589"
+  },
+  "T1589.001": {
+   "deprecated": false,
+   "name": "Credentials",
+   "parent_id": "T1589",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1589/001"
+  },
+  "T1589.002": {
+   "deprecated": false,
+   "name": "Email Addresses",
+   "parent_id": "T1589",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1589/002"
+  },
+  "T1589.003": {
+   "deprecated": false,
+   "name": "Employee Names",
+   "parent_id": "T1589",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1589/003"
+  },
+  "T1590": {
+   "deprecated": false,
+   "name": "Gather Victim Network Information",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1590"
+  },
+  "T1590.001": {
+   "deprecated": false,
+   "name": "Domain Properties",
+   "parent_id": "T1590",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1590/001"
+  },
+  "T1590.002": {
+   "deprecated": false,
+   "name": "DNS",
+   "parent_id": "T1590",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1590/002"
+  },
+  "T1590.003": {
+   "deprecated": false,
+   "name": "Network Trust Dependencies",
+   "parent_id": "T1590",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1590/003"
+  },
+  "T1590.004": {
+   "deprecated": false,
+   "name": "Network Topology",
+   "parent_id": "T1590",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1590/004"
+  },
+  "T1590.005": {
+   "deprecated": false,
+   "name": "IP Addresses",
+   "parent_id": "T1590",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1590/005"
+  },
+  "T1590.006": {
+   "deprecated": false,
+   "name": "Network Security Appliances",
+   "parent_id": "T1590",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1590/006"
+  },
+  "T1591": {
+   "deprecated": false,
+   "name": "Gather Victim Org Information",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1591"
+  },
+  "T1591.001": {
+   "deprecated": false,
+   "name": "Determine Physical Locations",
+   "parent_id": "T1591",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1591/001"
+  },
+  "T1591.002": {
+   "deprecated": false,
+   "name": "Business Relationships",
+   "parent_id": "T1591",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1591/002"
+  },
+  "T1591.003": {
+   "deprecated": false,
+   "name": "Identify Business Tempo",
+   "parent_id": "T1591",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1591/003"
+  },
+  "T1591.004": {
+   "deprecated": false,
+   "name": "Identify Roles",
+   "parent_id": "T1591",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1591/004"
+  },
+  "T1592": {
+   "deprecated": false,
+   "name": "Gather Victim Host Information",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1592"
+  },
+  "T1592.001": {
+   "deprecated": false,
+   "name": "Hardware",
+   "parent_id": "T1592",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1592/001"
+  },
+  "T1592.002": {
+   "deprecated": false,
+   "name": "Software",
+   "parent_id": "T1592",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1592/002"
+  },
+  "T1592.003": {
+   "deprecated": false,
+   "name": "Firmware",
+   "parent_id": "T1592",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1592/003"
+  },
+  "T1592.004": {
+   "deprecated": false,
+   "name": "Client Configurations",
+   "parent_id": "T1592",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1592/004"
+  },
+  "T1593": {
+   "deprecated": false,
+   "name": "Search Open Websites/Domains",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1593"
+  },
+  "T1593.001": {
+   "deprecated": false,
+   "name": "Social Media",
+   "parent_id": "T1593",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1593/001"
+  },
+  "T1593.002": {
+   "deprecated": false,
+   "name": "Search Engines",
+   "parent_id": "T1593",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1593/002"
+  },
+  "T1593.003": {
+   "deprecated": false,
+   "name": "Code Repositories",
+   "parent_id": "T1593",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1593/003"
+  },
+  "T1594": {
+   "deprecated": false,
+   "name": "Search Victim-Owned Websites",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1594"
+  },
+  "T1595": {
+   "deprecated": false,
+   "name": "Active Scanning",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1595"
+  },
+  "T1595.001": {
+   "deprecated": false,
+   "name": "Scanning IP Blocks",
+   "parent_id": "T1595",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1595/001"
+  },
+  "T1595.002": {
+   "deprecated": false,
+   "name": "Vulnerability Scanning",
+   "parent_id": "T1595",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1595/002"
+  },
+  "T1595.003": {
+   "deprecated": false,
+   "name": "Wordlist Scanning",
+   "parent_id": "T1595",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1595/003"
+  },
+  "T1596": {
+   "deprecated": false,
+   "name": "Search Open Technical Databases",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1596"
+  },
+  "T1596.001": {
+   "deprecated": false,
+   "name": "DNS/Passive DNS",
+   "parent_id": "T1596",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1596/001"
+  },
+  "T1596.002": {
+   "deprecated": false,
+   "name": "WHOIS",
+   "parent_id": "T1596",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1596/002"
+  },
+  "T1596.003": {
+   "deprecated": false,
+   "name": "Digital Certificates",
+   "parent_id": "T1596",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1596/003"
+  },
+  "T1596.004": {
+   "deprecated": false,
+   "name": "CDNs",
+   "parent_id": "T1596",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1596/004"
+  },
+  "T1596.005": {
+   "deprecated": false,
+   "name": "Scan Databases",
+   "parent_id": "T1596",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1596/005"
+  },
+  "T1597": {
+   "deprecated": false,
+   "name": "Search Closed Sources",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1597"
+  },
+  "T1597.001": {
+   "deprecated": false,
+   "name": "Threat Intel Vendors",
+   "parent_id": "T1597",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1597/001"
+  },
+  "T1597.002": {
+   "deprecated": false,
+   "name": "Purchase Technical Data",
+   "parent_id": "T1597",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1597/002"
+  },
+  "T1598": {
+   "deprecated": false,
+   "name": "Phishing for Information",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1598"
+  },
+  "T1598.001": {
+   "deprecated": false,
+   "name": "Spearphishing Service",
+   "parent_id": "T1598",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1598/001"
+  },
+  "T1598.002": {
+   "deprecated": false,
+   "name": "Spearphishing Attachment",
+   "parent_id": "T1598",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1598/002"
+  },
+  "T1598.003": {
+   "deprecated": false,
+   "name": "Spearphishing Link",
+   "parent_id": "T1598",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1598/003"
+  },
+  "T1598.004": {
+   "deprecated": false,
+   "name": "Spearphishing Voice",
+   "parent_id": "T1598",
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1598/004"
+  },
+  "T1599": {
+   "deprecated": false,
+   "name": "Network Boundary Bridging",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1599"
+  },
+  "T1599.001": {
+   "deprecated": false,
+   "name": "Network Address Translation Traversal",
+   "parent_id": "T1599",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1599/001"
+  },
+  "T1600": {
+   "deprecated": false,
+   "name": "Weaken Encryption",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1600"
+  },
+  "T1600.001": {
+   "deprecated": false,
+   "name": "Reduce Key Space",
+   "parent_id": "T1600",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1600/001"
+  },
+  "T1600.002": {
+   "deprecated": false,
+   "name": "Disable Crypto Hardware",
+   "parent_id": "T1600",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1600/002"
+  },
+  "T1601": {
+   "deprecated": false,
+   "name": "Modify System Image",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1601"
+  },
+  "T1601.001": {
+   "deprecated": false,
+   "name": "Patch System Image",
+   "parent_id": "T1601",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1601/001"
+  },
+  "T1601.002": {
+   "deprecated": false,
+   "name": "Downgrade System Image",
+   "parent_id": "T1601",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1601/002"
+  },
+  "T1602": {
+   "deprecated": false,
+   "name": "Data from Configuration Repository",
+   "parent_id": null,
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1602"
+  },
+  "T1602.001": {
+   "deprecated": false,
+   "name": "SNMP (MIB Dump)",
+   "parent_id": "T1602",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1602/001"
+  },
+  "T1602.002": {
+   "deprecated": false,
+   "name": "Network Device Configuration Dump",
+   "parent_id": "T1602",
+   "tactics": [
+    "collection"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1602/002"
+  },
+  "T1606": {
+   "deprecated": false,
+   "name": "Forge Web Credentials",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1606"
+  },
+  "T1606.001": {
+   "deprecated": false,
+   "name": "Web Cookies",
+   "parent_id": "T1606",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1606/001"
+  },
+  "T1606.002": {
+   "deprecated": false,
+   "name": "SAML Tokens",
+   "parent_id": "T1606",
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1606/002"
+  },
+  "T1608": {
+   "deprecated": false,
+   "name": "Stage Capabilities",
+   "parent_id": null,
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1608"
+  },
+  "T1608.001": {
+   "deprecated": false,
+   "name": "Upload Malware",
+   "parent_id": "T1608",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1608/001"
+  },
+  "T1608.002": {
+   "deprecated": false,
+   "name": "Upload Tool",
+   "parent_id": "T1608",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1608/002"
+  },
+  "T1608.003": {
+   "deprecated": false,
+   "name": "Install Digital Certificate",
+   "parent_id": "T1608",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1608/003"
+  },
+  "T1608.004": {
+   "deprecated": false,
+   "name": "Drive-by Target",
+   "parent_id": "T1608",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1608/004"
+  },
+  "T1608.005": {
+   "deprecated": false,
+   "name": "Link Target",
+   "parent_id": "T1608",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1608/005"
+  },
+  "T1608.006": {
+   "deprecated": false,
+   "name": "SEO Poisoning",
+   "parent_id": "T1608",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1608/006"
+  },
+  "T1609": {
+   "deprecated": false,
+   "name": "Container Administration Command",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1609"
+  },
+  "T1610": {
+   "deprecated": false,
+   "name": "Deploy Container",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1610"
+  },
+  "T1611": {
+   "deprecated": false,
+   "name": "Escape to Host",
+   "parent_id": null,
+   "tactics": [
+    "privilege-escalation"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1611"
+  },
+  "T1612": {
+   "deprecated": false,
+   "name": "Build Image on Host",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1612"
+  },
+  "T1613": {
+   "deprecated": false,
+   "name": "Container and Resource Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1613"
+  },
+  "T1614": {
+   "deprecated": false,
+   "name": "System Location Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1614"
+  },
+  "T1614.001": {
+   "deprecated": false,
+   "name": "System Language Discovery",
+   "parent_id": "T1614",
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1614/001"
+  },
+  "T1615": {
+   "deprecated": false,
+   "name": "Group Policy Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1615"
+  },
+  "T1619": {
+   "deprecated": false,
+   "name": "Cloud Storage Object Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1619"
+  },
+  "T1620": {
+   "deprecated": false,
+   "name": "Reflective Code Loading",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1620"
+  },
+  "T1621": {
+   "deprecated": false,
+   "name": "Multi-Factor Authentication Request Generation",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1621"
+  },
+  "T1622": {
+   "deprecated": false,
+   "name": "Debugger Evasion",
+   "parent_id": null,
+   "tactics": [
+    "stealth",
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1622"
+  },
+  "T1647": {
+   "deprecated": false,
+   "name": "Plist File Modification",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1647"
+  },
+  "T1648": {
+   "deprecated": false,
+   "name": "Serverless Execution",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1648"
+  },
+  "T1649": {
+   "deprecated": false,
+   "name": "Steal or Forge Authentication Certificates",
+   "parent_id": null,
+   "tactics": [
+    "credential-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1649"
+  },
+  "T1650": {
+   "deprecated": false,
+   "name": "Acquire Access",
+   "parent_id": null,
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1650"
+  },
+  "T1651": {
+   "deprecated": false,
+   "name": "Cloud Administration Command",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1651"
+  },
+  "T1652": {
+   "deprecated": false,
+   "name": "Device Driver Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1652"
+  },
+  "T1653": {
+   "deprecated": false,
+   "name": "Power Settings",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1653"
+  },
+  "T1654": {
+   "deprecated": false,
+   "name": "Log Enumeration",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1654"
+  },
+  "T1656": {
+   "deprecated": true,
+   "name": "Impersonation",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1656"
+  },
+  "T1657": {
+   "deprecated": false,
+   "name": "Financial Theft",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1657"
+  },
+  "T1659": {
+   "deprecated": false,
+   "name": "Content Injection",
+   "parent_id": null,
+   "tactics": [
+    "initial-access",
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1659"
+  },
+  "T1665": {
+   "deprecated": false,
+   "name": "Hide Infrastructure",
+   "parent_id": null,
+   "tactics": [
+    "command-and-control"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1665"
+  },
+  "T1666": {
+   "deprecated": false,
+   "name": "Modify Cloud Resource Hierarchy",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1666"
+  },
+  "T1667": {
+   "deprecated": false,
+   "name": "Email Bombing",
+   "parent_id": null,
+   "tactics": [
+    "impact"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1667"
+  },
+  "T1668": {
+   "deprecated": false,
+   "name": "Exclusive Control",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1668"
+  },
+  "T1669": {
+   "deprecated": false,
+   "name": "Wi-Fi Networks",
+   "parent_id": null,
+   "tactics": [
+    "initial-access"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1669"
+  },
+  "T1671": {
+   "deprecated": false,
+   "name": "Cloud Application Integration",
+   "parent_id": null,
+   "tactics": [
+    "persistence"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1671"
+  },
+  "T1672": {
+   "deprecated": true,
+   "name": "Email Spoofing",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1672"
+  },
+  "T1673": {
+   "deprecated": false,
+   "name": "Virtual Machine Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1673"
+  },
+  "T1674": {
+   "deprecated": false,
+   "name": "Input Injection",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1674"
+  },
+  "T1675": {
+   "deprecated": false,
+   "name": "ESXi Administration Command",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1675"
+  },
+  "T1677": {
+   "deprecated": false,
+   "name": "Poisoned Pipeline Execution",
+   "parent_id": null,
+   "tactics": [
+    "execution"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1677"
+  },
+  "T1678": {
+   "deprecated": false,
+   "name": "Delay Execution",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1678"
+  },
+  "T1679": {
+   "deprecated": false,
+   "name": "Selective Exclusion",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1679"
+  },
+  "T1680": {
+   "deprecated": false,
+   "name": "Local Storage Discovery",
+   "parent_id": null,
+   "tactics": [
+    "discovery"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1680"
+  },
+  "T1681": {
+   "deprecated": false,
+   "name": "Search Threat Vendor Data",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1681"
+  },
+  "T1682": {
+   "deprecated": false,
+   "name": "Query Public AI Services",
+   "parent_id": null,
+   "tactics": [
+    "reconnaissance"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1682"
+  },
+  "T1683": {
+   "deprecated": false,
+   "name": "Generate Content",
+   "parent_id": null,
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1683"
+  },
+  "T1683.001": {
+   "deprecated": false,
+   "name": "Written Content",
+   "parent_id": "T1683",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1683/001"
+  },
+  "T1683.002": {
+   "deprecated": false,
+   "name": "Audio-Visual Content",
+   "parent_id": "T1683",
+   "tactics": [
+    "resource-development"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1683/002"
+  },
+  "T1684": {
+   "deprecated": false,
+   "name": "Social Engineering",
+   "parent_id": null,
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1684"
+  },
+  "T1684.001": {
+   "deprecated": false,
+   "name": "Impersonation",
+   "parent_id": "T1684",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1684/001"
+  },
+  "T1684.002": {
+   "deprecated": false,
+   "name": "Email Spoofing",
+   "parent_id": "T1684",
+   "tactics": [
+    "stealth"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1684/002"
+  },
+  "T1685": {
+   "deprecated": false,
+   "name": "Disable or Modify Tools",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1685"
+  },
+  "T1685.001": {
+   "deprecated": false,
+   "name": "Disable or Modify Windows Event Log",
+   "parent_id": "T1685",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1685/001"
+  },
+  "T1685.002": {
+   "deprecated": false,
+   "name": "Disable or Modify Cloud Log",
+   "parent_id": "T1685",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1685/002"
+  },
+  "T1685.003": {
+   "deprecated": false,
+   "name": "Modify or Spoof Tool UI",
+   "parent_id": "T1685",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1685/003"
+  },
+  "T1685.004": {
+   "deprecated": false,
+   "name": "Disable or Modify Linux Audit System Log",
+   "parent_id": "T1685",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1685/004"
+  },
+  "T1685.005": {
+   "deprecated": false,
+   "name": "Clear Windows Event Logs",
+   "parent_id": "T1685",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1685/005"
+  },
+  "T1685.006": {
+   "deprecated": false,
+   "name": "Clear Linux or Mac System Logs",
+   "parent_id": "T1685",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1685/006"
+  },
+  "T1686": {
+   "deprecated": false,
+   "name": "Disable or Modify System Firewall",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1686"
+  },
+  "T1686.001": {
+   "deprecated": false,
+   "name": "Cloud Firewall",
+   "parent_id": "T1686",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1686/001"
+  },
+  "T1686.002": {
+   "deprecated": false,
+   "name": "Network Device Firewall",
+   "parent_id": "T1686",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1686/002"
+  },
+  "T1686.003": {
+   "deprecated": false,
+   "name": "Windows Host Firewall",
+   "parent_id": "T1686",
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1686/003"
+  },
+  "T1687": {
+   "deprecated": false,
+   "name": "Exploitation for Defense Impairment",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1687"
+  },
+  "T1688": {
+   "deprecated": false,
+   "name": "Safe Mode Boot",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1688"
+  },
+  "T1689": {
+   "deprecated": false,
+   "name": "Downgrade Attack",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1689"
+  },
+  "T1690": {
+   "deprecated": false,
+   "name": "Prevent Command History Logging",
+   "parent_id": null,
+   "tactics": [
+    "defense-impairment"
+   ],
+   "url": "https://attack.mitre.org/techniques/T1690"
+  }
+ }
+}

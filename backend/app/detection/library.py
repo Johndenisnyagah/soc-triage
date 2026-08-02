@@ -9,6 +9,21 @@ knowing CloudTrail exists. That is the whole point of decision 5 in CLAUDE.md.
 Every `technique` here is statically mapped. The LLM is never asked to supply
 one for these -- it may only propose a technique where this field is None, and
 even then the ID is validated against the ATT&CK catalog before use.
+
+Mappings verified against ATT&CK v19.1 and MITRE's v18.1->v19.0 changelog
+(https://attack.mitre.org/docs/changelogs/v18.1-v19.0/changelog.json), which
+carries the authoritative `revoked_by` edges for the Defense Evasion split:
+
+  T1110      credential-access               absent from the changelog, so
+  T1087      discovery                       untouched by the restructure --
+  T1098      persistence, priv-escalation    only patched in v19.1
+  T1685.002  defense-impairment              added in v19.0; the changelog
+                                             records it as revoking T1562.008
+
+"Still resolves" only proves a technique is not deprecated. The changelog is
+what proves the mapping is still the *right* one, which is why the check is
+recorded here rather than left to `test_every_rule_technique_resolves` -- that
+test runs offline and can only catch the first kind of staleness.
 """
 
 from __future__ import annotations
@@ -165,7 +180,14 @@ class CloudLoggingDisabled(SingleEventRule):
     rule_id = "cloud_logging_disabled"
     title = "Cloud audit logging disabled"
     severity = Severity.HIGH
-    technique = "T1562.008"
+    # Was T1562.008 "Disable or Modify Cloud Logs". ATT&CK v19.0 revoked the
+    # whole T1562 Impair Defenses family in favour of T1685 under the new
+    # `defense-impairment` tactic; the changelog records the edge explicitly as
+    # T1562.008 revoked_by T1685.002. The catalog validator caught the stale ID
+    # -- which is the point of decision 8: a plausible-looking technique that no
+    # longer exists resolves to None and contributes no tactic, silently
+    # under-escalating every incident containing it.
+    technique = "T1685.002"
     subscribes_to = frozenset({Category.CONFIGURATION})
 
     def matches(self, event: NormalizedEvent) -> bool:

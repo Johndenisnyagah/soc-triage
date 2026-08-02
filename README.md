@@ -32,7 +32,7 @@ are next.
 - [x] **Persistence** — event/entity models, ingest endpoint, global deduplication
 - [x] **Detection** — source-agnostic rules over event windows
 - [x] **Correlation** — incident grouping by entity key and time window
-- [ ] **MITRE ATT&CK mapping** — static rule mapping, LLM proposal, catalog validation
+- [x] **MITRE ATT&CK mapping** — static rule mapping and catalog validation (LLM proposal path not yet built)
 - [ ] **LLM enrichment** — summaries with confidence-gated deterministic fallback
 - [ ] **Windows Security parser**
 - [ ] **Executive reports and response playbooks**
