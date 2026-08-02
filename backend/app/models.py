@@ -38,31 +38,12 @@ from app.ingest.schema import (
     NormalizedEvent,
     Outcome,
     SourceType,
+    to_utc,
 )
 
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
-
-
-def _to_utc(value: datetime | None) -> datetime | None:
-    """Normalize to UTC before persisting, and after loading.
-
-    SQLite's `DateTime(timezone=True)` stores wall-clock time and throws the
-    offset away, so a `+02:00` event written as-is comes back claiming to be
-    two hours later than it was. Converting on write means the naive value in
-    the column is always UTC, which is what makes re-stamping it UTC on read
-    correct rather than merely well-formed.
-
-    Naive input is treated as already-UTC: `ParseContext.assume_tz` defaults to
-    UTC and parsers attach it, so a naive timestamp reaching here means nobody
-    ever knew the zone. Guessing anything else would move the event.
-    """
-    if value is None:
-        return None
-    if value.tzinfo is None:
-        return value.replace(tzinfo=timezone.utc)
-    return value.astimezone(timezone.utc)
 
 
 class Ingest(Base):
@@ -149,7 +130,7 @@ class Event(Base):
             source_type=str(event.source_type),
             raw=event.raw,
             dedup_hash=event.dedup_hash(),
-            timestamp=_to_utc(event.timestamp),
+            timestamp=to_utc(event.timestamp),
             category=str(event.category),
             action=event.action,
             outcome=str(event.outcome),
@@ -191,7 +172,7 @@ class Event(Base):
         return NormalizedEvent(
             source_type=SourceType(self.source_type),
             raw=self.raw,
-            timestamp=_to_utc(self.timestamp),
+            timestamp=to_utc(self.timestamp),
             category=Category(self.category),
             action=self.action,
             outcome=Outcome(self.outcome),

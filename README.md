@@ -66,8 +66,8 @@ indexed query.
 ## Quick start
 
 ```bash
-git clone https://github.com/Johndenisnyagah/soc-triage-.git
-cd soc-triage-/backend
+git clone https://github.com/Johndenisnyagah/soc-triage.git
+cd soc-triage/backend
 
 python -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate

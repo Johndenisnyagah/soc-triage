@@ -9,9 +9,33 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import StrEnum
 from typing import Any
+
+
+def to_utc(value: datetime | None) -> datetime | None:
+    """Normalize a timestamp to UTC.
+
+    Lives here rather than in `models` because `dedup_hash()` needs it and
+    `models` already imports this module -- the dependency only runs one way.
+
+    Two callers, one definition, deliberately:
+
+    * `dedup_hash()`, so the same instant written `04:41:07+00:00` and
+      `06:41:07+02:00` produces one fingerprint instead of two rows.
+    * `Event.from_normalized` / `to_normalized`, because SQLite's
+      `DateTime(timezone=True)` stores wall-clock time and discards the offset.
+
+    Naive input is treated as already-UTC: `ParseContext.assume_tz` defaults to
+    UTC and parsers attach it, so a naive value reaching here means the zone was
+    never known. Guessing anything else would move the event.
+    """
+    if value is None:
+        return None
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
 
 
 class SourceType(StrEnum):
@@ -121,11 +145,20 @@ class NormalizedEvent:
         Includes `source_event_id` so that genuinely distinct events sharing a
         one-second timestamp stay distinct. Re-ingesting the same file still
         produces the same hashes, so idempotence is preserved.
+
+        The timestamp is normalized to UTC first. Without that, one instant
+        expressed in two offsets -- the same event exported from a host whose
+        `ParseContext.assume_tz` differs from a previous run's -- fingerprints
+        differently and lands as a second row, which is precisely the silent
+        duplicate the global unique index exists to prevent. Every parser emits
+        UTC today, so this changes no existing hash; it closes the gap
+        `assume_tz` would eventually open.
         """
+        timestamp = to_utc(self.timestamp)
         parts = [
             self.source_type,
             self.source_event_id or "",
-            self.timestamp.isoformat() if self.timestamp else "",
+            timestamp.isoformat() if timestamp else "",
             self.category,
             self.action,
             self.outcome,
