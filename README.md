@@ -6,10 +6,16 @@ Windows domain controllers, and an analyst has to decide which handful of them m
 Most of that time goes to mechanical work: reading raw log formats, pivoting between
 sources to check whether the same address appears twice, and writing up what happened.
 
-This pipeline automates that. It ingests raw logs from multiple sources, normalizes
-them into a single event schema, detects incidents with deterministic rules, and uses
-a language model to explain what it found — MITRE ATT&CK mapping, executive summaries,
-and response playbooks.
+This pipeline automates that. It ingests raw logs — Linux `sshd` over syslog and AWS
+CloudTrail today, with Windows Security event logs planned — normalizes them into a
+single event schema, detects incidents with deterministic rules, and uses a language
+model to explain what it found: MITRE ATT&CK mapping, executive summaries, and
+response playbooks.
+
+The source list is the part worth reading carefully. Two sources are implemented and
+tested; Windows is designed for but not built. Nothing in the detection layer is
+source-specific, so adding it is a parser rather than a rewrite — but "planned" and
+"present" are different claims, and the checklist below is the authoritative one.
 
 The architectural constraint the whole project is built around: **rules detect, AI
 explains.** The model never creates, suppresses, or re-scores an incident. If the LLM
@@ -118,6 +124,85 @@ Both files together produce a single entity key `ip:203.0.113.5` spanning 27
 events across both sources — an SSH brute-force burst, a successful SSH login,
 then AWS console logins and IAM changes from that same address. That is the
 cross-source correlation the detection and incident layers are being built on.
+
+## What it produces
+
+`scripts/run_detection.py` ingests both sample files through the real endpoint, reads
+the persisted events back out, and runs detection and correlation over them. It goes
+through persistence deliberately: deduplication is part of the semantics, so a tool
+that ran rules over freshly parsed events would double-count and disagree with what
+the API produces.
+
+This is verbatim output, not a mock-up:
+
+```
+$ python scripts/run_detection.py ../sample_logs
+# parse-stats table trimmed for length — it is the same per-file counts shown in
+# Quick start above. Everything from here down is unedited.
+
+stats: events_in=28 no_timestamp=0 entities=11 rules=6 findings=19 incidents=1
+
+==============================================================================
+INC-0001  [CRITICAL]  principal:arn:aws:iam::123456789012:user/deploy
+==============================================================================
+  when      04:41:07-04:56:02
+  sources   aws_cloudtrail+syslog_sshd
+  tactics   credential-access, defense-impairment, discovery, persistence, privilege-escalation
+  entities  host:123456789012, host:webserver01, ip:203.0.113.5, principal:arn:aws:iam::123456789012:user/deploy, user:deploy, user:root
+  findings  6
+    [CRITICAL] T1110      Successful authentication after repeated failures
+               rule=brute_force_success  evidence=17  04:41:07-04:41:29
+               leading_count=16, window=0:10:00
+    [HIGH    ] T1098      Access key created after suspicious authentication
+               rule=access_key_after_suspicious_auth  evidence=19  04:41:07-04:55:10
+               leading_count=18, window=1:00:00
+    [HIGH    ] T1110      Repeated authentication failures
+               rule=brute_force_auth  evidence=16  04:41:07-04:41:24
+               count=16, window=0:10:00
+    [HIGH    ] T1685.002  Cloud audit logging disabled
+               rule=cloud_logging_disabled  evidence=1  04:56:02-04:56:02
+               outcome=failure, target=cloudtrail.amazonaws.com:StopLogging
+    [HIGH    ] T1098      Administrator policy attached to principal
+               rule=admin_policy_attached  evidence=1  04:55:33-04:55:33
+               policy_arn=arn:aws:iam::aws:policy/AdministratorAccess
+    [MEDIUM  ] T1087      Authentication attempts against non-existent accounts
+               rule=invalid_user_enumeration  evidence=6  04:41:14-04:41:21
+               count=6, distinct_count=3, distinct_values=['admin', 'oracle', 'postgres'], window=0:10:00
+
+  summary
+    CRITICAL incident on principal:arn:aws:iam::123456789012:user/deploy: 6 detections across 5 ATT&CK tactics. Activity ran from 2026-08-02 04:41:07 to 04:56:02 UTC, a span of 14 minutes. Evidence spans 2 log sources (syslog_sshd, aws_cloudtrail), which is why these detections were correlated into one incident rather than treated separately. Tactics observed: credential access, defense impairment, discovery, persistence, privilege escalation. Entities involved: host:123456789012, host:webserver01, ip:203.0.113.5, principal:arn:aws:iam::123456789012:user/deploy, user:deploy, user:root.
+
+    Timeline:
+      04:41:07  Successful authentication after repeated failures [T1110 Brute Force] (17 events)
+      04:41:07  Access key created after suspicious authentication [T1098 Account Manipulation] (19 events)
+      04:41:07  Repeated authentication failures [T1110 Brute Force] (16 events)
+      04:41:14  Authentication attempts against non-existent accounts [T1087 Account Discovery] (6 events)
+      04:55:33  Administrator policy attached to principal [T1098 Account Manipulation] (1 event)
+      04:56:02  Cloud audit logging disabled [T1685.002 Disable or Modify Cloud Log] (1 event)
+```
+
+Nineteen findings became **one incident**, and that collapse is the whole point.
+
+Six of those nineteen survive as distinct observations; the other thirteen were
+duplicate views of the same activity, because the engine files a burst separately
+under every entity key its evidence touches — `ip:`, `user:`, and `host:` — and
+correlation absorbs the narrower copies.
+
+What is left reads as one story spanning both log sources. An SSH brute-force burst
+against `webserver01` (16 failures) lands a successful login, three non-existent
+accounts are probed along the way, and then — from the same `ip:203.0.113.5`, now as
+an AWS principal — an access key is minted, `AdministratorAccess` is attached, and
+something tries to stop CloudTrail logging. The two halves never share a log format
+or a field name. They share an entity key, which is what joins them.
+
+Severity is `CRITICAL` because five distinct ATT&CK tactics are represented, not
+because six rules fired. Twenty brute-force findings would still be one tactic and one
+story; credential access → discovery → persistence → privilege escalation → defense
+impairment is a kill chain.
+
+The `summary` block is generated with no model involved. It is what ships when the LLM
+is unavailable or its output fails validation, which is why it is written and tested
+before any prompt exists.
 
 ## Design decisions
 
