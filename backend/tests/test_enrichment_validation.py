@@ -26,10 +26,12 @@ from detection_helpers import auth_failure, finding
 
 from app.detection.correlation import Incident, correlate
 from app.enrichment.validation import (
+    MAX_ACTION_CHARS,
     MAX_EVIDENCE_LINE_CHARS,
     MAX_EVIDENCE_LINES,
     MAX_NARRATIVE_CHARS,
     MAX_PROPOSED_TECHNIQUES,
+    MAX_RECOMMENDED_ACTIONS,
     MAX_SUMMARY_CHARS,
     Source,
     enrich_deterministic,
@@ -253,6 +255,150 @@ def test_a_deprecated_technique_is_rejected_identically():
 
     assert result is None
     assert codes(failures) == ["unknown_technique"]
+
+
+def test_a_well_formed_playbook_id_is_accepted():
+    """The control for the rejection tests below. Shape only -- no library
+    exists yet, so a well-formed ID naming a playbook nobody wrote still
+    passes, and that is the documented state until step 8."""
+    for playbook_id in ("pb-brute-force", "brute_force", "t1110", "abc", "a" * 64):
+        _, failures = validate(payload(playbook_id=playbook_id), incident_with())
+
+        assert failures == [], playbook_id
+
+
+def test_a_non_string_playbook_id_is_rejected():
+    result, failures = validate(payload(playbook_id=1110), incident_with())
+
+    assert result is None
+    assert codes(failures) == ["wrong_type"]
+
+
+def test_a_free_text_playbook_id_is_rejected():
+    """A model answering the question in prose instead of with a key. Uppercase
+    and spaces are both outside the character class."""
+    result, failures = validate(
+        payload(playbook_id="Respond to SSH brute force"), incident_with()
+    )
+
+    assert result is None
+    assert codes(failures) == ["malformed_playbook_id"]
+
+
+def test_a_playbook_id_containing_a_path_separator_is_rejected():
+    """The reason shape validation is worth having before the library exists:
+    this ID becomes a lookup key against a filesystem-backed YAML library, and
+    `/` and `.` are excluded from the character class so it cannot become a
+    path that escapes the playbook directory."""
+    result, failures = validate(
+        payload(playbook_id="../../../etc/passwd"), incident_with()
+    )
+
+    assert result is None
+    assert codes(failures) == ["malformed_playbook_id"]
+
+
+def test_a_trailing_newline_does_not_slip_past_the_anchor():
+    """`$` also matches immediately before a trailing newline, so `re.match`
+    would accept this. The check uses `fullmatch` -- otherwise a key that reads
+    as clean in a log line is not the key that gets looked up."""
+    result, failures = validate(payload(playbook_id="brute-force\n"), incident_with())
+
+    assert result is None
+    assert codes(failures) == ["malformed_playbook_id"]
+
+
+def test_a_playbook_id_leading_with_a_separator_is_rejected():
+    """The first character class is deliberately narrower than the rest: a
+    leading hyphen or underscore reads as a flag or a private name, and neither
+    is a playbook."""
+    for playbook_id in ("-brute-force", "_brute_force"):
+        result, failures = validate(payload(playbook_id=playbook_id), incident_with())
+
+        assert result is None, playbook_id
+        assert codes(failures) == ["malformed_playbook_id"], playbook_id
+
+
+def test_playbook_ids_outside_the_length_bounds_are_rejected():
+    """3 to 64 characters. Two is not a name; 65 is not a filename anybody
+    typed."""
+    for playbook_id in ("ab", "a" * 65):
+        result, failures = validate(payload(playbook_id=playbook_id), incident_with())
+
+        assert result is None, playbook_id
+        assert codes(failures) == ["malformed_playbook_id"], playbook_id
+
+
+def test_recommended_actions_must_be_a_list():
+    """A single string would iterate character by character, so the type check
+    has to come before the per-item loop rather than inside it."""
+    result, failures = validate(
+        payload(recommended_actions="Block the source address."), incident_with()
+    )
+
+    assert result is None
+    assert codes(failures) == ["wrong_type"]
+
+
+def test_a_non_string_recommended_action_is_rejected():
+    result, failures = validate(
+        payload(recommended_actions=[{"step": "Block the source address."}]),
+        incident_with(),
+    )
+
+    assert result is None
+    assert codes(failures) == ["wrong_type"]
+
+
+def test_too_many_recommended_actions_is_rejected():
+    """Every item here is well within the length limit, so the only thing wrong
+    is the count."""
+    actions = [f"Step {n}." for n in range(MAX_RECOMMENDED_ACTIONS + 1)]
+
+    result, failures = validate(payload(recommended_actions=actions), incident_with())
+
+    assert result is None
+    assert codes(failures) == ["too_many_actions"]
+
+
+def test_exactly_the_maximum_number_of_actions_is_accepted():
+    actions = [f"Step {n}." for n in range(MAX_RECOMMENDED_ACTIONS)]
+
+    _, failures = validate(payload(recommended_actions=actions), incident_with())
+
+    assert failures == []
+
+
+def test_an_oversized_recommended_action_is_rejected():
+    """This text lands in a report an analyst acts on. An unbounded item is a
+    model handing itself the whole page."""
+    result, failures = validate(
+        payload(recommended_actions=["x" * (MAX_ACTION_CHARS + 1)]), incident_with()
+    )
+
+    assert result is None
+    assert codes(failures) == ["action_too_long"]
+
+
+def test_an_action_exactly_at_the_length_limit_is_accepted():
+    """Inclusive, matching every other length bound in the module."""
+    _, failures = validate(
+        payload(recommended_actions=["x" * MAX_ACTION_CHARS]), incident_with()
+    )
+
+    assert failures == []
+
+
+def test_every_oversized_action_is_reported_not_just_the_first():
+    """Same reason the payload-level check reports all failures: an operator
+    fixing a prompt one item at a time is an operator running the gate three
+    times to learn one thing."""
+    result, failures = validate(
+        payload(recommended_actions=["x" * (MAX_ACTION_CHARS + 1)] * 3), incident_with()
+    )
+
+    assert result is None
+    assert codes(failures) == ["action_too_long"] * 3
 
 
 def test_a_citation_to_an_event_we_do_not_hold_is_rejected():
