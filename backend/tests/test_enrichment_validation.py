@@ -257,6 +257,87 @@ def test_a_deprecated_technique_is_rejected_identically():
     assert codes(failures) == ["unknown_technique"]
 
 
+def test_a_real_but_off_list_technique_is_rejected():
+    """The check catalog validation cannot perform.
+
+    T1078 Valid Accounts exists, is current, and resolves cleanly -- and it is
+    not what the shortlist offered. Without membership enforcement a model can
+    return any of ATT&CK's seven hundred live techniques and pass, which makes
+    the constrained question decorative: the list would be advice in a prompt,
+    and a model ignoring it would be indistinguishable from one obeying it.
+    """
+    result, failures = validate(
+        payload(proposed_techniques=["T1078"]),
+        incident_with(),
+        allowed_techniques={"T1110", "T1098"},
+    )
+
+    assert result is None
+    assert codes(failures) == ["off_list_technique"]
+
+
+def test_an_on_list_technique_is_accepted():
+    """The control. Membership is enforced, not merely reported."""
+    _, failures = validate(
+        payload(proposed_techniques=["T1110"]),
+        incident_with(),
+        allowed_techniques={"T1110", "T1098"},
+    )
+
+    assert failures == []
+
+
+def test_membership_is_case_normalized_like_the_catalog():
+    """`t1110` from the model and `T1110` on the shortlist are one technique.
+    A membership test that disagreed with `resolve()` about what an ID is
+    would reject for the wrong reason."""
+    _, failures = validate(
+        payload(proposed_techniques=["  t1110 "]),
+        incident_with(),
+        allowed_techniques={"T1110"},
+    )
+
+    assert failures == []
+
+
+def test_an_off_list_technique_that_also_does_not_resolve_reports_one_code():
+    """An unresolvable ID is trivially off-list too. Reporting both would say
+    twice that the payload is discarded while telling an operator less about
+    why -- the catalog is the more specific answer, so it wins."""
+    result, failures = validate(
+        payload(proposed_techniques=["T9999"]),
+        incident_with(),
+        allowed_techniques={"T1110"},
+    )
+
+    assert result is None
+    assert codes(failures) == ["unknown_technique"]
+
+
+def test_without_a_shortlist_only_resolution_is_enforced():
+    """`allowed_techniques=None` means no list was offered, so there is nothing
+    to enforce. Pinned because it is the default, and a default that silently
+    rejected everything would break every caller outside the enrichment path.
+    """
+    _, failures = validate(payload(proposed_techniques=["T1078"]), incident_with())
+
+    assert failures == []
+
+
+def test_an_empty_shortlist_rejects_every_technique():
+    """Distinct from None. An incident whose categories map to no candidates
+    offered the model nothing, so any technique it returns came from somewhere
+    other than the question it was asked."""
+    result, failures = validate(
+        payload(proposed_techniques=["T1110"]),
+        incident_with(),
+        allowed_techniques=set(),
+    )
+
+    assert result is None
+    assert codes(failures) == ["off_list_technique"]
+
+
 def test_a_well_formed_playbook_id_is_accepted():
     """The control for the rejection tests below. Shape only -- no library
     exists yet, so a well-formed ID naming a playbook nobody wrote still

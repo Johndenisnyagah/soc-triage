@@ -274,3 +274,73 @@ def test_every_rule_technique_contributes_at_least_one_tactic():
     }
 
     assert tactless == {}
+
+
+# ---------------------------------------------------------------------------
+# The enrichment candidate shortlists
+# ---------------------------------------------------------------------------
+
+
+def test_every_candidate_technique_resolves():
+    """The same regression guard as for rule mappings, for the other place a
+    technique ID is written down by hand.
+
+    A dead candidate fails more quietly than a dead rule mapping: the ID goes
+    into the prompt as an option, so the model is invited to pick it, and
+    picking it is the *correct* answer to the question it was asked. The result
+    is a proposed technique that contributes no tactic and looks like a model
+    error rather than a configuration one.
+    """
+    from app.enrichment.candidates import CANDIDATES
+
+    unresolved = {
+        technique_id: str(category)
+        for category, ids in CANDIDATES.items()
+        for technique_id in ids
+        if resolve(technique_id) is None
+    }
+
+    assert unresolved == {}
+
+
+def test_every_candidate_technique_contributes_at_least_one_tactic():
+    """`describe_candidates` renders the tactic list into the prompt, so a
+    technique with none would be offered as a bare name with nothing to
+    distinguish it."""
+    from app.enrichment.candidates import CANDIDATES
+
+    tactless = {
+        technique_id: str(category)
+        for category, ids in CANDIDATES.items()
+        for technique_id in ids
+        if not tactics_for(technique_id)
+    }
+
+    assert tactless == {}
+
+
+def test_validate_candidates_accepts_the_shipped_map():
+    """Runs at import already; called explicitly so the guard has a named test
+    rather than only failing as a collection error somewhere unrelated."""
+    from app.enrichment.candidates import validate_candidates
+
+    validate_candidates()  # must not raise
+
+
+def test_validate_candidates_rejects_a_deprecated_id(monkeypatch):
+    """Proves the guard is not vacuous. T1562.007 Disable or Modify Cloud
+    Firewall is exactly the shape of the failure this exists for: it was a
+    reasonable candidate before v19 retired the Impair Defenses family, and it
+    still reads as a real technique in the source.
+    """
+    from app.enrichment import candidates as candidates_mod
+    from app.ingest.schema import Category
+
+    monkeypatch.setattr(
+        candidates_mod, "CANDIDATES", {Category.NETWORK: ("T1046", "T1562.007")}
+    )
+
+    with pytest.raises(candidates_mod.InvalidCandidateError) as excinfo:
+        candidates_mod.validate_candidates()
+
+    assert "T1562.007" in str(excinfo.value)

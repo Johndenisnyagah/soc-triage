@@ -191,6 +191,41 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     interpretive: what fired, when, against what, in what order. Interpretation
     is what the LLM adds; an invented narrative is worse than none.
 
+    **Candidate shortlists convert technique mapping from generation to
+    selection.** Catalog validation cannot catch a real-but-wrong ID: T1078
+    Valid Accounts exists, is current, resolves cleanly, and is simply not
+    what the evidence shows. Asking "which ATT&CK technique describes this?"
+    is open generation and the only reachable check is existence. Asking
+    "which of these six, or none?" bounds the wrong answers, makes "none" a
+    listed choice rather than something the model must resist producing, and
+    makes a selection outside the list a validation failure in its own right
+    (`off_list_technique`).
+
+    The enforcement is the load-bearing half. `validate()` takes
+    `allowed_techniques` and `enrich()` passes the shortlist it just rendered
+    into the prompt — one derivation, `shortlist_for()`, feeding both, so the
+    list shown and the list checked cannot diverge. Without that parameter the
+    constraint is advice in a prompt, and a model ignoring it is
+    indistinguishable from one obeying it.
+
+    Shortlists are keyed by event category, bounded at eight, and drawn
+    breadth-first across the categories present — a cross-source incident
+    (decision 14) would otherwise spend every slot on its noisiest category
+    and offer no candidate for the finding that matters. Candidates are
+    validated against the catalog at import, so an ATT&CK release that retires
+    one fails the build rather than quietly offering the model a dead ID that
+    it would be *right* to pick given the list it was shown.
+
+    **Retry is selective.** Formatting failures — unparseable, wrong shape,
+    wrong type, unknown field — retry once with the rejection fed back. Content
+    failures never retry: an ungrounded citation means the model invented a
+    detail, and re-asking invites a better-disguised invention rather than a
+    correction. An off-list technique is the same class, not a typo — the list
+    was in the prompt and the model went around it, so a second ask most likely
+    yields a different real technique that is also wrong. A forbidden field is
+    a boundary violation, and asking again only teaches it to score more
+    plausibly.
+
     **Untrusted evidence is framed, never filtered** (decision 10). Injected
     instruction-like text in a log line is passed through verbatim inside the
     delimiters. Filtering would fail twice: it cannot enumerate how an
@@ -239,9 +274,10 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 5. ATT&CK mapping with catalog validation ✅ (catalog + validator; LLM
    proposal path deliberately not built yet)
 6. LLM enrichment + structurally-validated fallback 🚧 (deterministic summary,
-   validation gate and evidence framing done and wired into `run_detection.py`;
-   prompt and API client deliberately not built yet. Not "confidence-gated" —
-   see decision 15)
+   validation gate, evidence framing, candidate shortlists, prompt and
+   orchestration done — `enrich()` is off by default and fully exercised
+   through a fake client. Only the provider client behind the `LLMClient`
+   Protocol is left. Not "confidence-gated" — see decision 15)
 7. Windows Security parser
 8. Exec reports + playbooks
 9. Continuous ingest endpoint + worker

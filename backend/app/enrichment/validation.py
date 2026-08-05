@@ -131,10 +131,27 @@ def wrap_evidence(incident: Incident) -> str:
     )
 
 
-def validate(raw_output: str, incident: Incident) -> tuple[dict[str, Any] | None, list[ValidationFailure]]:
+def validate(
+    raw_output: str,
+    incident: Incident,
+    *,
+    allowed_techniques: set[str] | None = None,
+) -> tuple[dict[str, Any] | None, list[ValidationFailure]]:
     """Parse and check model output. Returns (payload, failures).
 
     A non-empty failure list means the payload must be discarded entirely.
+
+    `allowed_techniques` is the candidate shortlist the prompt offered. When
+    supplied, a proposed technique outside it fails even though it resolves --
+    which is the only check that makes the constrained question real. Catalog
+    resolution cannot catch T1078: it exists, it is current, and it is simply
+    wrong for the evidence. Without membership enforcement the shortlist is
+    advice in a prompt rather than a constraint, and a model that ignores it
+    is indistinguishable from one that obeyed.
+
+    None means no shortlist was offered, so there is nothing to enforce --
+    resolution alone. That is not a weaker mode to reach for: it is what
+    callers outside the enrichment path get, and they should be passing a list.
     """
     failures: list[ValidationFailure] = []
 
@@ -184,15 +201,36 @@ def validate(raw_output: str, incident: Incident) -> tuple[dict[str, Any] | None
         failures.append(
             ValidationFailure("too_many_techniques", f"{len(proposed)} > {MAX_PROPOSED_TECHNIQUES}")
         )
+    # Normalized through the catalog's own rule, so `t1110` on the shortlist and
+    # `T1110` from the model are one technique. Anything else would be a
+    # membership test that disagrees with `resolve()` about what an ID is.
+    allowed = (
+        None
+        if allowed_techniques is None
+        else {attack.Catalog.normalize(t) for t in allowed_techniques}
+    )
+
     for technique in proposed:
         if not isinstance(technique, str):
             failures.append(ValidationFailure("wrong_type", "technique id is not a string"))
             continue
-        if attack.resolve(technique) is None:
+        info = attack.resolve(technique)
+        if info is None:
             failures.append(
                 ValidationFailure(
                     "unknown_technique",
                     f"'{technique}' does not resolve in the ATT&CK catalog",
+                )
+            )
+            continue
+        # One code per bad ID. An unresolvable technique is also trivially
+        # off-list, and reporting both would say twice that the payload is
+        # being discarded while telling an operator less about why.
+        if allowed is not None and info.technique_id not in allowed:
+            failures.append(
+                ValidationFailure(
+                    "off_list_technique",
+                    f"'{info.technique_id}' resolves but was not on the candidate list",
                 )
             )
 
