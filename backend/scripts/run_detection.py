@@ -68,6 +68,7 @@ from fastapi.testclient import TestClient  # noqa: E402
 from app.database import SessionLocal  # noqa: E402
 from app.detection.correlation import correlate  # noqa: E402
 from app.detection.engine import run_rules  # noqa: E402
+from app.enrichment.summary import summarize  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import Event  # noqa: E402
 
@@ -147,6 +148,14 @@ def report(events: list) -> None:
             )
             if meta:
                 print(f"               {meta}")
+        # The deterministic summary, unconditionally. No LLM is wired in yet and
+        # this block must still read as a finished product when one is: it is
+        # what ships whenever the model is unavailable or its output fails the
+        # gate, so seeing it on every run is how it stays honest rather than
+        # becoming a stub nobody looks at.
+        print("\n  summary")
+        for line in summarize(incident).splitlines():
+            print(f"    {line}" if line else "")
         print()
 
 

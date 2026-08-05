@@ -159,6 +159,46 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     a release that starts dual-mapping across that pair would escalate the
     defence-related rules a rung without detecting anything new.
 
+15. **Enrichment never reads a self-reported confidence score.** Asking a model
+    how sure it is produces a fluent number that is roughly uncorrelated with
+    correctness, and is highest exactly when the model is confidently wrong —
+    the case a gate exists to catch. A threshold over that number therefore
+    admits the worst output most reliably. `confidence` is in
+    `FORBIDDEN_FIELDS` alongside `severity`: its presence is itself a failure,
+    not a value to weigh.
+
+    **Validation is structural instead.** Every check is against something
+    verifiable outside the model: does the output parse, do its technique IDs
+    resolve in the ATT&CK catalog (decision 8), does every event it cites
+    exist in this incident's evidence, did it stay inside the allowed fields
+    and the length limits. Evidence grounding is the load-bearing one —
+    catalog validation catches a technique that does not exist, but only
+    grounding catches a fluent sentence resting on a log line that was never
+    there.
+
+    **Any failure discards the entire payload.** Not the offending field —
+    the payload. Partial acceptance ships prose whose support was removed for
+    being wrong, and it reads exactly as confident as prose that was right.
+    All failures are still *reported* rather than short-circuited at the
+    first, because an operator debugging a prompt needs the whole list.
+
+    **The deterministic summary is the floor and must be complete on its
+    own.** `app/enrichment/summary.py` is written and tested before any prompt
+    exists, and it is what ships whenever the LLM is unavailable, slow, or
+    rejected. If it were a stub, an LLM outage would not degrade output — it
+    would break the pipeline, and "rules detect, AI explains" would be a claim
+    the architecture could not honour. It is deliberately factual rather than
+    interpretive: what fired, when, against what, in what order. Interpretation
+    is what the LLM adds; an invented narrative is worse than none.
+
+    **Untrusted evidence is framed, never filtered** (decision 10). Injected
+    instruction-like text in a log line is passed through verbatim inside the
+    delimiters. Filtering would fail twice: it cannot enumerate how an
+    instruction can be phrased, and a stripped line is evidence the analyst no
+    longer sees — an attacker would delete their own tracks by writing
+    something that trips the filter. Truncation exists to bound prompt
+    occupancy, not to sanitize.
+
 ## Open questions
 
 - `host` for CloudTrail is currently `recipientAccountId`, which conflates
@@ -198,7 +238,10 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 4. Correlation — group incidents by entity key + time window ✅
 5. ATT&CK mapping with catalog validation ✅ (catalog + validator; LLM
    proposal path deliberately not built yet)
-6. LLM enrichment + confidence-gated fallback
+6. LLM enrichment + structurally-validated fallback 🚧 (deterministic summary,
+   validation gate and evidence framing done and wired into `run_detection.py`;
+   prompt and API client deliberately not built yet. Not "confidence-gated" —
+   see decision 15)
 7. Windows Security parser
 8. Exec reports + playbooks
 9. Continuous ingest endpoint + worker
