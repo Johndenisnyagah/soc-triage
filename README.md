@@ -31,15 +31,19 @@ rewrite that addresses both.
 
 ## Status
 
-In progress. Ingest and persistence are complete and tested; detection and enrichment
-are next.
+In progress. Ingest, persistence, detection, correlation and ATT&CK mapping are
+complete and tested. Enrichment is built and exercised end to end against a fake
+client — deterministic summaries, the validation gate, candidate shortlists and
+orchestration — with only the provider client behind the `LLMClient` protocol left to
+write. The Windows parser, reports and playbooks, and the continuous-ingest worker
+come after that.
 
 - [x] **Ingest layer** — normalized event schema, confidence-based parser registry, sshd and CloudTrail parsers
 - [x] **Persistence** — event/entity models, ingest endpoint, global deduplication
 - [x] **Detection** — source-agnostic rules over event windows
 - [x] **Correlation** — incident grouping by entity key and time window
 - [x] **MITRE ATT&CK mapping** — static rule mapping and catalog validation (LLM proposal path not yet built)
-- [ ] **LLM enrichment** — summaries with confidence-gated deterministic fallback
+- [ ] **LLM enrichment** — summaries with structurally-validated deterministic fallback
 - [ ] **Windows Security parser**
 - [ ] **Executive reports and response playbooks**
 - [ ] **Continuous ingest endpoint and worker**
@@ -209,11 +213,19 @@ before any prompt exists.
 **Rules detect, AI explains.** The LLM writes summaries, proposes ATT&CK techniques,
 and selects playbooks. It never decides whether something is an incident.
 
-**ATT&CK technique IDs are validated against the real catalog.** Detection rules map
-to techniques statically where the mapping is known. For unmapped cases the model may
-propose a technique, but any ID it returns is checked against the ATT&CK STIX data and
-rejected on failure. A plausible-looking technique ID is exactly the kind of error a
-language model produces confidently.
+**ATT&CK technique IDs are validated against the real catalog, and constrained to a
+shortlist.** Detection rules map to techniques statically where the mapping is known.
+For unmapped cases the model may propose a technique, but any ID it returns is checked
+against the ATT&CK STIX data and rejected on failure. A plausible-looking technique ID
+is exactly the kind of error a language model produces confidently.
+
+The catalog rejects IDs that do not exist; it cannot reject one that does. T1078 Valid
+Accounts is real, current, and resolves cleanly, and is still simply wrong for most
+evidence — so the prompt offers a short list of candidates drawn from the incident's
+event categories, and validation rejects any technique that was never on it. That is
+what converts mapping from generation into selection: the wrong answers are bounded,
+"none of these" is a listed choice, and a selection outside the list is a validation
+failure rather than a plausible answer nobody can check.
 
 **Playbooks are retrieved, not generated.** Response steps come from a local YAML
 library keyed by technique ID. The model selects and contextualizes; it does not
