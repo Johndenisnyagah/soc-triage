@@ -25,6 +25,12 @@ Design notes:
   severities would let noise inflate; taking the max would rank a full kill
   chain the same as its loudest step.
 
+* **Incident IDs are derived from evidence, not from enumeration order.**
+  Incidents are recomputed from persisted events on every request, so a
+  positional `INC-0001` renamed itself whenever a later ingest reordered the
+  components -- and a detail URL is only useful if it still names the same
+  incident tomorrow. See `incident_id_for`.
+
 * **`MAX_COOCCURRING_KEYS` is tunable and currently unvalidated.** The value of
   12 is a guess with no corpus behind it, and it is the first knob to turn when
   output looks wrong in either direction: incidents that swallow unrelated
@@ -36,9 +42,11 @@ Design notes:
 
 from __future__ import annotations
 
+import hashlib
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
+from typing import Iterable
 
 from app.detection import attack
 from app.detection.rules import Finding, Severity
@@ -58,7 +66,52 @@ DEFAULT_MAX_GAP = timedelta(hours=1)
 # Unvalidated -- see the module docstring. Tune this before tuning anything else.
 MAX_COOCCURRING_KEYS = 12
 
-_KEY_PRECEDENCE = ("principal:", "ip:", "host:", "user:")
+# `account:` sits just below `principal:`: it identifies a tenant rather than
+# an actor, so it is the right thing to pivot on only when no principal named
+# one -- and still a better answer than an address, which names a source but
+# not what was reached.
+_KEY_PRECEDENCE = ("principal:", "account:", "ip:", "host:", "user:")
+
+# Hex characters of the digest kept in an incident ID. Eight is short enough to
+# read aloud and paste into a ticket, and 32 bits across the handful of
+# incidents a batch produces makes an accidental collision a non-event.
+_ID_DIGEST_CHARS = 8
+
+
+def incident_id_for(findings: Iterable[Finding]) -> str:
+    """A stable ID derived from what the incident *contains*.
+
+    Enumeration order was the obvious choice and the wrong one: incidents are
+    recomputed from persisted events on every request, so `INC-0001` named a
+    different incident whenever a new ingest reordered the components, and a
+    detail URL an analyst pasted into a ticket silently pointed somewhere else.
+    A content hash makes the ID a property of the evidence instead of a
+    property of the run that happened to produce it.
+
+    The input is the **set** of evidence dedup hashes, sorted -- so the same
+    findings in any input order hash identically, and fan-out copies (which
+    carry overlapping evidence) cannot move it. That also makes this safe to
+    call either side of `_collapse_fanout`: collapse only drops findings whose
+    evidence is contained in a kept one, so the union is unchanged.
+
+    Two caveats, both deliberate:
+
+    * The ID names evidence, not rules. Two incidents over an identical
+      evidence set with different rules would collide -- unreachable today,
+      since findings sharing evidence share entity keys and would have joined.
+
+    * `Event.to_normalized()` does not restore `source_event_id`, so a
+      round-tripped event recomputes a coarser `dedup_hash()` than the one
+      stored: same-second siblings fold together here. That shrinks the hashed
+      set without destabilising it, and it is the same hash `_collapse_fanout`
+      and evidence grounding already use, so all three agree.
+    """
+    digest = hashlib.sha256(
+        "|".join(
+            sorted({e.dedup_hash() for f in findings for e in f.evidence})
+        ).encode()
+    ).hexdigest()
+    return f"INC-{digest[:_ID_DIGEST_CHARS]}"
 
 
 @dataclass(slots=True)
@@ -127,8 +180,9 @@ def _pick_primary(keys: set[str]) -> str:
     """The entity an analyst would pivot on.
 
     Precedence, not specificity: a cloud principal names an actor exactly, an
-    IP names a source, a host names an asset, and a username is usually the
-    *target* rather than the attacker.
+    account names the tenant that actor operated in, an IP names a source, a
+    host names an asset, and a username is usually the *target* rather than
+    the attacker.
     """
     for prefix in _KEY_PRECEDENCE:
         matches = sorted(k for k in keys if k.startswith(prefix))
@@ -236,7 +290,7 @@ def correlate(
         groups[uf.find(i)].append(f)
 
     incidents: list[Incident] = []
-    for n, group in enumerate(groups.values(), start=1):
+    for group in groups.values():
         keys = {f.entity_key for f in group}
         group = _collapse_fanout(group)
         # `f.technique` only, never `f.proposed_technique`. Severity is a
@@ -249,7 +303,7 @@ def correlate(
         }
         incidents.append(
             Incident(
-                incident_id=f"INC-{n:04d}",
+                incident_id=incident_id_for(group),
                 findings=sorted(group, key=lambda f: f.severity, reverse=True),
                 entity_keys=keys,
                 primary_entity=_pick_primary(keys),

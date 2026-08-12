@@ -74,8 +74,32 @@ def headline(incident: Incident) -> str:
     )
 
 
+def _span(finding) -> str:
+    """`HH:MM:SS` for an instant, `HH:MM:SS-HH:MM:SS` for a run.
+
+    A finding is a span, and rendering only its start hides the containment
+    that makes a chain readable: a brute-force burst and the success that
+    followed it share a start instant and differ only in where they end.
+    Printing one clock also made the column look unsorted once ordering moved
+    to `last_seen` -- a long finding that began early would sit below a short
+    one that began later while showing the earlier time.
+    """
+    if not finding.first_seen:
+        return "--:--:--"
+    start = finding.first_seen.strftime("%H:%M:%S")
+    if not finding.last_seen or finding.last_seen == finding.first_seen:
+        return start
+    return f"{start}-{finding.last_seen.strftime('%H:%M:%S')}"
+
+
 def timeline(incident: Incident) -> list[str]:
     """One line per finding, chronological. The analyst's working view.
+
+    Ordered by when each finding **ended**, not when it began. A sequence
+    rule's evidence starts at its first leading event, so ordering by start
+    puts "successful authentication after repeated failures" above the failures
+    it is built on -- the effect printed before its cause. End time is what
+    separates a burst from the longer chain containing it.
 
     Untimestamped findings sort last rather than first: a known time is more
     useful than an unknown one. The `is None` flag carries that, and it also
@@ -85,11 +109,11 @@ def timeline(incident: Incident) -> list[str]:
     """
     ordered = sorted(
         incident.findings,
-        key=lambda f: (f.first_seen is None, f.first_seen),
+        key=lambda f: (f.last_seen is None, f.last_seen),
     )
     lines: list[str] = []
     for finding in ordered:
-        when = finding.first_seen.strftime("%H:%M:%S") if finding.first_seen else "--:--:--"
+        when = _span(finding)
         # A technique that does not resolve degrades to no annotation rather
         # than to a broken one. Unknown and deprecated IDs both land here
         # (decision 8), and neither is worth showing an analyst as though the

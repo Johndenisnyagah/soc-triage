@@ -234,10 +234,66 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     something that trips the filter. Truncation exists to bound prompt
     occupancy, not to sanitize.
 
+16. **Incidents are computed on read, and their IDs are derived from content.**
+    There is no incidents table. `GET /api/incidents` and
+    `GET /api/incidents/{id}` run `events -> run_rules -> correlate` per
+    request, so the queue cannot disagree with the rules in the tree — a
+    stored incident from before a threshold change would sit next to a fresh
+    one with nothing in the response distinguishing them.
+
+    That forces the ID question. `INC-0001` was assigned by enumeration order,
+    which is a property of the run rather than of the incident: any later
+    ingest that reordered the connected components renamed every incident, and
+    a detail URL an analyst saved pointed at somebody else's intrusion.
+    `incident_id_for()` hashes the sorted **set** of evidence dedup hashes, so
+    the ID is order-independent, stable across machines and databases, and
+    unchanged by the fan-out copies correlation collapses (their evidence is
+    contained in what survives, so the union is the same either side of the
+    collapse).
+
+    Two known edges. The ID names evidence, not rules, so two incidents over an
+    identical evidence set would collide — unreachable today, since findings
+    sharing evidence share entity keys and would have joined. And
+    `Event.to_normalized()` does not restore `source_event_id` (see decision
+    11), so a round-tripped event recomputes a coarser hash than the stored
+    column: same-second siblings fold together, shrinking the hashed set
+    without destabilising it. That coarser hash is the one `_collapse_fanout`
+    and evidence grounding already use, so all three agree with each other.
+
+    Recomputing per request means replaying detection over every persisted
+    event on every call. Fine at sample-log scale; it is the first thing that
+    breaks under real volume, and the fix is a cache keyed on the event set
+    rather than a stored incident.
+
+17. **A tenant is not a machine: `account:`, not `host:`.** CloudTrail's
+    `recipientAccountId` was mapped to `host`, which was an open question from
+    the ingest design and became visible the moment the API rendered entity
+    keys — `host:123456789012` is an asset identifier for something that has
+    no asset behind it. `NormalizedEvent.account` is now its own field and its
+    own namespace, cloud records carry no `host` at all, and `account:` sits
+    just below `principal:` in `_KEY_PRECEDENCE`: it names the tenant an actor
+    operated in, so it is worth pivoting on only when no principal named the
+    actor, and still beats an address that names a source but not what was
+    reached. Grouping is unaffected — the key that gathered every CloudTrail
+    event under one bucket changed its prefix, not its cardinality.
+
+    `account` is in `dedup_hash`, which broke the pin in
+    `test_dedup_hash_is_stable_across_releases` knowingly: cloud hashes were
+    changing anyway now that `host` no longer carries the account, and one
+    unconditional definition of identity beats a per-source one. Free only
+    while the schema is on `create_all` with no data worth keeping.
+
+18. **Timeline order is by `last_seen`, and an entry is a span.** A sequence
+    rule's evidence begins at its first *leading* event, so `brute_force_success`
+    and the `brute_force_auth` burst it is built on start at the same instant.
+    Ordering by start time therefore printed the effect above its cause. End
+    time is the field that distinguishes a burst from the longer chain
+    containing it. Both the API timeline and the deterministic summary sort
+    this way — they ship in the same response, and two orderings inside one
+    payload is a defect an analyst has to reconcile by hand.
+
 ## Open questions
 
-- `host` for CloudTrail is currently `recipientAccountId`, which conflates
-  "machine" with "AWS account". May need a separate `account`/`tenant` field.
 - Windows `logon_type` (3 = network, 10 = RDP) is in `extra`. If a detection
   rule needs it, promote it to a column.
 

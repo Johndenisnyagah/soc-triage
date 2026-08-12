@@ -80,7 +80,13 @@ def test_happy_path():
     assert login.actor_name == "alice"
     assert login.actor_type is ActorType.USER
     assert login.source_ip == "203.0.113.5"
-    assert login.host == "123456789012"
+    # An AWS account is a tenant, not a machine. `recipientAccountId` used to
+    # land in `host`, which produced the entity key `host:123456789012` -- an
+    # asset identifier naming something with no asset behind it.
+    assert login.account == "123456789012"
+    assert login.host is None
+    assert "account:123456789012" in login.entity_keys()
+    assert not any(k.startswith("host:") for k in login.entity_keys())
     assert login.target_resource == "signin.amazonaws.com:ConsoleLogin"
     assert login.source_event_id == "evt-1"
     assert len({e.source_event_id for e in events}) == 3

@@ -111,6 +111,15 @@ class NormalizedEvent:
 
     # -- to what --------------------------------------------------------
     host: str | None = None  # asset the event occurred on
+
+    # Tenant the event belongs to: an AWS account id, and whatever the
+    # equivalent turns out to be for the next cloud source. Separate from
+    # `host` because an account is not a machine -- CloudTrail's
+    # `recipientAccountId` lived in `host` until it surfaced in the API as
+    # `host:123456789012`, an asset key naming something that has no asset.
+    # Cloud records carry no host at all; conflating the two invented one.
+    account: str | None = None
+
     target_resource: str | None = None  # file path, ARN, service name
 
     # -- source-specific ------------------------------------------------
@@ -134,6 +143,8 @@ class NormalizedEvent:
             keys.append(f"principal:{self.actor_id}")
         if self.host:
             keys.append(f"host:{self.host.casefold()}")
+        if self.account:
+            keys.append(f"account:{self.account.casefold()}")
         return keys
 
     def dedup_hash(self) -> str:
@@ -153,6 +164,12 @@ class NormalizedEvent:
         duplicate the global unique index exists to prevent. Every parser emits
         UTC today, so this changes no existing hash; it closes the gap
         `assume_tz` would eventually open.
+
+        `account` is in here for the same reason `host` is: two otherwise
+        identical API calls made in different AWS accounts are two events.
+        Unlike the UTC normalisation above, adding it does re-fingerprint every
+        stored event -- free only because the schema is still on `create_all`,
+        with no migration story and no data worth keeping.
         """
         timestamp = to_utc(self.timestamp)
         parts = [
@@ -165,6 +182,7 @@ class NormalizedEvent:
             self.actor_name or "",
             self.source_ip or "",
             self.host or "",
+            self.account or "",
             self.target_resource or "",
         ]
         return hashlib.sha256("|".join(parts).encode()).hexdigest()[:32]

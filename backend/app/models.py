@@ -105,6 +105,9 @@ class Event(Base):
 
     # to what
     host = Column(String(255), nullable=True, index=True)
+    # Tenant, not machine. Indexed because "everything in this AWS account"
+    # is an entity-key lookup the same way "everything on this host" is.
+    account = Column(String(64), nullable=True, index=True)
     target_resource = Column(String(512), nullable=True)
 
     extra = Column(JSON, nullable=False, default=dict)
@@ -141,6 +144,7 @@ class Event(Base):
             source_port=event.source_port,
             user_agent=event.user_agent,
             host=event.host,
+            account=event.account,
             target_resource=event.target_resource,
             extra=event.extra,
             entity_links=[EventEntity(entity_key=k) for k in event.entity_keys()],
@@ -183,6 +187,7 @@ class Event(Base):
             source_port=self.source_port,
             user_agent=self.user_agent,
             host=self.host,
+            account=self.account,
             target_resource=self.target_resource,
             extra=self.extra or {},
         )

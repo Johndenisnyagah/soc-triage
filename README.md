@@ -147,12 +147,12 @@ $ python scripts/run_detection.py ../sample_logs
 stats: events_in=28 no_timestamp=0 entities=11 rules=6 findings=19 incidents=1
 
 ==============================================================================
-INC-0001  [CRITICAL]  principal:arn:aws:iam::123456789012:user/deploy
+INC-ab9590ae  [CRITICAL]  principal:arn:aws:iam::123456789012:user/deploy
 ==============================================================================
   when      04:41:07-04:56:02
   sources   aws_cloudtrail+syslog_sshd
   tactics   credential-access, defense-impairment, discovery, persistence, privilege-escalation
-  entities  host:123456789012, host:webserver01, ip:203.0.113.5, principal:arn:aws:iam::123456789012:user/deploy, user:deploy, user:root
+  entities  account:123456789012, host:webserver01, ip:203.0.113.5, principal:arn:aws:iam::123456789012:user/deploy, user:deploy, user:root
   findings  6
     [CRITICAL] T1110      Successful authentication after repeated failures
                rule=brute_force_success  evidence=17  04:41:07-04:41:29
@@ -174,13 +174,13 @@ INC-0001  [CRITICAL]  principal:arn:aws:iam::123456789012:user/deploy
                count=6, distinct_count=3, distinct_values=['admin', 'oracle', 'postgres'], window=0:10:00
 
   summary
-    CRITICAL incident on principal:arn:aws:iam::123456789012:user/deploy: 6 detections across 5 ATT&CK tactics. Activity ran from 2026-08-02 04:41:07 to 04:56:02 UTC, a span of 14 minutes. Evidence spans 2 log sources (syslog_sshd, aws_cloudtrail), which is why these detections were correlated into one incident rather than treated separately. Tactics observed: credential access, defense impairment, discovery, persistence, privilege escalation. Entities involved: host:123456789012, host:webserver01, ip:203.0.113.5, principal:arn:aws:iam::123456789012:user/deploy, user:deploy, user:root.
+    CRITICAL incident on principal:arn:aws:iam::123456789012:user/deploy: 6 detections across 5 ATT&CK tactics. Activity ran from 2026-08-02 04:41:07 to 04:56:02 UTC, a span of 14 minutes. Evidence spans 2 log sources (syslog_sshd, aws_cloudtrail), which is why these detections were correlated into one incident rather than treated separately. Tactics observed: credential access, defense impairment, discovery, persistence, privilege escalation. Entities involved: account:123456789012, host:webserver01, ip:203.0.113.5, principal:arn:aws:iam::123456789012:user/deploy, user:deploy, user:root.
 
     Timeline:
-      04:41:07  Successful authentication after repeated failures [T1110 Brute Force] (17 events)
-      04:41:07  Access key created after suspicious authentication [T1098 Account Manipulation] (19 events)
-      04:41:07  Repeated authentication failures [T1110 Brute Force] (16 events)
-      04:41:14  Authentication attempts against non-existent accounts [T1087 Account Discovery] (6 events)
+      04:41:14-04:41:21  Authentication attempts against non-existent accounts [T1087 Account Discovery] (6 events)
+      04:41:07-04:41:24  Repeated authentication failures [T1110 Brute Force] (16 events)
+      04:41:07-04:41:29  Successful authentication after repeated failures [T1110 Brute Force] (17 events)
+      04:41:07-04:55:10  Access key created after suspicious authentication [T1098 Account Manipulation] (19 events)
       04:55:33  Administrator policy attached to principal [T1098 Account Manipulation] (1 event)
       04:56:02  Cloud audit logging disabled [T1685.002 Disable or Modify Cloud Log] (1 event)
 ```
@@ -207,6 +207,58 @@ impairment is a kill chain.
 The `summary` block is generated with no model involved. It is what ships when the LLM
 is unavailable or its output fails validation, which is why it is written and tested
 before any prompt exists.
+
+## Read API
+
+Two endpoints serve the same pipeline over HTTP. Incidents are **computed at request
+time**, not stored: there is no incidents table, so the queue can never disagree with
+the rules currently in the tree.
+
+```bash
+curl http://localhost:8000/api/incidents
+curl http://localhost:8000/api/incidents/INC-ab9590ae
+```
+
+The listing is one row per incident, worst first, with `?severity=CRITICAL` to filter:
+
+```json
+[
+  {
+    "incident_id": "INC-ab9590ae",
+    "severity": "CRITICAL",
+    "severity_score": 90,
+    "primary_entity": "principal:arn:aws:iam::123456789012:user/deploy",
+    "finding_count": 6,
+    "tactic_count": 5,
+    "tactics": ["credential-access", "defense-impairment", "discovery", "persistence", "privilege-escalation"],
+    "sources": [
+      { "source_type": "syslog_sshd", "event_count": 17 },
+      { "source_type": "aws_cloudtrail", "event_count": 5 }
+    ],
+    "first_seen": "2026-08-02T04:41:07Z",
+    "last_seen": "2026-08-02T04:56:02Z"
+  }
+]
+```
+
+The detail route adds the deterministic summary, every entity key, the resolved ATT&CK
+techniques, and a timeline carrying the raw log lines behind each finding. It also
+reports `"enrichment_source": "deterministic"`, so the UI can label output produced
+without a model rather than presenting it as though one had run.
+
+**Timeline entries are spans ordered by end time.** A sequence rule's evidence begins
+at its first *leading* event, so "successful authentication after repeated failures"
+starts at the same instant as the burst it is built on — ordering by start time printed
+the effect above its cause. Each entry carries both `first_seen` and `last_seen`, which
+is also what lets a UI draw a finding as a bar rather than stacking every rule on one
+tick.
+
+**Incident IDs are derived from evidence, not from position in the result.** `INC-0001`
+was assigned by enumeration order, which meant the same incident was renamed whenever a
+later ingest reordered the components — and a detail URL pasted into a ticket silently
+pointed somewhere else. The ID is now a short hash of the sorted set of evidence dedup
+hashes, so the same activity produces `INC-ab9590ae` on any machine, in any upload
+order, on a database that has never seen it before.
 
 ## Design decisions
 

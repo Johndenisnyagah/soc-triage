@@ -19,6 +19,7 @@ from detection_helpers import (
     BASE,
     access_key_created,
     auth_failure,
+    auth_success,
     event,
     finding,
     logging_stopped,
@@ -172,6 +173,60 @@ def test_untimestamped_findings_sort_last():
     assert lines[1].startswith("--:--:--")
 
 
+def _burst_and_its_success() -> Incident:
+    """The ordering case: a threshold finding, and the sequence finding built
+    on top of it. Both begin at the same instant because a sequence rule's
+    evidence starts at its first *leading* event."""
+    burst = [auth_failure(i) for i in range(6)]
+    return correlate(
+        [
+            finding(
+                rule_id="brute_force_success",
+                title="Successful authentication after repeated failures",
+                severity=Severity.CRITICAL,
+                evidence=[*burst, auth_success(30)],
+            ),
+            finding(
+                rule_id="brute_force_auth",
+                title="Repeated authentication failures",
+                severity=Severity.HIGH,
+                evidence=burst,
+            ),
+        ]
+    )[0]
+
+
+def test_a_sequence_finding_sorts_after_the_burst_it_builds_on():
+    """Effects must not print above their causes. Both findings start at the
+    same second, so a sort on `first_seen` put the success first -- the
+    incident read as though the login preceded the failures."""
+    incident = _burst_and_its_success()
+    assert len(incident.findings) == 2  # not collapsed: different rules
+
+    lines = timeline(incident)
+
+    assert "Repeated authentication failures" in lines[0]
+    assert "Successful authentication after repeated failures" in lines[1]
+
+
+def test_a_multi_event_finding_prints_its_span():
+    """One clock could not distinguish a burst from the longer chain
+    containing it, and once ordering moved to `last_seen` a single start time
+    made the column look unsorted."""
+    lines = timeline(_burst_and_its_success())
+
+    assert lines[0].startswith("04:41:00-04:41:05  ")
+    assert lines[1].startswith("04:41:00-04:41:30  ")
+
+
+def test_an_instant_finding_prints_one_clock():
+    """No span to show, and `04:41:00-04:41:00` would read as a measured
+    duration of zero rather than a single event."""
+    incident = correlate([finding(rule_id="a", evidence=[auth_failure(0)])])[0]
+
+    assert timeline(incident)[0].startswith("04:41:00  ")
+
+
 # ---------------------------------------------------------------------------
 # Unresolvable techniques
 # ---------------------------------------------------------------------------
@@ -258,7 +313,8 @@ Tactics observed: credential access, defense impairment, persistence, \
 privilege escalation. Entities involved: host:web01, ip:203.0.113.5, user:root.
 
 Timeline:
-  04:41:00  Repeated authentication failures [T1110 Brute Force] (6 events)
+  04:41:00-04:43:30  Repeated authentication failures [T1110 Brute Force] \
+(6 events)
   04:56:00  Access key created after suspicious authentication \
 [T1098 Account Manipulation] (1 event)
   05:01:00  Cloud audit logging disabled \

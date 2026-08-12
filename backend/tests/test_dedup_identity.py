@@ -114,9 +114,26 @@ def test_dedup_hash_is_stable_across_releases():
     so changing how it is computed silently invalidates every row already
     written -- previously-ingested events stop matching and re-ingest as
     duplicates. If this value must change, that is a migration, not an edit.
+
+    It has changed exactly once, from `2738864502a2b52f48b672c081eca36b`, when
+    `account` joined the hashed fields. That was a knowing break: CloudTrail's
+    `recipientAccountId` moved out of `host`, so cloud hashes were changing
+    regardless, and adding the field for every source keeps one definition of
+    identity rather than a conditional one. It cost nothing because the schema
+    is still on `create_all` with no migration path and no data worth keeping
+    -- which will not be true the next time this line needs editing.
     """
-    assert _event().dedup_hash() == "2738864502a2b52f48b672c081eca36b"
+    assert _event().dedup_hash() == "ad3a374f906f519a4796da7a22a697e1"
     assert len(_event().dedup_hash()) == 32
+
+
+def test_account_is_part_of_identity():
+    """Two identical API calls in two AWS accounts are two events. Without
+    `account` in the hash, moving it out of `host` would have made them one."""
+    assert (
+        _event(host=None, account="123456789012").dedup_hash()
+        != _event(host=None, account="210987654321").dedup_hash()
+    )
 
 
 # -- the helper itself -------------------------------------------------------

@@ -7,6 +7,7 @@ a test here -- and the noise and gap cases need shapes no sample log produces.
 
 from __future__ import annotations
 
+import re
 from datetime import timedelta
 
 from detection_helpers import auth_failure, event, finding
@@ -16,6 +17,7 @@ from app.detection.correlation import (
     MAX_COOCCURRING_KEYS,
     Incident,
     correlate,
+    incident_id_for,
 )
 from app.detection.rules import Severity
 
@@ -631,7 +633,87 @@ def test_incident_ids_are_assigned():
     )
 
     assert all(isinstance(i, Incident) for i in incidents)
-    assert {i.incident_id for i in incidents} == {"INC-0001", "INC-0002"}
+    assert len({i.incident_id for i in incidents}) == 2
+    assert all(re.fullmatch(r"INC-[0-9a-f]{8}", i.incident_id) for i in incidents)
+
+
+# ---------------------------------------------------------------------------
+# Incident IDs are content-derived
+# ---------------------------------------------------------------------------
+
+
+def _two_unrelated_findings() -> list:
+    return [
+        finding(rule_id="a", entity_key="ip:198.51.100.1",
+                evidence=[event(0, source_ip="198.51.100.1",
+                                host="h1", actor_name="u1")]),
+        finding(rule_id="b", entity_key="ip:203.0.113.5",
+                evidence=[event(0, source_ip="203.0.113.5",
+                                host="h2", actor_name="u2")]),
+    ]
+
+
+def test_input_order_does_not_change_incident_ids():
+    """The reason positional IDs had to go: incidents are recomputed on every
+    request, so a reordered input renamed every incident and a detail URL an
+    analyst had saved pointed at something else."""
+    group = _two_unrelated_findings()
+
+    forward = {i.primary_entity: i.incident_id for i in correlate(group)}
+    reversed_ = {
+        i.primary_entity: i.incident_id for i in correlate(list(reversed(group)))
+    }
+
+    assert forward == reversed_
+
+
+def test_fanout_order_does_not_change_the_incident_id():
+    """Within one incident too: the same burst filed under three entity keys
+    must hash the same however the engine happened to emit the copies."""
+    evidence = [auth_failure(i) for i in range(5)]
+    keys = ["ip:203.0.113.5", "user:root", "host:web01"]
+    fanned = [
+        finding(rule_id="brute_force_auth", entity_key=k, evidence=evidence)
+        for k in keys
+    ]
+
+    first = correlate(fanned)[0].incident_id
+    second = correlate(list(reversed(fanned)))[0].incident_id
+
+    assert first == second
+
+
+def test_different_evidence_produces_a_different_id():
+    a = correlate([finding(rule_id="a", evidence=[auth_failure(0)])])[0]
+    b = correlate([finding(rule_id="a", evidence=[auth_failure(60)])])[0]
+
+    assert a.incident_id != b.incident_id
+
+
+def test_the_id_is_stable_across_identical_reruns():
+    group = _two_unrelated_findings()
+
+    assert [i.incident_id for i in correlate(group)] == [
+        i.incident_id for i in correlate(group)
+    ]
+
+
+def test_the_id_covers_evidence_the_fanout_collapse_removed():
+    """`incident_id_for` is called after collapse, which is only sound because
+    collapse drops findings whose evidence is contained in a kept one. Hashing
+    the group before and after must therefore agree."""
+    wide = [auth_failure(i) for i in range(16)]
+    group = [
+        finding(rule_id="brute_force_auth", entity_key="ip:203.0.113.5",
+                evidence=wide),
+        finding(rule_id="brute_force_auth", entity_key="user:root",
+                evidence=wide[:8]),
+    ]
+
+    incident = correlate(group)[0]
+
+    assert len(incident.findings) == 1  # the narrow copy was absorbed
+    assert incident.incident_id == incident_id_for(group)
 
 
 def test_incident_time_span_covers_every_finding():

@@ -156,7 +156,12 @@ class CloudTrailParser(BaseParser):
             actor_type=_ACTOR_TYPES.get(identity.get("type", ""), ActorType.UNKNOWN),
             source_ip=_clean_ip(record.get("sourceIPAddress")),
             user_agent=record.get("userAgent"),
-            host=record.get("recipientAccountId"),
+            # No `host`: a CloudTrail record names an API call against an
+            # account, not an action on a machine. `recipientAccountId` used to
+            # land in `host` and produced the entity key `host:123456789012` --
+            # an asset identifier for something that is not an asset, which
+            # merged tenant scope into machine scope everywhere downstream.
+            account=record.get("recipientAccountId"),
             target_resource=f"{event_source}:{event_name}" if event_source else event_name,
             extra={
                 "aws_region": record.get("awsRegion"),
