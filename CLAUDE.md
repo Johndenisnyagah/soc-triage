@@ -159,6 +159,39 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     a release that starts dual-mapping across that pair would escalate the
     defence-related rules a rung without detecting anything new.
 
+    **Collapse plus busiest-source labelling means a multi-source rule always
+    renders as its host half.** Two mechanisms compose into a constraint that
+    is invisible in either one alone. `_collapse_fanout` keeps the *widest*
+    evidence set per `rule_id` and drops the copies contained in it; the API's
+    `_finding_source` then labels a finding by whichever source contributed
+    most of its evidence. So when one attacker touches two sources under a
+    shared key (decision 12's fan-out), the `ip:`-scoped copy of a rule
+    subsumes the `principal:`-scoped cloud-only copy, and the survivor is
+    labelled `syslog_sshd` because sshd is chattier per unit of activity.
+
+    The consequence: **only naturally single-source rules can produce a
+    cloud-labelled row.** `admin_policy_attached` and `cloud_logging_disabled`
+    are cloud-only by construction and always show as cloud;
+    `brute_force_auth`, `brute_force_success` and
+    `access_key_after_suspicious_auth` span both and always show as host,
+    however much CloudTrail evidence they rest on.
+
+    This is a **display consequence, not a correlation bug**. The evidence is
+    intact and the incident is right — `sources` on the incident reports both
+    sources with honest per-source counts, and the finding's own evidence list
+    carries every line. What is lossy is the single-valued `source_type` on a
+    timeline row, which cannot describe a finding that genuinely spans sources.
+
+    It shapes what sample data can demonstrate, which is the practical bite.
+    A UI that distinguishes host from cloud activity per timeline row can only
+    show alternation where the alternating findings are single-source, so
+    `sample_logs/` has to stage the intrusion around the cloud-only rules
+    rather than simply narrating a host-to-cloud escalation. Worth
+    remembering before reading a timeline as evidence that correlation is
+    mis-grouping: it is the label that is coarse, not the grouping. If a row
+    ever needs to say "both", the fix is a multi-valued source on
+    `TimelineEntry`, not a change to `_collapse_fanout`.
+
 15. **Enrichment never reads a self-reported confidence score.** Asking a model
     how sure it is produces a fluent number that is roughly uncorrelated with
     correctness, and is highest exactly when the model is confidently wrong —

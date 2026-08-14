@@ -104,17 +104,17 @@ reports exactly what was dropped rather than failing silently.
   "ingest_id": 1,
   "filename": "auth.log",
   "source_type": "syslog_sshd",
-  "detected_confidence": 0.86,
-  "events_persisted": 18,
+  "detected_confidence": 0.932,
+  "events_persisted": 31,
   "duplicates_skipped": 0,
-  "stats": { "lines_read": 30, "events_emitted": 18, "lines_skipped": 12, "errors": [] }
+  "stats": { "lines_read": 44, "events_emitted": 31, "lines_skipped": 13, "errors": [] }
 }
 ```
 
-The twelve skipped lines are the CRON, systemd, and sshd session lines the sshd
+The thirteen skipped lines are the CRON, systemd, and sshd session lines the sshd
 parser recognises as syslog but does not model as authentication events. Running
 the same command a second time returns `events_persisted: 0` and
-`duplicates_skipped: 18` — deduplication is global, so re-ingesting a file is
+`duplicates_skipped: 31` — deduplication is global, so re-ingesting a file is
 idempotent.
 
 `sample_logs/cloudtrail.json` covers the second parser, and deliberately shares a
@@ -124,10 +124,20 @@ source IP and username with `auth.log`:
 curl -F "file=@../sample_logs/cloudtrail.json" http://localhost:8000/api/ingest
 ```
 
-Both files together produce a single entity key `ip:203.0.113.5` spanning 27
-events across both sources — an SSH brute-force burst, a successful SSH login,
-then AWS console logins and IAM changes from that same address. That is the
-cross-source correlation the detection and incident layers are being built on.
+The two files describe **two unrelated intrusions**, which is what makes them
+useful as a fixture rather than a demo.
+
+The first is one attacker at `ip:203.0.113.5` moving between a Linux host and an
+AWS account over eighteen minutes: SSH brute force, username enumeration, a pivot
+to failed console logins, a successful SSH login as `deploy`, IAM recon, a policy
+attach, an access key, a return to SSH for more enumeration, and finally an attempt
+to stop CloudTrail logging. Host and cloud activity **alternate**, which is the
+cross-source chronology the detection and incident layers exist to reassemble.
+
+The second is a plain SSH brute force against `backup` on `db02` from
+`198.51.100.77`, hours later. It shares no entity key with the first, so
+correlation must leave the two apart — the sample exercises separation as well as
+joining.
 
 ## What it produces
 
@@ -144,65 +154,104 @@ $ python scripts/run_detection.py ../sample_logs
 # parse-stats table trimmed for length — it is the same per-file counts shown in
 # Quick start above. Everything from here down is unedited.
 
-stats: events_in=28 no_timestamp=0 entities=11 rules=6 findings=19 incidents=1
+stats: events_in=43 no_timestamp=0 entities=17 rules=6 findings=34 incidents=2
 
 ==============================================================================
-INC-ab9590ae  [CRITICAL]  principal:arn:aws:iam::123456789012:user/deploy
+INC-fe9ac9b7  [CRITICAL]  principal:arn:aws:iam::123456789012:user/deploy
 ==============================================================================
-  when      04:41:07-04:56:02
+  when      04:41:07-04:59:20
   sources   aws_cloudtrail+syslog_sshd
   tactics   credential-access, defense-impairment, discovery, persistence, privilege-escalation
   entities  account:123456789012, host:webserver01, ip:203.0.113.5, principal:arn:aws:iam::123456789012:user/deploy, user:deploy, user:root
-  findings  6
+  findings  9
     [CRITICAL] T1110      Successful authentication after repeated failures
-               rule=brute_force_success  evidence=17  04:41:07-04:41:29
-               leading_count=16, window=0:10:00
+               rule=brute_force_success  evidence=21  04:41:07-04:48:41
+               leading_count=20, window=0:10:00
     [HIGH    ] T1098      Access key created after suspicious authentication
-               rule=access_key_after_suspicious_auth  evidence=19  04:41:07-04:55:10
-               leading_count=18, window=1:00:00
+               rule=access_key_after_suspicious_auth  evidence=21  04:41:07-04:52:11
+               leading_count=20, window=1:00:00
     [HIGH    ] T1110      Repeated authentication failures
-               rule=brute_force_auth  evidence=16  04:41:07-04:41:24
-               count=16, window=0:10:00
+               rule=brute_force_auth  evidence=20  04:41:07-04:47:10
+               count=20, window=0:10:00
+    [HIGH    ] T1110      Repeated authentication failures
+               rule=brute_force_auth  evidence=6  04:57:30-04:58:40
+               count=6, window=0:10:00
     [HIGH    ] T1685.002  Cloud audit logging disabled
-               rule=cloud_logging_disabled  evidence=1  04:56:02-04:56:02
+               rule=cloud_logging_disabled  evidence=1  04:59:20-04:59:20
                outcome=failure, target=cloudtrail.amazonaws.com:StopLogging
     [HIGH    ] T1098      Administrator policy attached to principal
-               rule=admin_policy_attached  evidence=1  04:55:33-04:55:33
+               rule=admin_policy_attached  evidence=1  04:50:20-04:50:20
+               policy_arn=arn:aws:iam::aws:policy/IAMFullAccess
+    [HIGH    ] T1098      Administrator policy attached to principal
+               rule=admin_policy_attached  evidence=1  04:56:33-04:56:33
                policy_arn=arn:aws:iam::aws:policy/AdministratorAccess
     [MEDIUM  ] T1087      Authentication attempts against non-existent accounts
-               rule=invalid_user_enumeration  evidence=6  04:41:14-04:41:21
+               rule=invalid_user_enumeration  evidence=6  04:43:12-04:44:27
                count=6, distinct_count=3, distinct_values=['admin', 'oracle', 'postgres'], window=0:10:00
+    [MEDIUM  ] T1087      Authentication attempts against non-existent accounts
+               rule=invalid_user_enumeration  evidence=6  04:57:30-04:58:40
+               count=6, distinct_count=3, distinct_values=['jenkins', 'gitlab', 'ansible'], window=0:10:00
 
   summary
-    CRITICAL incident on principal:arn:aws:iam::123456789012:user/deploy: 6 detections across 5 ATT&CK tactics. Activity ran from 2026-08-02 04:41:07 to 04:56:02 UTC, a span of 14 minutes. Evidence spans 2 log sources (syslog_sshd, aws_cloudtrail), which is why these detections were correlated into one incident rather than treated separately. Tactics observed: credential access, defense impairment, discovery, persistence, privilege escalation. Entities involved: account:123456789012, host:webserver01, ip:203.0.113.5, principal:arn:aws:iam::123456789012:user/deploy, user:deploy, user:root.
+    CRITICAL incident on principal:arn:aws:iam::123456789012:user/deploy: 9 detections across 5 ATT&CK tactics. Activity ran from 2026-08-02 04:41:07 to 04:59:20 UTC, a span of 18 minutes. Evidence spans 2 log sources (syslog_sshd, aws_cloudtrail), which is why these detections were correlated into one incident rather than treated separately. Tactics observed: credential access, defense impairment, discovery, persistence, privilege escalation. Entities involved: account:123456789012, host:webserver01, ip:203.0.113.5, principal:arn:aws:iam::123456789012:user/deploy, user:deploy, user:root.
 
     Timeline:
-      04:41:14-04:41:21  Authentication attempts against non-existent accounts [T1087 Account Discovery] (6 events)
-      04:41:07-04:41:24  Repeated authentication failures [T1110 Brute Force] (16 events)
-      04:41:07-04:41:29  Successful authentication after repeated failures [T1110 Brute Force] (17 events)
-      04:41:07-04:55:10  Access key created after suspicious authentication [T1098 Account Manipulation] (19 events)
-      04:55:33  Administrator policy attached to principal [T1098 Account Manipulation] (1 event)
-      04:56:02  Cloud audit logging disabled [T1685.002 Disable or Modify Cloud Log] (1 event)
+      04:43:12-04:44:27  Authentication attempts against non-existent accounts [T1087 Account Discovery] (6 events)
+      04:41:07-04:47:10  Repeated authentication failures [T1110 Brute Force] (20 events)
+      04:41:07-04:48:41  Successful authentication after repeated failures [T1110 Brute Force] (21 events)
+      04:50:20  Administrator policy attached to principal [T1098 Account Manipulation] (1 event)
+      04:41:07-04:52:11  Access key created after suspicious authentication [T1098 Account Manipulation] (21 events)
+      04:56:33  Administrator policy attached to principal [T1098 Account Manipulation] (1 event)
+      04:57:30-04:58:40  Repeated authentication failures [T1110 Brute Force] (6 events)
+      04:57:30-04:58:40  Authentication attempts against non-existent accounts [T1087 Account Discovery] (6 events)
+      04:59:20  Cloud audit logging disabled [T1685.002 Disable or Modify Cloud Log] (1 event)
+
+==============================================================================
+INC-27359b57  [HIGH]  ip:198.51.100.77
+==============================================================================
+  when      08:12:03-08:14:41
+  sources   syslog_sshd
+  tactics   credential-access
+  entities  host:db02, ip:198.51.100.77, user:backup
+  findings  1
+    [HIGH    ] T1110      Repeated authentication failures
+               rule=brute_force_auth  evidence=7  08:12:03-08:14:41
+               count=7, window=0:10:00
+
+  summary
+    HIGH incident on ip:198.51.100.77: 1 detection across 1 ATT&CK tactic. Activity ran from 2026-08-02 08:12:03 to 08:14:41 UTC, a span of 2 minutes. All evidence came from syslog_sshd. Tactics observed: credential access. Entities involved: host:db02, ip:198.51.100.77, user:backup.
+
+    Timeline:
+      08:12:03-08:14:41  Repeated authentication failures [T1110 Brute Force] (7 events)
 ```
 
-Nineteen findings became **one incident**, and that collapse is the whole point.
+Thirty-four findings became **two incidents**, and both halves of that are the point:
+the collapse *and* the split.
 
-Six of those nineteen survive as distinct observations; the other thirteen were
-duplicate views of the same activity, because the engine files a burst separately
-under every entity key its evidence touches — `ip:`, `user:`, and `host:` — and
-correlation absorbs the narrower copies.
+Nine of the thirty-four survive as distinct observations in the first incident; the
+rest were duplicate views of the same activity, because the engine files a burst
+separately under every entity key its evidence touches — `ip:`, `user:`, `host:`,
+`principal:` — and correlation absorbs the narrower copies.
 
-What is left reads as one story spanning both log sources. An SSH brute-force burst
-against `webserver01` (16 failures) lands a successful login, three non-existent
-accounts are probed along the way, and then — from the same `ip:203.0.113.5`, now as
-an AWS principal — an access key is minted, `AdministratorAccess` is attached, and
-something tries to stop CloudTrail logging. The two halves never share a log format
-or a field name. They share an entity key, which is what joins them.
+The first incident reads as one story woven from both log sources. An SSH brute-force
+burst against `webserver01` lands a successful login as `deploy`; three non-existent
+accounts are probed along the way; the same address then appears as an AWS principal
+failing console logins, attaches `IAMFullAccess`, mints an access key, escalates to
+`AdministratorAccess`, comes *back* to SSH to probe three more accounts, and finally
+tries to stop CloudTrail logging. Host and cloud activity alternate through the middle
+of that timeline. The two halves never share a log format or a field name. They share
+an entity key, which is what joins them.
 
-Severity is `CRITICAL` because five distinct ATT&CK tactics are represented, not
-because six rules fired. Twenty brute-force findings would still be one tactic and one
-story; credential access → discovery → persistence → privilege escalation → defense
-impairment is a kill chain.
+The second incident is the harder claim. A brute force against `backup` on `db02` from
+`198.51.100.77`, hours later, shares **no** entity key with the first — so correlation
+leaves it alone rather than absorbing it into the loudest story in the batch. Joining
+is the easy half; knowing when not to join is what keeps an incident queue readable.
+
+Severity is `CRITICAL` for the first because five distinct ATT&CK tactics are
+represented, not because nine rules fired. The second stays `HIGH`: seven failures is
+one tactic and one story, and a single tactic never reaches the escalation rung.
+Credential access → discovery → persistence → privilege escalation → defense impairment
+is a kill chain; a password guess is not.
 
 The `summary` block is generated with no model involved. It is what ships when the LLM
 is unavailable or its output fails validation, which is why it is written and tested
@@ -216,7 +265,7 @@ the rules currently in the tree.
 
 ```bash
 curl http://localhost:8000/api/incidents
-curl http://localhost:8000/api/incidents/INC-ab9590ae
+curl http://localhost:8000/api/incidents/INC-fe9ac9b7
 ```
 
 The listing is one row per incident, worst first, with `?severity=CRITICAL` to filter:
@@ -224,22 +273,43 @@ The listing is one row per incident, worst first, with `?severity=CRITICAL` to f
 ```json
 [
   {
-    "incident_id": "INC-ab9590ae",
+    "incident_id": "INC-fe9ac9b7",
     "severity": "CRITICAL",
     "severity_score": 90,
     "primary_entity": "principal:arn:aws:iam::123456789012:user/deploy",
-    "finding_count": 6,
+    "finding_count": 9,
     "tactic_count": 5,
     "tactics": ["credential-access", "defense-impairment", "discovery", "persistence", "privilege-escalation"],
     "sources": [
-      { "source_type": "syslog_sshd", "event_count": 17 },
-      { "source_type": "aws_cloudtrail", "event_count": 5 }
+      { "source_type": "syslog_sshd", "event_count": 21 },
+      { "source_type": "aws_cloudtrail", "event_count": 10 }
+    ],
+    "entity_keys": [
+      "account:123456789012",
+      "host:webserver01",
+      "ip:203.0.113.5",
+      "principal:arn:aws:iam::123456789012:user/deploy",
+      "user:deploy",
+      "user:root"
+    ],
+    "rule_ids": [
+      "access_key_after_suspicious_auth",
+      "admin_policy_attached",
+      "brute_force_auth",
+      "brute_force_success",
+      "cloud_logging_disabled",
+      "invalid_user_enumeration"
     ],
     "first_seen": "2026-08-02T04:41:07Z",
-    "last_seen": "2026-08-02T04:56:02Z"
+    "last_seen": "2026-08-02T04:59:20Z"
   }
 ]
 ```
+
+`entity_keys` and `rule_ids` ride on the queue row rather than only on the detail so
+the queue can be searched by them: an analyst pivoting on an address that appears in
+an incident's evidence but did not win `_KEY_PRECEDENCE` would otherwise get no hit,
+and the queue would look empty on an entity it is in fact reporting.
 
 The detail route adds the deterministic summary, every entity key, the resolved ATT&CK
 techniques, and a timeline carrying the raw log lines behind each finding. It also
@@ -257,7 +327,7 @@ tick.
 was assigned by enumeration order, which meant the same incident was renamed whenever a
 later ingest reordered the components — and a detail URL pasted into a ticket silently
 pointed somewhere else. The ID is now a short hash of the sorted set of evidence dedup
-hashes, so the same activity produces `INC-ab9590ae` on any machine, in any upload
+hashes, so the same activity produces `INC-fe9ac9b7` on any machine, in any upload
 order, on a database that has never seen it before.
 
 ## Design decisions

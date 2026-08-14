@@ -30,8 +30,23 @@ _ACTOR_TYPES = {
 # eventSource-derived categorisation, so coverage degrades gracefully.
 _EVENT_MAP: dict[str, tuple[Category, str]] = {
     "ConsoleLogin": (Category.AUTHENTICATION, "login"),
+    # Credential *issuance*. These genuinely authenticate something, so they
+    # belong in AUTHENTICATION. Listed explicitly rather than inherited from a
+    # service-level default -- see `_SOURCE_CATEGORY` below for why STS has no
+    # default any more. The federated variants are here so that removing the
+    # fallback did not silently drop them out of AUTHENTICATION, which would
+    # have been a detection regression hiding inside a false-positive fix.
     "AssumeRole": (Category.AUTHENTICATION, "assume_role"),
+    "AssumeRoleWithSAML": (Category.AUTHENTICATION, "assume_role"),
+    "AssumeRoleWithWebIdentity": (Category.AUTHENTICATION, "assume_role"),
     "GetSessionToken": (Category.AUTHENTICATION, "session_token_issue"),
+    "GetFederationToken": (Category.AUTHENTICATION, "session_token_issue"),
+    # Identity *read*. Authenticates nothing -- it reports who the caller
+    # already is. IAM rather than AUTHENTICATION, because landing in
+    # AUTHENTICATION with outcome=success makes it a valid trailing event for
+    # `brute_force_success`, and the AWS CLI and every CI job on earth call it
+    # constantly. See the note on `_SOURCE_CATEGORY`.
+    "GetCallerIdentity": (Category.IAM, "caller_identity_get"),
     "CreateUser": (Category.IAM, "user_create"),
     "DeleteUser": (Category.IAM, "user_delete"),
     "CreateAccessKey": (Category.IAM, "access_key_create"),
@@ -45,9 +60,29 @@ _EVENT_MAP: dict[str, tuple[Category, str]] = {
     "AuthorizeSecurityGroupIngress": (Category.NETWORK, "sg_ingress_authorize"),
 }
 
+#: Service-level fallback for event names `_EVENT_MAP` does not cover.
+#:
+#: **Nothing here may map to `Category.AUTHENTICATION`.** That category is the
+#: one place where a rule fires on `category` + `outcome` alone --
+#: `is_auth_success()` and `is_auth_failure()` never look at `action` -- so any
+#: unmapped event inheriting it becomes a real authentication event to every
+#: rule in the library. Every other category is safe under a coarse default
+#: because its rules match a specific action: `access_key_create`,
+#: `policy_attach`, `logging_stop`. An unmapped IAM call gets
+#: `_snake(eventName)` and matches none of them.
+#:
+#: `sts.amazonaws.com` used to map here and was exactly that bug. STS does two
+#: unrelated things: it issues credentials (AssumeRole, GetSessionToken) *and*
+#: it answers identity reads (GetCallerIdentity), which authenticate nothing.
+#: A successful GetCallerIdentity inherited AUTHENTICATION/success and became a
+#: valid trailing event for `brute_force_success` -- so a burst of failed
+#: logins followed by any routine CLI or CI call raised a CRITICAL "successful
+#: authentication after repeated failures" for an authentication that never
+#: happened. Credential-issuing STS events are now named individually in
+#: `_EVENT_MAP`; everything else STS falls to OTHER, which no rule subscribes
+#: to. Guarded by `test_sts_identity_read_is_not_an_authentication_success`.
 _SOURCE_CATEGORY = {
     "iam.amazonaws.com": Category.IAM,
-    "sts.amazonaws.com": Category.AUTHENTICATION,
     "s3.amazonaws.com": Category.STORAGE,
     "ec2.amazonaws.com": Category.NETWORK,
     "cloudtrail.amazonaws.com": Category.CONFIGURATION,

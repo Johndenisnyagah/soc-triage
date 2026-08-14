@@ -240,3 +240,105 @@ def test_malformed_input_does_not_raise_and_counts_skips():
     reasons = " ".join(e.reason for e in ctx.stats.errors)
     assert "invalid JSON" in reasons
     assert "malformed record" in reasons
+
+
+# ---------------------------------------------------------------------------
+# STS categorisation
+# ---------------------------------------------------------------------------
+
+
+def _sts(event_name: str, event_id: str = "evt-sts") -> dict:
+    """A successful STS call. No errorCode, so `_outcome` returns SUCCESS."""
+    return {
+        "eventVersion": "1.08",
+        "userIdentity": {
+            "type": "IAMUser",
+            "userName": "deploy",
+            "arn": "arn:aws:iam::123456789012:user/deploy",
+        },
+        "eventTime": "2026-08-02T04:49:05Z",
+        "eventSource": "sts.amazonaws.com",
+        "eventName": event_name,
+        "awsRegion": "us-east-1",
+        "sourceIPAddress": "203.0.113.5",
+        "userAgent": "aws-cli/2.15.30",
+        "recipientAccountId": "123456789012",
+        "eventID": event_id,
+    }
+
+
+def _parse_one(record: dict):
+    events = list(
+        CloudTrailParser().parse(json.dumps({"Records": [record]}), ParseContext())
+    )
+    assert len(events) == 1
+    return events[0]
+
+
+def test_sts_identity_read_is_not_an_authentication_success():
+    """`GetCallerIdentity` must never look like an authentication.
+
+    It reports who the caller already is; it authenticates nothing. While
+    `sts.amazonaws.com` had a service-level default of AUTHENTICATION, a
+    successful call inherited AUTHENTICATION/success and satisfied
+    `is_auth_success()` -- making it a valid trailing event for
+    `brute_force_success`. The AWS CLI and effectively every CI job call it
+    constantly, so that fired on routine automation.
+    """
+    event = _parse_one(_sts("GetCallerIdentity"))
+
+    assert event.category is Category.IAM
+    assert event.action == "caller_identity_get"
+    assert not event.is_auth_success()
+    assert not event.is_auth_failure()
+
+
+def test_unmapped_sts_events_fall_to_other_not_authentication():
+    """The fallback is gone, not redirected.
+
+    An STS call nobody has classified must land somewhere no rule subscribes
+    to. OTHER is that place; inheriting AUTHENTICATION is the bug this guards.
+    """
+    event = _parse_one(_sts("DecodeAuthorizationMessage"))
+
+    assert event.category is Category.OTHER
+    assert not event.is_auth_success()
+
+
+def test_credential_issuing_sts_events_are_still_authentication():
+    """Removing the fallback must not quietly drop real credential issuance.
+
+    These are the STS calls that genuinely authenticate something, so they are
+    named individually in `_EVENT_MAP`. If this regressed, the false-positive
+    fix would have silently taken detection coverage with it.
+    """
+    for name, action in [
+        ("AssumeRole", "assume_role"),
+        ("AssumeRoleWithSAML", "assume_role"),
+        ("AssumeRoleWithWebIdentity", "assume_role"),
+        ("GetSessionToken", "session_token_issue"),
+        ("GetFederationToken", "session_token_issue"),
+    ]:
+        event = _parse_one(_sts(name))
+        assert event.category is Category.AUTHENTICATION, name
+        assert event.action == action, name
+        assert event.is_auth_success(), name
+
+
+def test_no_service_default_maps_to_authentication():
+    """The structural rule behind the STS fix, pinned.
+
+    AUTHENTICATION is the only category whose rules fire on `category` +
+    `outcome` alone -- `is_auth_success()`/`is_auth_failure()` never inspect
+    `action`. Every other category is safe under a coarse service default
+    because its rules match a specific action (`access_key_create`,
+    `policy_attach`, `logging_stop`), which an unmapped `_snake(eventName)`
+    will not collide with.
+
+    So a service-level default that lands in AUTHENTICATION turns every
+    unmapped event from that service into a real authentication event. Adding
+    one is the mistake; this test is what says so.
+    """
+    from app.ingest.parsers.cloudtrail import _SOURCE_CATEGORY
+
+    assert Category.AUTHENTICATION not in _SOURCE_CATEGORY.values()

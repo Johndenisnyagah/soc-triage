@@ -9,7 +9,7 @@
         "accountId": "123456789012",
         "userName": "deploy"
       },
-      "eventTime": "2026-08-02T04:52:41Z",
+      "eventTime": "2026-08-02T04:45:30Z",
       "eventSource": "signin.amazonaws.com",
       "eventName": "ConsoleLogin",
       "awsRegion": "us-east-1",
@@ -25,10 +25,8 @@
         "MobileVersion": "No",
         "MFAUsed": "No"
       },
-      "eventID": "3f1c9a54-8b27-4e6d-9c11-2a7f4d8e6b03",
-      "readOnly": false,
+      "eventID": "0b5f2c11-8a41-4f6d-9c2e-1d7a3b4e5f60",
       "eventType": "AwsConsoleSignIn",
-      "managementEvent": true,
       "recipientAccountId": "123456789012"
     },
     {
@@ -40,7 +38,7 @@
         "accountId": "123456789012",
         "userName": "deploy"
       },
-      "eventTime": "2026-08-02T04:53:02Z",
+      "eventTime": "2026-08-02T04:45:52Z",
       "eventSource": "signin.amazonaws.com",
       "eventName": "ConsoleLogin",
       "awsRegion": "us-east-1",
@@ -56,10 +54,8 @@
         "MobileVersion": "No",
         "MFAUsed": "No"
       },
-      "eventID": "b7d2e610-4c95-4f83-a0d7-59e3c1b8f742",
-      "readOnly": false,
+      "eventID": "1c6a3d22-9b52-4a7e-8d3f-2e8b4c5f6a71",
       "eventType": "AwsConsoleSignIn",
-      "managementEvent": true,
       "recipientAccountId": "123456789012"
     },
     {
@@ -71,25 +67,24 @@
         "accountId": "123456789012",
         "userName": "deploy"
       },
-      "eventTime": "2026-08-02T04:53:44Z",
+      "eventTime": "2026-08-02T04:46:14Z",
       "eventSource": "signin.amazonaws.com",
       "eventName": "ConsoleLogin",
       "awsRegion": "us-east-1",
       "sourceIPAddress": "203.0.113.5",
       "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+      "errorMessage": "Failed authentication",
       "requestParameters": null,
       "responseElements": {
-        "ConsoleLogin": "Success"
+        "ConsoleLogin": "Failure"
       },
       "additionalEventData": {
         "LoginTo": "https://console.aws.amazon.com/console/home",
         "MobileVersion": "No",
         "MFAUsed": "No"
       },
-      "eventID": "c48a1f07-6de3-4b21-8f95-0d6a2c73e158",
-      "readOnly": false,
+      "eventID": "2d7b4e33-ac63-4b8f-9e4a-3f9c5d6a7b82",
       "eventType": "AwsConsoleSignIn",
-      "managementEvent": true,
       "recipientAccountId": "123456789012"
     },
     {
@@ -101,18 +96,105 @@
         "accountId": "123456789012",
         "userName": "deploy"
       },
-      "eventTime": "2026-08-02T04:54:01Z",
-      "eventSource": "sts.amazonaws.com",
-      "eventName": "GetCallerIdentity",
+      "eventTime": "2026-08-02T04:46:35Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
       "awsRegion": "us-east-1",
       "sourceIPAddress": "203.0.113.5",
-      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.5.0-35-generic exe/x86_64.ubuntu.22",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+      "errorMessage": "Failed authentication",
       "requestParameters": null,
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      },
+      "additionalEventData": {
+        "LoginTo": "https://console.aws.amazon.com/console/home",
+        "MobileVersion": "No",
+        "MFAUsed": "No"
+      },
+      "eventID": "3e8c5f44-bd74-4c9a-af5b-4a1d6e7b8c93",
+      "eventType": "AwsConsoleSignIn",
+      "recipientAccountId": "123456789012"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDACKCEVSQ6C2EXAMPLE",
+        "arn": "arn:aws:iam::123456789012:user/deploy",
+        "accountId": "123456789012",
+        "userName": "deploy"
+      },
+      "eventTime": "2026-08-02T04:46:58Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.5",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+      "errorMessage": "Failed authentication",
+      "requestParameters": null,
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      },
+      "additionalEventData": {
+        "LoginTo": "https://console.aws.amazon.com/console/home",
+        "MobileVersion": "No",
+        "MFAUsed": "No"
+      },
+      "eventID": "4f9d6a55-ce85-4dab-b06c-5b2e7f8c9da4",
+      "eventType": "AwsConsoleSignIn",
+      "recipientAccountId": "123456789012"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDACKCEVSQ6C2EXAMPLE",
+        "arn": "arn:aws:iam::123456789012:user/deploy",
+        "accountId": "123456789012",
+        "userName": "deploy"
+      },
+      "eventTime": "2026-08-02T04:47:10Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.5",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+      "errorMessage": "Failed authentication",
+      "requestParameters": null,
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      },
+      "additionalEventData": {
+        "LoginTo": "https://console.aws.amazon.com/console/home",
+        "MobileVersion": "No",
+        "MFAUsed": "No"
+      },
+      "eventID": "5a0e7b66-df96-4ebc-c17d-6c3f8a9daeb5",
+      "eventType": "AwsConsoleSignIn",
+      "recipientAccountId": "123456789012"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDACKCEVSQ6C2EXAMPLE",
+        "arn": "arn:aws:iam::123456789012:user/deploy",
+        "accountId": "123456789012",
+        "userName": "deploy"
+      },
+      "eventTime": "2026-08-02T04:49:52Z",
+      "eventSource": "iam.amazonaws.com",
+      "eventName": "ListAttachedUserPolicies",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.5",
+      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/5.15.0 exec-env/CLI",
+      "requestParameters": {
+        "userName": "deploy"
+      },
       "responseElements": null,
-      "eventID": "9e5b3c82-7a14-4d60-b3e8-6f2c05a91d47",
-      "readOnly": true,
+      "eventID": "6b1f8c77-ea07-4fcd-d28e-7d4a9badbfc6",
       "eventType": "AwsApiCall",
-      "managementEvent": true,
       "recipientAccountId": "123456789012"
     },
     {
@@ -124,20 +206,40 @@
         "accountId": "123456789012",
         "userName": "deploy"
       },
-      "eventTime": "2026-08-02T04:54:19Z",
+      "eventTime": "2026-08-02T04:50:20Z",
+      "eventSource": "iam.amazonaws.com",
+      "eventName": "AttachUserPolicy",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.5",
+      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/5.15.0 exec-env/CLI",
+      "requestParameters": {
+        "userName": "deploy",
+        "policyArn": "arn:aws:iam::aws:policy/IAMFullAccess"
+      },
+      "responseElements": null,
+      "eventID": "b06ed1cc-3f5c-4412-c7d3-c29f0afc041b",
+      "eventType": "AwsApiCall",
+      "recipientAccountId": "123456789012"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDACKCEVSQ6C2EXAMPLE",
+        "arn": "arn:aws:iam::123456789012:user/deploy",
+        "accountId": "123456789012",
+        "userName": "deploy"
+      },
+      "eventTime": "2026-08-02T04:49:31Z",
       "eventSource": "iam.amazonaws.com",
       "eventName": "ListUsers",
       "awsRegion": "us-east-1",
       "sourceIPAddress": "203.0.113.5",
-      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.5.0-35-generic exe/x86_64.ubuntu.22",
-      "requestParameters": {
-        "maxItems": 100
-      },
+      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/5.15.0 exec-env/CLI",
+      "requestParameters": null,
       "responseElements": null,
-      "eventID": "1a0f7b93-2c48-4e5a-9d16-8b3e40c7f295",
-      "readOnly": true,
+      "eventID": "7c2a9d88-fb18-40de-e39f-8e5bacbec0d7",
       "eventType": "AwsApiCall",
-      "managementEvent": true,
       "recipientAccountId": "123456789012"
     },
     {
@@ -149,53 +251,24 @@
         "accountId": "123456789012",
         "userName": "deploy"
       },
-      "eventTime": "2026-08-02T04:54:37Z",
-      "eventSource": "ec2.amazonaws.com",
-      "eventName": "DescribeInstances",
-      "awsRegion": "us-east-1",
-      "sourceIPAddress": "203.0.113.5",
-      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.5.0-35-generic exe/x86_64.ubuntu.22",
-      "requestParameters": {
-        "instancesSet": {},
-        "filterSet": {}
-      },
-      "responseElements": null,
-      "eventID": "6c93d418-5f27-49b3-8a04-e17d2b5f8c61",
-      "readOnly": true,
-      "eventType": "AwsApiCall",
-      "managementEvent": true,
-      "recipientAccountId": "123456789012"
-    },
-    {
-      "eventVersion": "1.08",
-      "userIdentity": {
-        "type": "IAMUser",
-        "principalId": "AIDACKCEVSQ6C2EXAMPLE",
-        "arn": "arn:aws:iam::123456789012:user/deploy",
-        "accountId": "123456789012",
-        "userName": "deploy"
-      },
-      "eventTime": "2026-08-02T04:55:10Z",
+      "eventTime": "2026-08-02T04:52:11Z",
       "eventSource": "iam.amazonaws.com",
       "eventName": "CreateAccessKey",
       "awsRegion": "us-east-1",
       "sourceIPAddress": "203.0.113.5",
-      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.5.0-35-generic exe/x86_64.ubuntu.22",
+      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/5.15.0 exec-env/CLI",
       "requestParameters": {
         "userName": "deploy"
       },
       "responseElements": {
         "accessKey": {
-          "accessKeyId": "AKIAIOSFODNN7EXAMPLE",
+          "accessKeyId": "AKIA3XAMPLE9Q7",
           "status": "Active",
-          "userName": "deploy",
-          "createDate": "Aug 2, 2026 4:55:10 AM"
+          "userName": "deploy"
         }
       },
-      "eventID": "d2b64e57-9013-4c8f-a75b-3e690f1c8b42",
-      "readOnly": false,
+      "eventID": "8d3bae99-0c29-41ef-f4a0-9f6cbdcfd1e8",
       "eventType": "AwsApiCall",
-      "managementEvent": true,
       "recipientAccountId": "123456789012"
     },
     {
@@ -207,21 +280,19 @@
         "accountId": "123456789012",
         "userName": "deploy"
       },
-      "eventTime": "2026-08-02T04:55:33Z",
+      "eventTime": "2026-08-02T04:56:33Z",
       "eventSource": "iam.amazonaws.com",
       "eventName": "AttachUserPolicy",
       "awsRegion": "us-east-1",
       "sourceIPAddress": "203.0.113.5",
-      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.5.0-35-generic exe/x86_64.ubuntu.22",
+      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/5.15.0 exec-env/CLI",
       "requestParameters": {
         "userName": "deploy",
         "policyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
       },
       "responseElements": null,
-      "eventID": "8f47a2c6-1b95-4e03-9d82-5a0c6e37b914",
-      "readOnly": false,
+      "eventID": "9e4cbfaa-1d3a-42f0-a5b1-a07dcedae2f9",
       "eventType": "AwsApiCall",
-      "managementEvent": true,
       "recipientAccountId": "123456789012"
     },
     {
@@ -233,59 +304,20 @@
         "accountId": "123456789012",
         "userName": "deploy"
       },
-      "eventTime": "2026-08-02T04:56:02Z",
+      "eventTime": "2026-08-02T04:59:20Z",
       "eventSource": "cloudtrail.amazonaws.com",
       "eventName": "StopLogging",
       "awsRegion": "us-east-1",
       "sourceIPAddress": "203.0.113.5",
-      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.5.0-35-generic exe/x86_64.ubuntu.22",
+      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/5.15.0 exec-env/CLI",
       "errorCode": "AccessDenied",
-      "errorMessage": "User: arn:aws:iam::123456789012:user/deploy is not authorized to perform: cloudtrail:StopLogging on resource: arn:aws:cloudtrail:us-east-1:123456789012:trail/org-audit-trail",
+      "errorMessage": "User: arn:aws:iam::123456789012:user/deploy is not authorized to perform: cloudtrail:StopLogging",
       "requestParameters": {
-        "name": "arn:aws:cloudtrail:us-east-1:123456789012:trail/org-audit-trail"
+        "name": "org-trail"
       },
       "responseElements": null,
-      "eventID": "0b5e9d31-7c46-4a28-b91f-4d8207e6a5c3",
-      "readOnly": false,
+      "eventID": "af5dc0bb-2e4b-4301-b6c2-b18edfebf30a",
       "eventType": "AwsApiCall",
-      "managementEvent": true,
-      "recipientAccountId": "123456789012"
-    },
-    {
-      "eventVersion": "1.08",
-      "userIdentity": {
-        "type": "IAMUser",
-        "principalId": "AIDACKCEVSQ6C2EXAMPLE",
-        "arn": "arn:aws:iam::123456789012:user/deploy",
-        "accountId": "123456789012",
-        "userName": "deploy"
-      },
-      "eventTime": "2026-08-02T04:56:48Z",
-      "eventSource": "s3.amazonaws.com",
-      "eventName": "PutBucketPolicy",
-      "awsRegion": "us-east-1",
-      "sourceIPAddress": "203.0.113.5",
-      "userAgent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.5.0-35-generic exe/x86_64.ubuntu.22",
-      "requestParameters": {
-        "bucketName": "acme-prod-artifacts",
-        "bucketPolicy": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Sid": "PublicRead",
-              "Effect": "Allow",
-              "Principal": "*",
-              "Action": "s3:GetObject",
-              "Resource": "arn:aws:s3:::acme-prod-artifacts/*"
-            }
-          ]
-        }
-      },
-      "responseElements": null,
-      "eventID": "e91c40a8-3d72-4b65-807e-2f5a91c6d834",
-      "readOnly": false,
-      "eventType": "AwsApiCall",
-      "managementEvent": true,
       "recipientAccountId": "123456789012"
     }
   ]

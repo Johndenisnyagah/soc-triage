@@ -19,14 +19,19 @@ import pytest
 
 SAMPLE_LOGS = pathlib.Path(__file__).resolve().parents[2] / "sample_logs"
 
-# A second, unrelated intrusion: different address, different host, different
-# account, four hours after the sample logs end. Nothing joins it to them, so
-# the queue holds two incidents and `?severity=` has something to discriminate
-# between. Synthetic on purpose -- the committed samples are one story, and a
-# filter test that cannot fail is not a test.
-UNRELATED_BRUTE_FORCE = "\n".join(
-    f"Aug  2 09:1{n // 6}:{n % 6 * 10:02d} db02 sshd[{7000 + n}]: "
-    f"Failed password for backup from 198.51.100.77 port {50000 + n} ssh2"
+# A *third* intrusion, ingested after the fact. The committed samples already
+# carry two incidents (the cross-source webserver01 story and the unrelated
+# db02 brute force), so this exists only for the tests that need an ingest to
+# happen *later* than the ids they are checking.
+#
+# Its entities are disjoint from both committed incidents -- different host,
+# address and account -- and it sits well past `DEFAULT_MAX_GAP` from either.
+# Reusing db02/backup/198.51.100.77 here would join the sample's second
+# incident rather than forming a third, and the test would silently stop
+# testing what it says it does.
+LATER_UNRELATED_BRUTE_FORCE = "\n".join(
+    f"Aug  2 13:2{n // 6}:{n % 6 * 10:02d} app03 sshd[{9000 + n}]: "
+    f"Failed password for tomcat from 192.0.2.66 port {52000 + n} ssh2"
     for n in range(8)
 )
 
@@ -50,8 +55,8 @@ def ingested(client):
 
 
 @pytest.fixture()
-def two_incidents(ingested):
-    _upload(ingested, UNRELATED_BRUTE_FORCE, "db02.log")
+def three_incidents(ingested):
+    _upload(ingested, LATER_UNRELATED_BRUTE_FORCE, "app03.log")
     return ingested
 
 
@@ -61,17 +66,35 @@ def two_incidents(ingested):
 
 
 def test_listing_returns_incidents_for_ingested_samples(ingested):
+    """The committed samples carry two intrusions that must not be merged.
+
+    They share no entity key and sit hours apart, so correlation separating
+    them is the claim being checked here -- joining is the easier half.
+    """
     body = ingested.get("/api/incidents").json()
 
-    assert len(body) == 1
-    row = body[0]
-    assert row["severity"] == "CRITICAL"
-    assert row["severity_score"] == 90
-    assert row["primary_entity"].startswith("principal:")
-    assert row["finding_count"] == 6
-    assert row["tactic_count"] == len(row["tactics"]) == 5
-    assert row["tactics"] == sorted(row["tactics"])
-    assert row["first_seen"] < row["last_seen"]
+    assert len(body) == 2
+    critical, high = body
+
+    assert critical["severity"] == "CRITICAL"
+    assert critical["severity_score"] == 90
+    assert critical["primary_entity"].startswith("principal:")
+    assert critical["tactic_count"] == len(critical["tactics"]) == 5
+    assert critical["tactics"] == sorted(critical["tactics"])
+    assert critical["first_seen"] < critical["last_seen"]
+    # Cross-source: the whole point of the first sample story.
+    assert {s["source_type"] for s in critical["sources"]} == {
+        "syslog_sshd",
+        "aws_cloudtrail",
+    }
+
+    # The second intrusion is one rule on one source, so it stays HIGH: a
+    # single tactic never reaches the escalation rung (decision 14).
+    assert high["severity"] == "HIGH"
+    assert high["tactic_count"] == 1
+    assert [s["source_type"] for s in high["sources"]] == ["syslog_sshd"]
+
+    assert not set(critical["entity_keys"]) & set(high["entity_keys"])
 
 
 def test_listing_is_empty_before_anything_is_ingested(client):
@@ -93,28 +116,35 @@ def test_source_counts_are_per_source_and_count_each_event_once(ingested):
     assert sum(counts.values()) < total_evidence
 
 
-def test_listing_is_sorted_worst_first(two_incidents):
-    body = two_incidents.get("/api/incidents").json()
+def test_listing_is_sorted_worst_first(three_incidents):
+    body = three_incidents.get("/api/incidents").json()
 
     scores = [row["severity_score"] for row in body]
     assert scores == sorted(scores, reverse=True)
 
 
-def test_severity_filter_selects_one_incident(two_incidents):
-    everything = two_incidents.get("/api/incidents").json()
+def test_severity_filter_selects_one_incident(ingested):
+    """Runs on the committed samples alone -- no synthetic top-up.
+
+    The filter is only meaningfully exercised if the shipped data spans more
+    than one severity, so this doubles as a guard on the sample logs: if a
+    future edit collapsed them to a single incident, the filter would still
+    "pass" against a queue it could not discriminate.
+    """
+    everything = ingested.get("/api/incidents").json()
     assert len(everything) == 2
     assert {row["severity"] for row in everything} == {"CRITICAL", "HIGH"}
 
-    critical = two_incidents.get("/api/incidents?severity=CRITICAL").json()
-    high = two_incidents.get("/api/incidents?severity=HIGH").json()
+    critical = ingested.get("/api/incidents?severity=CRITICAL").json()
+    high = ingested.get("/api/incidents?severity=HIGH").json()
 
     assert [row["severity"] for row in critical] == ["CRITICAL"]
     assert [row["severity"] for row in high] == ["HIGH"]
     assert critical[0]["incident_id"] != high[0]["incident_id"]
 
 
-def test_severity_filter_matching_nothing_returns_an_empty_list(two_incidents):
-    assert two_incidents.get("/api/incidents?severity=INFO").json() == []
+def test_severity_filter_matching_nothing_returns_an_empty_list(ingested):
+    assert ingested.get("/api/incidents?severity=INFO").json() == []
 
 
 def test_an_unknown_severity_is_rejected_rather_than_silently_empty(ingested):
@@ -261,21 +291,17 @@ def test_incident_ids_are_stable_across_two_requests(ingested):
     assert all(row.startswith("INC-") for row in first)
 
 
-def test_an_id_survives_a_later_unrelated_ingest(two_incidents):
+def test_an_id_survives_a_later_unrelated_ingest(ingested):
     """The failure positional ids had: ingesting anything renumbered every
     incident, so yesterday's link pointed at somebody else's intrusion."""
-    critical = two_incidents.get("/api/incidents?severity=CRITICAL").json()[0]
+    critical = ingested.get("/api/incidents?severity=CRITICAL").json()[0]
 
-    _upload(
-        two_incidents,
-        "Aug  2 11:00:00 web03 sshd[9100]: "
-        "Failed password for alice from 192.0.2.44 port 60001 ssh2",
-        "web03.log",
-    )
+    _upload(ingested, LATER_UNRELATED_BRUTE_FORCE, "app03.log")
 
-    after = two_incidents.get("/api/incidents?severity=CRITICAL").json()[0]
+    assert len(ingested.get("/api/incidents").json()) == 3
+    after = ingested.get("/api/incidents?severity=CRITICAL").json()[0]
     assert after["incident_id"] == critical["incident_id"]
-    assert two_incidents.get(
+    assert ingested.get(
         f"/api/incidents/{critical['incident_id']}"
     ).status_code == 200
 
@@ -301,11 +327,13 @@ def _shape(value):
 
 
 LISTING_SHAPE = {
+    "entity_keys": ["str"],
     "first_seen": "str",
     "finding_count": "int",
     "incident_id": "str",
     "last_seen": "str",
     "primary_entity": "str",
+    "rule_ids": ["str"],
     "severity": "str",
     "severity_score": "int",
     "sources": [{"event_count": "int", "source_type": "str"}],
@@ -316,7 +344,6 @@ LISTING_SHAPE = {
 DETAIL_SHAPE = {
     **LISTING_SHAPE,
     "enrichment_source": "str",
-    "entity_keys": ["str"],
     "summary": "str",
     "techniques": [{"name": "str", "tactics": ["str"], "technique_id": "str"}],
     "timeline": [
@@ -339,6 +366,38 @@ def test_listing_schema_snapshot(ingested):
     body = ingested.get("/api/incidents").json()
 
     assert _shape(body[0]) == LISTING_SHAPE
+
+
+def test_listing_carries_the_keys_the_queue_searches(ingested):
+    """`entity_keys` and `rule_ids` are on the queue row, not just the detail.
+
+    The queue's search box matches these. If they regress to detail-only, the
+    box silently stops finding incidents by any entity other than the one that
+    won `_KEY_PRECEDENCE` -- a failure that looks like "no such incident"
+    rather than like a missing field.
+    """
+    row = ingested.get("/api/incidents").json()[0]
+
+    assert row["entity_keys"] == sorted(row["entity_keys"])
+    assert row["primary_entity"] in row["entity_keys"]
+    # An entity the incident touches but which did not become primary_entity.
+    assert "ip:203.0.113.5" in row["entity_keys"]
+
+    assert row["rule_ids"] == sorted(row["rule_ids"])
+    assert "brute_force_auth" in row["rule_ids"]
+    # One entry per distinct rule, however many findings that rule produced.
+    assert len(row["rule_ids"]) == len(set(row["rule_ids"]))
+    assert len(row["rule_ids"]) <= row["finding_count"]
+
+
+def test_listing_and_detail_agree_on_the_shared_fields(ingested):
+    """Same incident, two endpoints, no disagreement about the inherited half."""
+    row = ingested.get("/api/incidents").json()[0]
+
+    detail = ingested.get(f"/api/incidents/{row['incident_id']}").json()
+
+    for field in LISTING_SHAPE:
+        assert detail[field] == row[field], field
 
 
 def test_detail_schema_snapshot(ingested):

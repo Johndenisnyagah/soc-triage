@@ -97,7 +97,23 @@ class TimelineEntry(BaseModel):
 
 
 class IncidentSummary(BaseModel):
-    """Queue row. Everything needed to triage without opening the incident."""
+    """Queue row. Everything needed to triage without opening the incident.
+
+    `entity_keys` and `rule_ids` are carried here, not just on the detail, so
+    the queue can be searched on them. Without them the only searchable
+    identifier is `primary_entity` -- one key out of the several an incident
+    actually touches -- so an analyst pivoting on an address that appears in the
+    evidence but did not win `_KEY_PRECEDENCE` gets no hit, and the queue looks
+    like it has nothing on an entity it is in fact reporting.
+
+    This grows the listing payload: both fields are per-incident sets, so a
+    response is roughly the sum of every incident's entity fan-out rather than
+    one key each. That is fine at sample-log scale and is the same bet as
+    recomputing incidents per request (above) -- and it is bounded by
+    `MAX_COOCCURRING_KEYS`, which already caps how wide an incident's key set
+    can get. If the queue ever needs to page, these are the two fields to drop
+    behind a `?fields=` projection first.
+    """
 
     incident_id: str
     severity: str = Field(description="Severity name, e.g. HIGH")
@@ -107,6 +123,10 @@ class IncidentSummary(BaseModel):
     tactic_count: int
     tactics: list[str]
     sources: list[SourceCount]
+    entity_keys: list[str]
+    rule_ids: list[str] = Field(
+        description="Distinct rule ids that fired, sorted. Searchable in the queue."
+    )
     first_seen: datetime | None
     last_seen: datetime | None
 
@@ -119,7 +139,6 @@ class IncidentDetail(IncidentSummary):
     enrichment_source: str = Field(
         description="'llm' or 'deterministic' -- the UI labels the latter"
     )
-    entity_keys: list[str]
     techniques: list[TechniqueOut]
     timeline: list[TimelineEntry]
 
@@ -250,6 +269,8 @@ def to_summary(incident: Incident) -> IncidentSummary:
         tactic_count=len(incident.tactics),
         tactics=sorted(incident.tactics),
         sources=_sources(incident),
+        entity_keys=sorted(incident.entity_keys),
+        rule_ids=sorted(incident.rule_ids),
         first_seen=incident.first_seen,
         last_seen=incident.last_seen,
     )
@@ -266,7 +287,6 @@ def to_detail(incident: Incident) -> IncidentDetail:
         **to_summary(incident).model_dump(),
         summary=enrichment.summary,
         enrichment_source=str(enrichment.source),
-        entity_keys=sorted(incident.entity_keys),
         techniques=_techniques(incident),
         timeline=_timeline(incident),
     )
