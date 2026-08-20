@@ -380,6 +380,27 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 FastAPI, SQLAlchemy, Postgres (not SQLite — the pipeline claim requires it),
 React 19 + TypeScript + Tailwind, Docker Compose.
 
+## Workflow
+
+**Changes land through pull requests, not direct commits to `main`.** Branch,
+commit, push the branch, and report the PR URL. Do not merge — opening the PR
+is where the work stops.
+
+The history up to and including the frontend commit is linear and direct to
+`main`, and that was right while this was one continuous build: there was no
+second reader, and a PR per step would have been ceremony around a monologue.
+Now that the pipeline is shippable, the reason for a PR is the written record
+of *why* a change happened. The commit says what moved; the PR is where the
+reasoning that did not fit in the diff lives.
+
+Practical note for a fresh session: the `gh` CLI is **not** installed on the
+current dev machine, so the PR cannot be opened from the shell. Push the
+branch and hand over the compare URL instead:
+
+```
+https://github.com/Johndenisnyagah/soc-triage/compare/main...<branch>?expand=1
+```
+
 ## Conventions
 
 - Python 3.12+, `from __future__ import annotations`, full type hints.
