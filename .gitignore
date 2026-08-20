@@ -26,3 +26,6 @@ htmlcov/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Personal prep material, not project documentation
+NOTES.md
