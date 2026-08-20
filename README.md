@@ -1,5 +1,7 @@
 # SOC Alert Triage & Context Enrichment Pipeline
 
+[![test](https://github.com/Johndenisnyagah/soc-triage/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/Johndenisnyagah/soc-triage/actions/workflows/test.yml)
+
 Security operations teams drown in alerts. A single mid-sized environment produces
 tens of thousands of log lines an hour across Linux hosts, cloud control planes, and
 Windows domain controllers, and an analyst has to decide which handful of them matter.
@@ -35,8 +37,8 @@ In progress. Ingest, persistence, detection, correlation and ATT&CK mapping are
 complete and tested. Enrichment is built and exercised end to end against a fake
 client — deterministic summaries, the validation gate, candidate shortlists and
 orchestration — with only the provider client behind the `LLMClient` protocol left to
-write. The Windows parser, reports and playbooks, and the continuous-ingest worker
-come after that.
+write. The read API and the React frontend are complete on top of that. The Windows
+parser, reports and playbooks, and the continuous-ingest worker come after.
 
 - [x] **Ingest layer** — normalized event schema, confidence-based parser registry, sshd and CloudTrail parsers
 - [x] **Persistence** — event/entity models, ingest endpoint, global deduplication
@@ -44,6 +46,8 @@ come after that.
 - [x] **Correlation** — incident grouping by entity key and time window
 - [x] **MITRE ATT&CK mapping** — static rule mapping and catalog validation (LLM proposal path not yet built)
 - [ ] **LLM enrichment** — summaries with structurally-validated deterministic fallback
+- [x] **Read API** — incidents computed on read, content-derived IDs
+- [x] **Frontend** — queue and detail views, generated types
 - [ ] **Windows Security parser**
 - [ ] **Executive reports and response playbooks**
 - [ ] **Continuous ingest endpoint and worker**
@@ -338,6 +342,14 @@ order, on a database that has never seen it before.
 cd backend && pytest -q
 ```
 
+[CI](.github/workflows/test.yml) runs this on every push and pull request to `main`,
+alongside a frontend job that typechecks and builds. No secrets are configured and none
+are needed: the ATT&CK catalog is committed and read from disk, enrichment is off unless
+`SOC_ENRICHMENT_ENABLED` is set, and `conftest.py` points the database at a throwaway
+SQLite file before any app module is imported. The suite was also run locally with every
+non-loopback socket and DNS lookup blocked, and passes unchanged — the offline claim is
+tested rather than asserted.
+
 Coverage is not evenly spread, and deliberately so. The heaviest files are the ones
 where being subtly wrong is survivable long enough to reach production:
 `test_enrichment_validation.py` (50), `test_correlation.py` (42),
@@ -593,8 +605,8 @@ OpenAPI document by `backend/scripts/generate_frontend_types.py`, and
 [`test_generated_types_are_current`](backend/tests/test_frontend_types.py:22) fails if
 the checked-in file has drifted from the response models — a renamed Pydantic field
 would otherwise reach the browser as a silent `undefined`. That check runs in the
-pytest suite; there is no CI pipeline in this repo yet, so it is only enforced when
-someone runs the tests.
+pytest suite, which CI runs on every push and pull request to `main`, so drift fails
+the build rather than waiting for someone to notice.
 
 ```bash
 cd frontend && npm install && npm run dev    # expects the backend on :8000
