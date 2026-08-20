@@ -2,7 +2,7 @@ name: test
 
 on:
   push:
-    branches: [main, ci/github-actions]
+    branches: [main]
   pull_request:
     branches: [main]
 
