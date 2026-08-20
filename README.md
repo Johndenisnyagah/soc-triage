@@ -580,5 +580,22 @@ signal the project exists to find.
 
 ## Stack
 
-FastAPI, SQLAlchemy 2.0, Postgres (SQLite for local development), pytest. React and
-TypeScript frontend to follow.
+**Backend.** FastAPI, SQLAlchemy 2.0, Postgres (SQLite for local development), pytest.
+
+**Frontend.** Vite, React 19, TypeScript and Tailwind v4, with react-router for two
+views: the incident queue at `/` and the detail view at `/incidents/:incidentId`. The
+queue filters by severity server-side and searches entity keys, rule IDs and tactics on
+the client; the detail view centres on the timeline, which distinguishes host from
+cloud activity on three redundant channels so a greyscale render still reads.
+
+Types are not hand-written. `frontend/src/api/schema.ts` is generated from the FastAPI
+OpenAPI document by `backend/scripts/generate_frontend_types.py`, and
+[`test_generated_types_are_current`](backend/tests/test_frontend_types.py:22) fails if
+the checked-in file has drifted from the response models — a renamed Pydantic field
+would otherwise reach the browser as a silent `undefined`. That check runs in the
+pytest suite; there is no CI pipeline in this repo yet, so it is only enforced when
+someone runs the tests.
+
+```bash
+cd frontend && npm install && npm run dev    # expects the backend on :8000
+```

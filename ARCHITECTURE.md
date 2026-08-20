@@ -94,8 +94,8 @@ flowchart TB
     GATE -->|"<b>any</b> failure →<br/>discard whole payload"| DS
     DS --> FALL["<b>Enrichment</b><br/>source = deterministic"]
 
-    PT["<code>Finding.proposed_technique</code>"]
-    L3 --> PT
+    PT["<code>Finding.proposed_technique</code><br/><i>field + guard exist;<br/>nothing populates it yet</i>"]
+    L3 -.->|"proposal path not built"| PT
     PT -.->|"❌ NEVER — correlation reads<br/><code>Finding.technique</code> only"| S
     PT -->|"displayed, enriched from"| ACC
 
@@ -115,6 +115,12 @@ function of distinct tactic count, so a proposed technique reaching
 `Finding.technique` would add a tactic, escalate the incident, and re-score
 it — the model doing detection's job without ever writing a number. Validating
 the ID does not help: a *valid* wrong technique escalates just as effectively.
+
+The guard is built and tested; the path it guards is not. Nothing in `app/`
+assigns `Finding.proposed_technique` today — `enrich()` returns proposed
+techniques on the `Enrichment`, and the API's `_techniques()` reads
+`Finding.technique` only. The constraint is in place before the feature that
+needs it, which is the order that makes it worth having.
 
 **Degradation is visible, not silent.** Every path out of the gate returns an
 `Enrichment` — no exception reaches the caller, no `None`. A timeout, a 500, a
