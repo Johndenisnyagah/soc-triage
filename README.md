@@ -35,8 +35,8 @@ In progress. Ingest, persistence, detection, correlation and ATT&CK mapping are
 complete and tested. Enrichment is built and exercised end to end against a fake
 client — deterministic summaries, the validation gate, candidate shortlists and
 orchestration — with only the provider client behind the `LLMClient` protocol left to
-write. The Windows parser, reports and playbooks, and the continuous-ingest worker
-come after that.
+write. The read API and the React frontend are complete on top of that. The Windows
+parser, reports and playbooks, and the continuous-ingest worker come after.
 
 - [x] **Ingest layer** — normalized event schema, confidence-based parser registry, sshd and CloudTrail parsers
 - [x] **Persistence** — event/entity models, ingest endpoint, global deduplication
@@ -44,6 +44,8 @@ come after that.
 - [x] **Correlation** — incident grouping by entity key and time window
 - [x] **MITRE ATT&CK mapping** — static rule mapping and catalog validation (LLM proposal path not yet built)
 - [ ] **LLM enrichment** — summaries with structurally-validated deterministic fallback
+- [x] **Read API** — incidents computed on read, content-derived IDs
+- [x] **Frontend** — queue and detail views, generated types
 - [ ] **Windows Security parser**
 - [ ] **Executive reports and response playbooks**
 - [ ] **Continuous ingest endpoint and worker**
