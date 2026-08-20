@@ -147,8 +147,12 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     **A technique contributes all of its tactics, and multi-mapping is the
     known weakness.** Breadth works as a severity proxy only while tactics are
     roughly independent, and ATT&CK maps many techniques to several — T1098
-    Account Manipulation covers persistence and privilege-escalation, and 54
-    other techniques share that exact pair. So one technique can move an
+    Account Manipulation covers persistence and privilege-escalation, and 53
+    other techniques carry *exactly* that pair and nothing else (54 including
+    T1098 itself; 65 if you count every technique carrying both tactics among
+    others, such as T1078). The strict count is the one quoted here, because
+    those are the techniques that behave identically to T1098 for severity
+    purposes. So one technique can move an
     incident two-fifths of the way up the ladder, and two rules can reach the
     three-tactic rung where three would otherwise be needed. Counting one
     tactic per technique was rejected as worse: it undercounts genuine breadth
