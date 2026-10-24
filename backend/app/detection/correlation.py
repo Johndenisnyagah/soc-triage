@@ -64,7 +64,8 @@ DEFAULT_MAX_GAP = timedelta(hours=1)
 
 # An entity key co-occurring with more than this many distinct other entities
 # is treated as ambient rather than identifying, and is not used to join.
-# Unvalidated -- see the module docstring. Tune this before tuning anything else.
+# Unvalidated at scale -- see the module docstring. Swept against the labelled
+# corpus in docs/detection-evaluation.md, where 6-12 give identical results.
 MAX_COOCCURRING_KEYS = 12
 
 # `account:` sits just below `principal:`: it identifies a tenant rather than

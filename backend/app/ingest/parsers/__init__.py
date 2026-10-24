@@ -1,1 +1,1 @@
-from . import cloudtrail, sshd  # noqa: F401 -- import side effect registers parsers
+from . import cloudtrail, sshd, windows_security  # noqa: F401 -- import side effect registers parsers

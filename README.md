@@ -2,14 +2,38 @@
 
 [![test](https://github.com/Johndenisnyagah/soc-triage/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/Johndenisnyagah/soc-triage/actions/workflows/test.yml)
 
+Turns raw Linux `sshd` and AWS CloudTrail logs into correlated, ATT&CK-mapped
+incidents with deterministic rules — so the same input always gives the same,
+auditable answer. A language model is only ever allowed to explain, never to detect.
+
+![Incident detail: a CRITICAL incident correlated across sshd and CloudTrail, with its deterministic summary, timeline, ATT&CK tactics and entity keys](docs/screenshots/incident-detail.png)
+
+*Real output from the committed sample logs: one attacker moving from an SSH brute
+force on a Linux host to persistence and log tampering in an AWS account, joined into
+one incident across both sources.*
+
+**Try it in a minute** — no database, Docker or API key needed:
+
+```bash
+cd backend && pip install -r requirements.txt
+python scripts/run_detection.py      # ingests sample_logs/, prints the two incidents
+```
+
+For the UI, run `uvicorn app.main:app --port 8000` in `backend/` and `npm install && npm run dev`
+in `frontend/`, then ingest the samples as shown in [Quick start](#quick-start).
+
+![Incident queue: two incidents ordered by severity](docs/screenshots/incident-queue.png)
+
+---
+
 Security operations teams drown in alerts. A single mid-sized environment produces
 tens of thousands of log lines an hour across Linux hosts, cloud control planes, and
 Windows domain controllers, and an analyst has to decide which handful of them matter.
 Most of that time goes to mechanical work: reading raw log formats, pivoting between
 sources to check whether the same address appears twice, and writing up what happened.
 
-This pipeline automates that. It ingests raw logs — Linux `sshd` over syslog and AWS
-CloudTrail today, with Windows Security event logs planned — normalizes them into a
+This pipeline automates that. It ingests raw logs — Linux `sshd` over syslog, AWS
+CloudTrail, and Windows Security event logs — normalizes them into a
 single event schema, detects incidents with deterministic rules, correlates them
 across sources, and maps them to MITRE ATT&CK against the real catalog. A language
 model layer then explains what was found.
@@ -20,10 +44,13 @@ validation gate, evidence framing and candidate shortlists — is built and test
 against a fake client, but no model provider is connected yet, so no incident text is
 model-written. Executive reports and response playbooks are planned, not built.
 
-The source list is the part worth reading carefully. Two sources are implemented and
-tested; Windows is designed for but not built. Nothing in the detection layer is
-source-specific, so adding it is a parser rather than a rewrite — but "planned" and
-"present" are different claims, and the checklist below is the authoritative one.
+The source list is the part worth reading carefully. Three sources are implemented
+and tested. Windows was added after the detection rules were written, and the
+brute-force and enumeration rules fire on Windows logons without a single change —
+nothing in the detection layer is source-specific. What Windows does *not* have yet is
+rules of its own: new accounts, group changes and cleared logs are parsed but nothing
+reads them. "Parsed" and "detected" are different claims, and the checklist below is
+the authoritative one.
 
 The architectural constraint the whole project is built around: **rules detect, AI
 explains.** The model never creates, suppresses, or re-scores an incident. If the LLM
@@ -51,8 +78,8 @@ In progress. Ingest, persistence, detection, correlation and ATT&CK mapping are
 complete and tested. Enrichment is built and exercised end to end against a fake
 client — deterministic summaries, the validation gate, candidate shortlists and
 orchestration — with only the provider client behind the `LLMClient` protocol left to
-write. The read API and the React frontend are complete on top of that. The Windows
-parser, reports and playbooks, and the continuous-ingest worker come after.
+write. The read API and the React frontend are complete on top of that. Reports and
+playbooks, and the continuous-ingest worker, come after.
 
 - [x] **Ingest layer** — normalized event schema, confidence-based parser registry, sshd and CloudTrail parsers
 - [x] **Persistence** — event/entity models, ingest endpoint, global deduplication
@@ -62,7 +89,7 @@ parser, reports and playbooks, and the continuous-ingest worker come after.
 - [ ] **LLM enrichment** — summaries with structurally-validated deterministic fallback
 - [x] **Read API** — incidents computed on read, content-derived IDs
 - [x] **Frontend** — queue and detail views, generated types
-- [ ] **Windows Security parser**
+- [x] **Windows Security parser** — Event XML from `wevtutil`, Event Viewer or EVTX converters; rules for its post-exploitation events still to come
 - [ ] **Executive reports and response playbooks**
 - [ ] **Continuous ingest endpoint and worker**
 
@@ -105,9 +132,21 @@ pytest -q
 uvicorn app.main:app --reload
 ```
 
-Defaults to SQLite, which is also what the test suite runs on. `DATABASE_URL` points
-it at Postgres, the intended production engine, but Postgres is not yet verified — see
-[Known limitations](#known-limitations).
+Defaults to SQLite for quick local work. `DATABASE_URL` points it at Postgres, the
+production engine. CI runs the full suite on both, and `TEST_DATABASE_URL` runs it
+against your own Postgres (every table in it is truncated between tests, which is why
+it is a separately named variable).
+
+**Or run the whole stack** — Postgres, the API, the UI and the sample logs — with one
+command:
+
+```bash
+docker compose up --build        # then open http://localhost:8080
+```
+
+Ports bind to `127.0.0.1` only, and LLM enrichment stays off unless you export
+`SOC_ENRICHMENT_ENABLED=true` and `ANTHROPIC_API_KEY` first. CI starts this exact stack
+on every pull request and checks the UI serves both sample incidents through its proxy.
 
 Ingest a sample file:
 
@@ -163,6 +202,23 @@ The second is a plain SSH brute force against `backup` on `db02` from
 `198.51.100.77`, hours later. It shares no entity key with the first, so
 correlation must leave the two apart — the sample exercises separation as well as
 joining.
+
+`sample_logs/windows_security.xml` is a third, separate intrusion, on a Windows
+workstation: password guessing and username probing over the network, a successful
+RDP logon, a new local account added to Administrators, and the Security log cleared —
+surrounded by the service and machine-account logons every Windows host produces.
+
+```bash
+curl -F "file=@../sample_logs/windows_security.xml" http://localhost:8000/api/ingest
+```
+
+It produces one CRITICAL incident on `ip:203.0.113.200` from the same three rules that
+fire on `sshd` (brute force, success after brute force, username enumeration). Of its
+20 records, 16 become events; the 4 service, machine-account and privilege-assignment
+records are skipped on purpose, because a service logon counted as a successful
+authentication would complete the brute-force-success pattern for an attacker who never
+got in. Binary `.evtx` files need converting first (`wevtutil qe Security /f:xml` on
+Windows, or an EVTX-to-XML tool elsewhere).
 
 ## What it produces
 
@@ -461,13 +517,23 @@ it resolved to `None`, contributed no tactic, and silently under-escalated every
 incident containing it. Caught by
 [`test_every_rule_technique_resolves`](backend/tests/test_attack_catalog.py:246).
 
-### What is not measured
+### What is measured, and what is not
 
-There is **no false-positive rate and no performance benchmark here**, because neither
-is honestly measurable yet. A false-positive rate requires a labeled corpus — real logs
-with an analyst's ground truth attached — and this project has two synthetic sample
-files written to exercise specific code paths. A rate computed against fixtures
-authored to produce known output would measure the fixtures. Likewise, throughput
+**Detection quality on a labelled corpus.** Sixteen scenarios — ten attacks and six
+pieces of benign activity overlapping in one busy morning — each labelled before
+scoring, run through the real ingest path and scored for hits, misses, false
+positives and whether each attack got a clean incident of its own. At the shipped
+defaults the rules catch **13 of 14** expected detections (the miss is a low-and-slow
+brute force, below the threshold by design), but **4 of 6** benign scenarios produce
+false positives and most attacks on the shared web fleet end up merged into one
+incident. The sweep of `MAX_COOCCURRING_KEYS` shows the merging comes from the rules'
+`user:`/`host:` grouping rather than from that threshold. Full tables, mechanisms and
+limitations: [docs/detection-evaluation.md](docs/detection-evaluation.md).
+
+What that corpus is not: real logs with an analyst's ground truth. It was written to
+probe known behaviours, so it is a regression harness and a design probe, **not a
+real-world false-positive rate** — a rate computed against scenarios the author wrote
+measures the scenarios. Likewise, there is **no performance benchmark**: throughput
 numbers taken against a 43-event SQLite database would say nothing about the Postgres
 deployment the pipeline is designed for.
 
@@ -555,12 +621,45 @@ checked against the catalog at import, so an ATT&CK release that retires one fai
 build rather than quietly offering the model a dead ID it would be *right* to pick given
 the list it was shown ([test](backend/tests/test_attack_catalog.py:56)).
 
+### Mapped to the OWASP Top 10 for LLM Applications (2025)
+
+The same controls, indexed by the [OWASP LLM Top 10](https://genai.owasp.org/llm-top-10/)
+risk they address. The last column is honest about where coverage stops.
+
+| Risk | Control in this repo | Where it stops |
+|---|---|---|
+| **LLM01 Prompt Injection** | Evidence wrapped in `<evidence>` delimiters as data; standing instruction in the system prompt to report, not obey, injected text; newlines flattened so a record cannot forge a closing delimiter (`wrap_evidence`, `SYSTEM_PROMPT`). | Framing reduces, never eliminates, injection. The real guarantee is LLM06: whatever the model is talked into, it cannot change an incident. |
+| **LLM02 Sensitive Information Disclosure** | Enrichment is off by default (`SOC_ENRICHMENT_ENABLED`); nothing leaves the machine unless an operator turns it on. Evidence is capped at 40 lines × 400 chars. | No redaction yet. Once a provider is connected, usernames, IPs and account IDs in evidence go to it — choosing a provider and data-handling terms is an operator decision. |
+| **LLM05 Improper Output Handling** | Output is parsed as JSON against an allow-list of fields and length limits; any failure discards the whole payload; the deterministic summary ships instead (`validate`, `FORBIDDEN_FIELDS`, `ALLOWED_FIELDS`). | Accepted text is rendered as text in the UI; it is never executed or used to build queries. |
+| **LLM06 Excessive Agency** | The model has no tools and no write path. It cannot create, suppress or re-score an incident; a technique it proposes is stored in `proposed_technique` and never counted towards severity. | — |
+| **LLM07 System Prompt Leakage** | The system prompt holds no credentials, thresholds or detection logic — leaking it reveals only the rules of the explanation task. | — |
+| **LLM09 Misinformation** | Every cited event must exist in this incident's evidence (`ungrounded_citation`); technique IDs must resolve in the committed ATT&CK catalog and come from the shortlist shown (`off_list_technique`); no self-reported confidence is read. | Grounding proves a cited line exists, not that the sentence built on it is a fair reading of it. |
+| **LLM10 Unbounded Consumption** | Prompt size is bounded (evidence caps, at most 8 candidates); at most 2 attempts, and content failures never retry. | Per-call timeouts and token limits belong in the provider client, which is not built yet. |
+
+LLM03 (supply chain) depends on the provider chosen; LLM04 (data and model poisoning)
+and LLM08 (vector and embedding weaknesses) do not apply — nothing is trained or
+fine-tuned, and there is no retrieval store.
+
 ## Design decisions
 
 **Rules detect, AI explains.** The LLM layer is designed to write summaries, propose
 ATT&CK techniques and, once the playbook library exists, select playbooks. It never
 decides whether something is an incident. Until a provider is connected, the
 deterministic summary is what every incident ships with.
+
+**Why not Sigma?** Sigma is the standard format for sharing detections, and since
+specification 2.0 (August 2024) its correlation rules — `event_count`, `value_count`,
+`temporal` and `temporal_ordered` — could express most of this project's individual
+detections: the brute-force threshold, the distinct-username count behind enumeration,
+success after repeated failures. What Sigma does not describe is the layer this project
+is about: joining findings from different log sources into one incident by the entities
+they share, deciding which keys are too common to join on, and scoring severity by how
+many ATT&CK tactics an incident spans. The rules here are Python over the normalised
+schema so they run unchanged on every source (decision 5) and are tested directly
+against persisted events (decision 13). Writing detections as Sigma, validating them in
+CI and converting them to KQL and SPL is the subject of a separate detection-as-code
+project; exporting these rules to Sigma is a possible bridge between the two, not
+something built here.
 
 **ATT&CK technique IDs are validated against the real catalog, and constrained to a
 shortlist.** Detection rules map to techniques statically where the mapping is known.
@@ -611,13 +710,15 @@ signal the project exists to find.
   generator interface avoids a second copy as ORM objects; it does not avoid holding
   the source text. Full streaming means parsers accepting a line iterator, and
   incremental JSON parsing for CloudTrail's bundled form.
-- **Postgres unverified.** The test suite runs on SQLite. The global unique index and
-  the time-window query index are where the two engines could diverge.
+- **Postgres is verified functionally, not under load.** CI runs the full suite on
+  Postgres 16 as well as SQLite, and the incident ids it produces match SQLite's
+  exactly. Nothing has measured it under concurrent writers or at volume — see the
+  single-writer dedup limitation above.
 
 ## Stack
 
-**Backend.** FastAPI, SQLAlchemy 2.0, pytest. SQLite today, for local development
-and the test suite; Postgres is the target engine and is not yet verified.
+**Backend.** FastAPI, SQLAlchemy 2.0, pytest. Postgres 16 in Docker Compose and in CI;
+SQLite for quick local work and the default test run.
 
 **Frontend.** Vite, React 19, TypeScript and Tailwind v4, with react-router for two
 views: the incident queue at `/` and the detail view at `/incidents/:incidentId`. The

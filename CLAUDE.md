@@ -127,8 +127,12 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     across forty hosts is ambient, `ip:203.0.113.5` across one host and one
     account is identifying however often it appears. Suppressed keys are still
     recorded on the incident: not joining on a key is not the same as
-    discarding it. `MAX_COOCCURRING_KEYS = 12` is an unvalidated guess and the
-    first knob to turn against real data.
+    discarding it. `MAX_COOCCURRING_KEYS = 12` began as an unvalidated guess.
+    Swept against the labelled corpus (`docs/detection-evaluation.md`), values
+    6–12 give identical results and the merges it shows come from `user:`- and
+    `host:`-scoped rule groups, not from this threshold. It is still
+    unvalidated at production scale and still the first knob to turn against
+    real data.
 
     **Severity comes from distinct ATT&CK tactic breadth, not finding count.**
     One step up at three distinct tactics, two at five, over the highest
@@ -331,8 +335,16 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 
 ## Open questions
 
-- Windows `logon_type` (3 = network, 10 = RDP) is in `extra`. If a detection
-  rule needs it, promote it to a column.
+- Windows `logon_type` (3 = network, 10 = RDP) is in `extra`. The parser uses
+  it to drop service, batch and system logons; no rule reads it yet. If one
+  does, promote it to a column — `invalid_user` is already due for the same
+  promotion now that two parsers set it.
+- **Windows post-exploitation events have no rules yet.** `user_create`,
+  `group_member_add` (Administrators), `audit_log_clear` and `process_create`
+  are parsed and persisted, and nothing reads them. Each new rule needs its
+  ATT&CK mapping checked against the v19 catalog and changelog the way
+  `library.py` documents for the existing ones, so they were not added
+  alongside the parser.
 
 ## Known limitations
 
@@ -354,9 +366,11 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
   both engines agree — but any code path that persists a non-UTC aware
   datetime without going through `Event.from_normalized` will be wrong on
   SQLite only.
-- **Postgres unverified.** The suite runs on SQLite. The global unique index
-  on `dedup_hash` and the `ix_event_triage` time-window queries are where the
-  engines could still diverge.
+- **Postgres verified functionally, not under load.** CI runs the whole suite
+  on Postgres 16 (`TEST_DATABASE_URL`) as well as SQLite, and content-derived
+  incident ids match across the two. First verified on a server set to
+  Europe/Berlin, so the UTC normalisation holds against a non-UTC server
+  default. Unmeasured: concurrent writers and volume.
 
 ## Build order
 
@@ -371,19 +385,20 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
    orchestration done — `enrich()` is off by default and fully exercised
    through a fake client. Only the provider client behind the `LLMClient`
    Protocol is left. Not "confidence-gated" — see decision 15)
-7. Windows Security parser
+7. Windows Security parser ✅ (Event XML, per-record parsing, DTDs
+   rejected, channel as `target_resource`, no SID principals, service and
+   machine-account logons skipped; existing auth rules fire unchanged)
 8. Exec reports + playbooks
 9. Continuous ingest endpoint + worker
 
 ## Stack
 
-Target: FastAPI, SQLAlchemy, Postgres (not SQLite — the pipeline claim requires it),
+FastAPI, SQLAlchemy, Postgres (not SQLite — the pipeline claim requires it),
 React 19 + TypeScript + Tailwind, Docker Compose.
 
-Current: the suite and local development run on SQLite, and there is no Compose
-file yet. Until both exist, README and repository description must say "target",
-not "uses" — a stack line that the tree cannot back is the first thing a reviewer
-checks. See Known limitations: "Postgres unverified".
+SQLite remains for quick local work and the default test run; CI also runs the
+suite on Postgres 16 and starts the Compose stack on every PR. A stack line the
+tree cannot back is the first thing a reviewer checks — keep it that way.
 
 ## Workflow
 
