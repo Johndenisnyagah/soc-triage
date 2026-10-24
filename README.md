@@ -555,6 +555,25 @@ checked against the catalog at import, so an ATT&CK release that retires one fai
 build rather than quietly offering the model a dead ID it would be *right* to pick given
 the list it was shown ([test](backend/tests/test_attack_catalog.py:56)).
 
+### Mapped to the OWASP Top 10 for LLM Applications (2025)
+
+The same controls, indexed by the [OWASP LLM Top 10](https://genai.owasp.org/llm-top-10/)
+risk they address. The last column is honest about where coverage stops.
+
+| Risk | Control in this repo | Where it stops |
+|---|---|---|
+| **LLM01 Prompt Injection** | Evidence wrapped in `<evidence>` delimiters as data; standing instruction in the system prompt to report, not obey, injected text; newlines flattened so a record cannot forge a closing delimiter (`wrap_evidence`, `SYSTEM_PROMPT`). | Framing reduces, never eliminates, injection. The real guarantee is LLM06: whatever the model is talked into, it cannot change an incident. |
+| **LLM02 Sensitive Information Disclosure** | Enrichment is off by default (`SOC_ENRICHMENT_ENABLED`); nothing leaves the machine unless an operator turns it on. Evidence is capped at 40 lines × 400 chars. | No redaction yet. Once a provider is connected, usernames, IPs and account IDs in evidence go to it — choosing a provider and data-handling terms is an operator decision. |
+| **LLM05 Improper Output Handling** | Output is parsed as JSON against an allow-list of fields and length limits; any failure discards the whole payload; the deterministic summary ships instead (`validate`, `FORBIDDEN_FIELDS`, `ALLOWED_FIELDS`). | Accepted text is rendered as text in the UI; it is never executed or used to build queries. |
+| **LLM06 Excessive Agency** | The model has no tools and no write path. It cannot create, suppress or re-score an incident; a technique it proposes is stored in `proposed_technique` and never counted towards severity. | — |
+| **LLM07 System Prompt Leakage** | The system prompt holds no credentials, thresholds or detection logic — leaking it reveals only the rules of the explanation task. | — |
+| **LLM09 Misinformation** | Every cited event must exist in this incident's evidence (`ungrounded_citation`); technique IDs must resolve in the committed ATT&CK catalog and come from the shortlist shown (`off_list_technique`); no self-reported confidence is read. | Grounding proves a cited line exists, not that the sentence built on it is a fair reading of it. |
+| **LLM10 Unbounded Consumption** | Prompt size is bounded (evidence caps, at most 8 candidates); at most 2 attempts, and content failures never retry. | Per-call timeouts and token limits belong in the provider client, which is not built yet. |
+
+LLM03 (supply chain) depends on the provider chosen; LLM04 (data and model poisoning)
+and LLM08 (vector and embedding weaknesses) do not apply — nothing is trained or
+fine-tuned, and there is no retrieval store.
+
 ## Design decisions
 
 **Rules detect, AI explains.** The LLM layer is designed to write summaries, propose
