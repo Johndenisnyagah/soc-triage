@@ -37,6 +37,14 @@ around one log format can't normalize a CloudTrail record, and incidents scoped 
 single uploaded file can't correlate an attacker who appears in two places. This is a
 rewrite that addresses both.
 
+## How it was built
+
+Built with [Claude Code](https://claude.com/claude-code) as a pair programmer. I set
+the scope and direction; every settled design decision, with the alternative it
+rejected and why, is recorded in [`CLAUDE.md`](CLAUDE.md), and the test suite is the
+specification. I'm still working through parts of the implementation in depth, and
+the decision log is where I do it.
+
 ## Status
 
 In progress. Ingest, persistence, detection, correlation and ATT&CK mapping are
