@@ -108,10 +108,23 @@ def wrap_evidence(incident: Incident) -> str:
     reads like an instruction. The delimiter plus the standing instruction in
     the system prompt is the mitigation; truncation bounds how much of the
     prompt an attacker can occupy.
+
+    Each event is rendered once. Findings in one incident share evidence -- a
+    burst is the evidence for both the brute-force finding and the success
+    that follows it -- so without this the same lines filled the budget two
+    or three times over and pushed later, unique evidence out of the prompt.
+    Identity is the exact raw record, not `dedup_hash()`: a round-tripped event
+    recomputes a coarser hash that folds same-second siblings together
+    (decision 16), and those are distinct events the model should see.
     """
     lines: list[str] = []
+    seen: set[tuple[str, str]] = set()
     for finding in incident.findings:
         for event in finding.evidence:
+            identity = (str(event.source_type), event.raw)
+            if identity in seen:
+                continue
+            seen.add(identity)
             raw = event.raw.replace("\n", " ")[:MAX_EVIDENCE_LINE_CHARS]
             lines.append(raw)
             if len(lines) >= MAX_EVIDENCE_LINES:

@@ -40,9 +40,11 @@ model layer then explains what was found.
 
 What runs today: every incident ships with a deterministic, factual summary and a
 statically mapped, catalog-validated ATT&CK technique. The LLM layer — prompt,
-validation gate, evidence framing and candidate shortlists — is built and tested
-against a fake client, but no model provider is connected yet, so no incident text is
-model-written. Executive reports and response playbooks are planned, not built.
+validation gate, evidence framing and candidate shortlists — is built, with an
+Anthropic provider client behind it. It is **off by default**: a fresh clone makes no
+network calls and every incident ships with the deterministic summary. A live run has
+not been recorded yet ([how to turn it on](#turning-on-llm-enrichment)). Executive
+reports and response playbooks are planned, not built.
 
 The source list is the part worth reading carefully. Three sources are implemented
 and tested. Windows was added after the detection rules were written, and the
@@ -75,18 +77,18 @@ the decision log is where I do it.
 ## Status
 
 In progress. Ingest, persistence, detection, correlation and ATT&CK mapping are
-complete and tested. Enrichment is built and exercised end to end against a fake
-client — deterministic summaries, the validation gate, candidate shortlists and
-orchestration — with only the provider client behind the `LLMClient` protocol left to
-write. The read API and the React frontend are complete on top of that. Reports and
-playbooks, and the continuous-ingest worker, come after.
+complete and tested. Enrichment is built — deterministic summaries, the validation
+gate, candidate shortlists, orchestration and an Anthropic provider client — and is off
+by default; every path is tested against fake and mocked clients, and a recorded live
+run is the remaining step. The read API and the React frontend are complete on top of
+that. Reports and playbooks, and the continuous-ingest worker, come after.
 
 - [x] **Ingest layer** — normalized event schema, confidence-based parser registry, sshd and CloudTrail parsers
 - [x] **Persistence** — event/entity models, ingest endpoint, global deduplication
 - [x] **Detection** — source-agnostic rules over event windows
 - [x] **Correlation** — incident grouping by entity key and time window
 - [x] **MITRE ATT&CK mapping** — static rule mapping and catalog validation (LLM proposal path not yet built)
-- [ ] **LLM enrichment** — summaries with structurally-validated deterministic fallback
+- [x] **LLM enrichment** — summaries with structurally-validated deterministic fallback, Anthropic provider, off by default (live run not yet recorded)
 - [x] **Read API** — incidents computed on read, content-derived IDs
 - [x] **Frontend** — queue and detail views, generated types
 - [x] **Windows Security parser** — Event XML from `wevtutil`, Event Viewer or EVTX converters; rules for its post-exploitation events still to come
@@ -219,6 +221,29 @@ records are skipped on purpose, because a service logon counted as a successful
 authentication would complete the brute-force-success pattern for an attacker who never
 got in. Binary `.evtx` files need converting first (`wevtutil qe Security /f:xml` on
 Windows, or an EVTX-to-XML tool elsewhere).
+
+### Turning on LLM enrichment
+
+Off unless both variables are set. Only the incident **detail** view is enriched, one
+incident per request; the queue never calls a model, and results are cached per
+incident id so a reload doesn't call it again.
+
+```bash
+export SOC_ENRICHMENT_ENABLED=true
+export ANTHROPIC_API_KEY=...              # your own key; never commit it
+export SOC_LLM_MODEL=claude-haiku-5-5     # optional; this is the default
+```
+
+When it is on, evidence lines — usernames, addresses, account IDs — are sent to the
+provider. Every response still goes through the validation gate, and anything it
+rejects falls back to the deterministic summary with the reason recorded.
+
+To record what the model actually does with the sample incidents, including an
+optional prompt-injection record:
+
+```bash
+cd backend && python scripts/enrich_demo.py --inject --write   # writes docs/llm-enrichment-run.md
+```
 
 ## What it produces
 
@@ -629,12 +654,12 @@ risk they address. The last column is honest about where coverage stops.
 | Risk | Control in this repo | Where it stops |
 |---|---|---|
 | **LLM01 Prompt Injection** | Evidence wrapped in `<evidence>` delimiters as data; standing instruction in the system prompt to report, not obey, injected text; newlines flattened so a record cannot forge a closing delimiter (`wrap_evidence`, `SYSTEM_PROMPT`). | Framing reduces, never eliminates, injection. The real guarantee is LLM06: whatever the model is talked into, it cannot change an incident. |
-| **LLM02 Sensitive Information Disclosure** | Enrichment is off by default (`SOC_ENRICHMENT_ENABLED`); nothing leaves the machine unless an operator turns it on. Evidence is capped at 40 lines × 400 chars. | No redaction yet. Once a provider is connected, usernames, IPs and account IDs in evidence go to it — choosing a provider and data-handling terms is an operator decision. |
+| **LLM02 Sensitive Information Disclosure** | Enrichment is off by default (`SOC_ENRICHMENT_ENABLED`); nothing leaves the machine unless an operator turns it on. Evidence is capped at 40 lines × 400 chars. | No redaction yet. When enrichment is switched on, usernames, IPs and account IDs in evidence go to the provider — choosing a provider and data-handling terms is an operator decision. |
 | **LLM05 Improper Output Handling** | Output is parsed as JSON against an allow-list of fields and length limits; any failure discards the whole payload; the deterministic summary ships instead (`validate`, `FORBIDDEN_FIELDS`, `ALLOWED_FIELDS`). | Accepted text is rendered as text in the UI; it is never executed or used to build queries. |
 | **LLM06 Excessive Agency** | The model has no tools and no write path. It cannot create, suppress or re-score an incident; a technique it proposes is stored in `proposed_technique` and never counted towards severity. | — |
 | **LLM07 System Prompt Leakage** | The system prompt holds no credentials, thresholds or detection logic — leaking it reveals only the rules of the explanation task. | — |
 | **LLM09 Misinformation** | Every cited event must exist in this incident's evidence (`ungrounded_citation`); technique IDs must resolve in the committed ATT&CK catalog and come from the shortlist shown (`off_list_technique`); no self-reported confidence is read. | Grounding proves a cited line exists, not that the sentence built on it is a fair reading of it. |
-| **LLM10 Unbounded Consumption** | Prompt size is bounded (evidence caps, at most 8 candidates); at most 2 attempts, and content failures never retry. | Per-call timeouts and token limits belong in the provider client, which is not built yet. |
+| **LLM10 Unbounded Consumption** | Prompt size is bounded (evidence caps, each event rendered once, at most 8 candidates); at most 2 attempts, and content failures never retry; every provider call has a 5 s connect / 30 s read timeout and a 2,048-token cap. | No per-day spending cap: cost is bounded per call and by the per-incident cache, not in total. |
 
 LLM03 (supply chain) depends on the provider chosen; LLM04 (data and model poisoning)
 and LLM08 (vector and embedding weaknesses) do not apply — nothing is trained or
@@ -644,7 +669,7 @@ fine-tuned, and there is no retrieval store.
 
 **Rules detect, AI explains.** The LLM layer is designed to write summaries, propose
 ATT&CK techniques and, once the playbook library exists, select playbooks. It never
-decides whether something is an incident. Until a provider is connected, the
+decides whether something is an incident. Unless enrichment is switched on, the
 deterministic summary is what every incident ships with.
 
 **Why not Sigma?** Sigma is the standard format for sharing detections, and since
