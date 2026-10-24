@@ -31,6 +31,14 @@ sys.path.insert(0, str(_BACKEND))
 
 SAMPLE_FILES = ("auth.log", "cloudtrail.json")
 
+# The year the sample logs describe. Syslog lines carry no year, so without
+# this the sshd sample is stamped with the *current* year while the CloudTrail
+# sample keeps its explicit 2026 timestamps. From 1 January 2027 that put the
+# two files a year apart, the one-hour correlation gap split the cross-source
+# incident in two, and the output stopped matching the README. Pinned, the demo
+# reproduces the same incidents and ids whenever it is run.
+SAMPLE_LOG_YEAR = 2026
+
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -45,6 +53,12 @@ def _parse_args() -> argparse.Namespace:
         "--database-url",
         default=None,
         help="target database; defaults to a throwaway SQLite file",
+    )
+    parser.add_argument(
+        "--year",
+        type=int,
+        default=SAMPLE_LOG_YEAR,
+        help=f"year for syslog lines, which carry none (default {SAMPLE_LOG_YEAR})",
     )
     parser.add_argument(
         "--no-ingest",
@@ -73,7 +87,7 @@ from app.main import app  # noqa: E402
 from app.models import Event  # noqa: E402
 
 
-def ingest(samples: pathlib.Path) -> None:
+def ingest(samples: pathlib.Path, year: int) -> None:
     """Upload each sample file through the real endpoint."""
     print(f"{'file':<18} {'source':<16} {'conf':>5} {'kept':>5} {'dupes':>6}  parse stats")
     with TestClient(app) as client:
@@ -84,6 +98,7 @@ def ingest(samples: pathlib.Path) -> None:
             response = client.post(
                 "/api/ingest",
                 files={"file": (name, path.read_bytes(), "text/plain")},
+                data={"default_year": str(year)},
             )
             if response.status_code != 201:
                 sys.exit(f"ingest of {name} failed: {response.status_code} {response.text}")
@@ -160,7 +175,7 @@ def report(events: list) -> None:
 
 
 if not args.no_ingest:
-    ingest(args.samples)
+    ingest(args.samples, args.year)
 
 events = load_events()
 print(f"\nevents read back from the database: {len(events)}")

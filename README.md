@@ -96,8 +96,13 @@ Defaults to SQLite for local development. Set `DATABASE_URL` for Postgres.
 Ingest a sample file:
 
 ```bash
-curl -F "file=@../sample_logs/auth.log" http://localhost:8000/api/ingest
+curl -F "file=@../sample_logs/auth.log" -F default_year=2026 http://localhost:8000/api/ingest
 ```
+
+Syslog lines carry no year, so `default_year` says which year the sample
+describes. Without it the server assumes the current year, and from 2027 the
+sshd sample would land a year away from the CloudTrail sample it is meant to
+correlate with.
 
 The response includes the ingest id and parse statistics — lines read, events
 emitted, lines skipped, and duplicates skipped — so a partially malformed upload
