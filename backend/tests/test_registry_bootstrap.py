@@ -51,7 +51,7 @@ def _probe(source: str) -> str:
 
 
 def test_importing_the_app_registers_every_parser():
-    assert _probe(_PARSER_PROBE) == "aws_cloudtrail,syslog_sshd"
+    assert _probe(_PARSER_PROBE) == "aws_cloudtrail,syslog_sshd,windows_security"
 
 
 def test_importing_the_engine_registers_every_rule():

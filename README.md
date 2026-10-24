@@ -8,8 +8,8 @@ Windows domain controllers, and an analyst has to decide which handful of them m
 Most of that time goes to mechanical work: reading raw log formats, pivoting between
 sources to check whether the same address appears twice, and writing up what happened.
 
-This pipeline automates that. It ingests raw logs — Linux `sshd` over syslog and AWS
-CloudTrail today, with Windows Security event logs planned — normalizes them into a
+This pipeline automates that. It ingests raw logs — Linux `sshd` over syslog, AWS
+CloudTrail, and Windows Security event logs — normalizes them into a
 single event schema, detects incidents with deterministic rules, correlates them
 across sources, and maps them to MITRE ATT&CK against the real catalog. A language
 model layer then explains what was found.
@@ -20,10 +20,13 @@ validation gate, evidence framing and candidate shortlists — is built and test
 against a fake client, but no model provider is connected yet, so no incident text is
 model-written. Executive reports and response playbooks are planned, not built.
 
-The source list is the part worth reading carefully. Two sources are implemented and
-tested; Windows is designed for but not built. Nothing in the detection layer is
-source-specific, so adding it is a parser rather than a rewrite — but "planned" and
-"present" are different claims, and the checklist below is the authoritative one.
+The source list is the part worth reading carefully. Three sources are implemented
+and tested. Windows was added after the detection rules were written, and the
+brute-force and enumeration rules fire on Windows logons without a single change —
+nothing in the detection layer is source-specific. What Windows does *not* have yet is
+rules of its own: new accounts, group changes and cleared logs are parsed but nothing
+reads them. "Parsed" and "detected" are different claims, and the checklist below is
+the authoritative one.
 
 The architectural constraint the whole project is built around: **rules detect, AI
 explains.** The model never creates, suppresses, or re-scores an incident. If the LLM
@@ -51,8 +54,8 @@ In progress. Ingest, persistence, detection, correlation and ATT&CK mapping are
 complete and tested. Enrichment is built and exercised end to end against a fake
 client — deterministic summaries, the validation gate, candidate shortlists and
 orchestration — with only the provider client behind the `LLMClient` protocol left to
-write. The read API and the React frontend are complete on top of that. The Windows
-parser, reports and playbooks, and the continuous-ingest worker come after.
+write. The read API and the React frontend are complete on top of that. Reports and
+playbooks, and the continuous-ingest worker, come after.
 
 - [x] **Ingest layer** — normalized event schema, confidence-based parser registry, sshd and CloudTrail parsers
 - [x] **Persistence** — event/entity models, ingest endpoint, global deduplication
@@ -62,7 +65,7 @@ parser, reports and playbooks, and the continuous-ingest worker come after.
 - [ ] **LLM enrichment** — summaries with structurally-validated deterministic fallback
 - [x] **Read API** — incidents computed on read, content-derived IDs
 - [x] **Frontend** — queue and detail views, generated types
-- [ ] **Windows Security parser**
+- [x] **Windows Security parser** — Event XML from `wevtutil`, Event Viewer or EVTX converters; rules for its post-exploitation events still to come
 - [ ] **Executive reports and response playbooks**
 - [ ] **Continuous ingest endpoint and worker**
 
@@ -163,6 +166,23 @@ The second is a plain SSH brute force against `backup` on `db02` from
 `198.51.100.77`, hours later. It shares no entity key with the first, so
 correlation must leave the two apart — the sample exercises separation as well as
 joining.
+
+`sample_logs/windows_security.xml` is a third, separate intrusion, on a Windows
+workstation: password guessing and username probing over the network, a successful
+RDP logon, a new local account added to Administrators, and the Security log cleared —
+surrounded by the service and machine-account logons every Windows host produces.
+
+```bash
+curl -F "file=@../sample_logs/windows_security.xml" http://localhost:8000/api/ingest
+```
+
+It produces one CRITICAL incident on `ip:203.0.113.200` from the same three rules that
+fire on `sshd` (brute force, success after brute force, username enumeration). Of its
+20 records, 16 become events; the 4 service, machine-account and privilege-assignment
+records are skipped on purpose, because a service logon counted as a successful
+authentication would complete the brute-force-success pattern for an attacker who never
+got in. Binary `.evtx` files need converting first (`wevtutil qe Security /f:xml` on
+Windows, or an EVTX-to-XML tool elsewhere).
 
 ## What it produces
 

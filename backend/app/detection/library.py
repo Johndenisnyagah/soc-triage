@@ -112,11 +112,12 @@ class InvalidUserEnumeration(DistinctThresholdRule):
     of one username would trip an enumeration rule that is not looking at
     variety.
 
-    Reads `extra["invalid_user"]`, which only the sshd parser sets. CLAUDE.md
-    flags reaching into `extra` from a rule as the signal that a field wants
-    promoting to a real column; this rule is the first caller, so the promotion
-    is worth doing once a second source can populate it. Until then `.get()`
-    means non-sshd events simply never match, rather than erroring.
+    Reads `extra["invalid_user"]`, which the sshd parser sets for "invalid
+    user" and the Windows parser for a 4625 with SubStatus 0xC0000064 ("user
+    name does not exist"). CLAUDE.md flags reaching into `extra` from a rule as
+    the signal that a field wants promoting to a real column; with two sources
+    now populating it, that promotion is due. Until then `.get()` means events
+    from other sources simply never match, rather than erroring.
     """
 
     rule_id = "invalid_user_enumeration"
