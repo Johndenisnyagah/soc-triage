@@ -1,16 +1,19 @@
 from __future__ import annotations
 
-from app.ingest import parsers  # noqa: F401 -- registers both parsers
+from app.ingest import parsers  # noqa: F401 -- registers every parser
 from app.ingest.base import registered_parsers, select_parser
 from app.ingest.parsers.cloudtrail import CloudTrailParser
 from app.ingest.parsers.sshd import SshdSyslogParser
+from app.ingest.parsers.windows_security import WindowsSecurityXmlParser
 
 
 def test_registry_is_populated():
     """Guards the failure that started this: an empty parsers/__init__.py
     leaves the registry empty and every ingest reports 'unrecognised format'
     with no error anywhere."""
-    assert set(registered_parsers()) == {SshdSyslogParser, CloudTrailParser}
+    assert set(registered_parsers()) == {
+        SshdSyslogParser, CloudTrailParser, WindowsSecurityXmlParser,
+    }
 
 
 def test_selects_sshd():

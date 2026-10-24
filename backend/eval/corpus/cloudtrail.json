@@ -1,0 +1,311 @@
+{
+ "Records": [
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA444455556666OPS-A",
+    "arn": "arn:aws:iam::444455556666:user/ops-admin",
+    "accountId": "444455556666",
+    "userName": "ops-admin"
+   },
+   "eventTime": "2026-09-14T09:58:00Z",
+   "eventSource": "signin.amazonaws.com",
+   "eventName": "ConsoleLogin",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "192.0.2.10",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": null,
+   "responseElements": {
+    "ConsoleLogin": "Success"
+   },
+   "eventID": "00000000-0000-4000-8000-000000000010",
+   "eventType": "AwsConsoleSignIn",
+   "recipientAccountId": "444455556666"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA444455556666OPS-A",
+    "arn": "arn:aws:iam::444455556666:user/ops-admin",
+    "accountId": "444455556666",
+    "userName": "ops-admin"
+   },
+   "eventTime": "2026-09-14T10:03:00Z",
+   "eventSource": "iam.amazonaws.com",
+   "eventName": "AttachUserPolicy",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "192.0.2.10",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": {
+    "userName": "ci-bot",
+    "policyArn": "arn:aws:iam::aws:policy/ReadOnlyAccess"
+   },
+   "responseElements": null,
+   "eventID": "00000000-0000-4000-8000-000000000011",
+   "eventType": "AwsApiCall",
+   "recipientAccountId": "444455556666"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA444455556666OPS-A",
+    "arn": "arn:aws:iam::444455556666:user/ops-admin",
+    "accountId": "444455556666",
+    "userName": "ops-admin"
+   },
+   "eventTime": "2026-09-14T10:04:00Z",
+   "eventSource": "iam.amazonaws.com",
+   "eventName": "CreateAccessKey",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "192.0.2.10",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": {
+    "userName": "ci-bot"
+   },
+   "responseElements": null,
+   "eventID": "00000000-0000-4000-8000-000000000012",
+   "eventType": "AwsApiCall",
+   "recipientAccountId": "444455556666"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA111122223333CI-RU",
+    "arn": "arn:aws:iam::111122223333:user/ci-runner",
+    "accountId": "111122223333",
+    "userName": "ci-runner"
+   },
+   "eventTime": "2026-09-14T10:50:00Z",
+   "eventSource": "signin.amazonaws.com",
+   "eventName": "ConsoleLogin",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "198.51.100.66",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": null,
+   "responseElements": {
+    "ConsoleLogin": "Failure"
+   },
+   "eventID": "00000000-0000-4000-8000-000000000001",
+   "eventType": "AwsConsoleSignIn",
+   "recipientAccountId": "111122223333",
+   "errorMessage": "Failed authentication"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA111122223333CI-RU",
+    "arn": "arn:aws:iam::111122223333:user/ci-runner",
+    "accountId": "111122223333",
+    "userName": "ci-runner"
+   },
+   "eventTime": "2026-09-14T10:50:15Z",
+   "eventSource": "signin.amazonaws.com",
+   "eventName": "ConsoleLogin",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "198.51.100.66",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": null,
+   "responseElements": {
+    "ConsoleLogin": "Failure"
+   },
+   "eventID": "00000000-0000-4000-8000-000000000002",
+   "eventType": "AwsConsoleSignIn",
+   "recipientAccountId": "111122223333",
+   "errorMessage": "Failed authentication"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA111122223333CI-RU",
+    "arn": "arn:aws:iam::111122223333:user/ci-runner",
+    "accountId": "111122223333",
+    "userName": "ci-runner"
+   },
+   "eventTime": "2026-09-14T10:50:30Z",
+   "eventSource": "signin.amazonaws.com",
+   "eventName": "ConsoleLogin",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "198.51.100.66",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": null,
+   "responseElements": {
+    "ConsoleLogin": "Failure"
+   },
+   "eventID": "00000000-0000-4000-8000-000000000003",
+   "eventType": "AwsConsoleSignIn",
+   "recipientAccountId": "111122223333",
+   "errorMessage": "Failed authentication"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA111122223333CI-RU",
+    "arn": "arn:aws:iam::111122223333:user/ci-runner",
+    "accountId": "111122223333",
+    "userName": "ci-runner"
+   },
+   "eventTime": "2026-09-14T10:50:45Z",
+   "eventSource": "signin.amazonaws.com",
+   "eventName": "ConsoleLogin",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "198.51.100.66",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": null,
+   "responseElements": {
+    "ConsoleLogin": "Failure"
+   },
+   "eventID": "00000000-0000-4000-8000-000000000004",
+   "eventType": "AwsConsoleSignIn",
+   "recipientAccountId": "111122223333",
+   "errorMessage": "Failed authentication"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA111122223333CI-RU",
+    "arn": "arn:aws:iam::111122223333:user/ci-runner",
+    "accountId": "111122223333",
+    "userName": "ci-runner"
+   },
+   "eventTime": "2026-09-14T10:51:00Z",
+   "eventSource": "signin.amazonaws.com",
+   "eventName": "ConsoleLogin",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "198.51.100.66",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": null,
+   "responseElements": {
+    "ConsoleLogin": "Failure"
+   },
+   "eventID": "00000000-0000-4000-8000-000000000005",
+   "eventType": "AwsConsoleSignIn",
+   "recipientAccountId": "111122223333",
+   "errorMessage": "Failed authentication"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA111122223333CI-RU",
+    "arn": "arn:aws:iam::111122223333:user/ci-runner",
+    "accountId": "111122223333",
+    "userName": "ci-runner"
+   },
+   "eventTime": "2026-09-14T10:51:15Z",
+   "eventSource": "signin.amazonaws.com",
+   "eventName": "ConsoleLogin",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "198.51.100.66",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": null,
+   "responseElements": {
+    "ConsoleLogin": "Failure"
+   },
+   "eventID": "00000000-0000-4000-8000-000000000006",
+   "eventType": "AwsConsoleSignIn",
+   "recipientAccountId": "111122223333",
+   "errorMessage": "Failed authentication"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA111122223333CI-RU",
+    "arn": "arn:aws:iam::111122223333:user/ci-runner",
+    "accountId": "111122223333",
+    "userName": "ci-runner"
+   },
+   "eventTime": "2026-09-14T10:51:50Z",
+   "eventSource": "signin.amazonaws.com",
+   "eventName": "ConsoleLogin",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "198.51.100.66",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": null,
+   "responseElements": {
+    "ConsoleLogin": "Success"
+   },
+   "eventID": "00000000-0000-4000-8000-000000000007",
+   "eventType": "AwsConsoleSignIn",
+   "recipientAccountId": "111122223333"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA111122223333CI-RU",
+    "arn": "arn:aws:iam::111122223333:user/ci-runner",
+    "accountId": "111122223333",
+    "userName": "ci-runner"
+   },
+   "eventTime": "2026-09-14T10:54:00Z",
+   "eventSource": "iam.amazonaws.com",
+   "eventName": "CreateAccessKey",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "198.51.100.66",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": {
+    "userName": "ci-runner"
+   },
+   "responseElements": null,
+   "eventID": "00000000-0000-4000-8000-000000000008",
+   "eventType": "AwsApiCall",
+   "recipientAccountId": "111122223333"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA111122223333CI-RU",
+    "arn": "arn:aws:iam::111122223333:user/ci-runner",
+    "accountId": "111122223333",
+    "userName": "ci-runner"
+   },
+   "eventTime": "2026-09-14T10:56:00Z",
+   "eventSource": "iam.amazonaws.com",
+   "eventName": "AttachUserPolicy",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "198.51.100.66",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": {
+    "userName": "ci-runner",
+    "policyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
+   },
+   "responseElements": null,
+   "eventID": "00000000-0000-4000-8000-000000000009",
+   "eventType": "AwsApiCall",
+   "recipientAccountId": "111122223333"
+  },
+  {
+   "eventVersion": "1.08",
+   "userIdentity": {
+    "type": "IAMUser",
+    "principalId": "AIDA444455556666PLATF",
+    "arn": "arn:aws:iam::444455556666:user/platform-eng",
+    "accountId": "444455556666",
+    "userName": "platform-eng"
+   },
+   "eventTime": "2026-09-14T11:10:00Z",
+   "eventSource": "cloudtrail.amazonaws.com",
+   "eventName": "StopLogging",
+   "awsRegion": "eu-central-1",
+   "sourceIPAddress": "192.0.2.10",
+   "userAgent": "aws-cli/2.17.0 Python/3.12",
+   "requestParameters": {
+    "name": "sandbox-trail"
+   },
+   "responseElements": null,
+   "eventID": "00000000-0000-4000-8000-000000000013",
+   "eventType": "AwsApiCall",
+   "recipientAccountId": "444455556666"
+  }
+ ]
+}

@@ -187,7 +187,9 @@ def test_unrecognised_format_returns_422(client):
     detail = response.json()["detail"]
     assert detail["error"] == "unrecognised log format"
     assert detail["best_confidence"] == 0.0
-    assert set(detail["supported_formats"]) == {"syslog_sshd", "aws_cloudtrail"}
+    assert set(detail["supported_formats"]) == {
+        "syslog_sshd", "aws_cloudtrail", "windows_security",
+    }
 
 
 def test_unrecognised_format_persists_nothing(client, db):

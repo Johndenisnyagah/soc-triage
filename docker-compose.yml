@@ -1,0 +1,62 @@
+# One-command demo: Postgres, the API, the UI, and the sample logs loaded.
+#
+#   docker compose up --build
+#   open http://localhost:8080
+#
+# Ports bind to 127.0.0.1 only. The database password is a local-demo default;
+# override POSTGRES_PASSWORD for anything that is not your own machine.
+# LLM enrichment stays off unless you export SOC_ENRICHMENT_ENABLED=true and
+# ANTHROPIC_API_KEY before starting.
+
+name: soc-triage
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: soc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-soc-local-demo}
+      POSTGRES_DB: soc_triage
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U soc -d soc_triage"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  api:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://soc:${POSTGRES_PASSWORD:-soc-local-demo}@db:5432/soc_triage
+      CORS_ORIGINS: http://localhost:8080
+      SOC_ENRICHMENT_ENABLED: ${SOC_ENRICHMENT_ENABLED:-false}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  seed:
+    build: ./backend
+    command: ["python", "scripts/seed_samples.py", "/samples"]
+    environment:
+      API_URL: http://api:8000
+    volumes:
+      - ./sample_logs:/samples:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: "no"
+
+  web:
+    build: ./frontend
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:80"
+
+volumes:
+  pgdata:
