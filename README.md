@@ -2,6 +2,30 @@
 
 [![test](https://github.com/Johndenisnyagah/soc-triage/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/Johndenisnyagah/soc-triage/actions/workflows/test.yml)
 
+Turns raw Linux `sshd` and AWS CloudTrail logs into correlated, ATT&CK-mapped
+incidents with deterministic rules — so the same input always gives the same,
+auditable answer. A language model is only ever allowed to explain, never to detect.
+
+![Incident detail: a CRITICAL incident correlated across sshd and CloudTrail, with its deterministic summary, timeline, ATT&CK tactics and entity keys](docs/screenshots/incident-detail.png)
+
+*Real output from the committed sample logs: one attacker moving from an SSH brute
+force on a Linux host to persistence and log tampering in an AWS account, joined into
+one incident across both sources.*
+
+**Try it in a minute** — no database, Docker or API key needed:
+
+```bash
+cd backend && pip install -r requirements.txt
+python scripts/run_detection.py      # ingests sample_logs/, prints the two incidents
+```
+
+For the UI, run `uvicorn app.main:app --port 8000` in `backend/` and `npm install && npm run dev`
+in `frontend/`, then ingest the samples as shown in [Quick start](#quick-start).
+
+![Incident queue: two incidents ordered by severity](docs/screenshots/incident-queue.png)
+
+---
+
 Security operations teams drown in alerts. A single mid-sized environment produces
 tens of thousands of log lines an hour across Linux hosts, cloud control planes, and
 Windows domain controllers, and an analyst has to decide which handful of them matter.
