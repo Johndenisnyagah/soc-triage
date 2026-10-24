@@ -24,10 +24,11 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections import deque
+from collections.abc import Callable, Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import IntEnum
-from typing import Callable, ClassVar, Iterable, Iterator, Sequence
+from typing import ClassVar
 
 from app.ingest.schema import Category, NormalizedEvent
 

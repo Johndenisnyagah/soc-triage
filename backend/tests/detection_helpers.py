@@ -13,7 +13,7 @@ second past it.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from app.detection.rules import DetectionContext, Finding, Rule, Severity
@@ -25,7 +25,7 @@ from app.ingest.schema import (
     SourceType,
 )
 
-BASE = datetime(2026, 8, 2, 4, 41, 0, tzinfo=timezone.utc)
+BASE = datetime(2026, 8, 2, 4, 41, 0, tzinfo=UTC)
 
 DEFAULT_IP = "203.0.113.5"
 DEFAULT_ENTITY = f"ip:{DEFAULT_IP}"

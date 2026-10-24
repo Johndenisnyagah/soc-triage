@@ -27,7 +27,7 @@ import pathlib
 import sys
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 #: Pin to a release tag, never a branch. `master` moves between releases, so a
@@ -180,7 +180,7 @@ def build(bundle: dict[str, Any], source: str, ref: str) -> dict[str, Any]:
             **_version_markers(bundle),
             "stix_spec_version": bundle.get("spec_version", "unknown"),
             "bundle_id": bundle.get("id", "unknown"),
-            "fetched_at": datetime.now(timezone.utc)
+            "fetched_at": datetime.now(UTC)
             .replace(microsecond=0)
             .isoformat()
             .replace("+00:00", "Z"),

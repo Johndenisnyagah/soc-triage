@@ -8,7 +8,7 @@ detection depends on, and neither raises.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 
 from app.ingest.schema import (
     ActorType,
@@ -19,7 +19,7 @@ from app.ingest.schema import (
     to_utc,
 )
 
-UTC_INSTANT = datetime(2026, 8, 2, 4, 41, 7, tzinfo=timezone.utc)
+UTC_INSTANT = datetime(2026, 8, 2, 4, 41, 7, tzinfo=UTC)
 
 
 def _event(**overrides) -> NormalizedEvent:

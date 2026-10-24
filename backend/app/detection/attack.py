@@ -52,7 +52,7 @@ class Catalog:
         self.meta = meta or {}
 
     @classmethod
-    def from_file(cls, path: pathlib.Path) -> "Catalog":
+    def from_file(cls, path: pathlib.Path) -> Catalog:
         payload = json.loads(path.read_text(encoding="utf-8"))
         return cls(payload.get("techniques", {}), payload.get("_meta", {}))
 

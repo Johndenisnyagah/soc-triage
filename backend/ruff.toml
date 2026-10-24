@@ -1,0 +1,11 @@
+# Lint config for the backend. Deliberately a focused rule set rather than
+# ruff's broad defaults: pyflakes and syntax errors, import order, the bugbear
+# checks that catch real bugs, and pyupgrade for the 3.12 floor.
+target-version = "py312"
+line-length = 100
+
+[lint]
+select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
+# FastAPI's Depends()/Form()/File() in argument defaults is the framework's
+# documented idiom, not the mutable-default bug B008 is written for.
+ignore = ["B008"]

@@ -23,8 +23,8 @@ The grouping happens once, here, for all rules. Two consequences worth naming:
 from __future__ import annotations
 
 from collections import defaultdict
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
-from typing import Iterable, Sequence
 
 from app.ingest.schema import NormalizedEvent
 

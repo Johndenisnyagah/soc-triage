@@ -15,7 +15,7 @@ Key changes from the original LogLens `Event`:
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import (
     JSON,
@@ -43,7 +43,7 @@ from app.ingest.schema import (
 
 
 def _utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class Ingest(Base):
@@ -127,7 +127,7 @@ class Event(Base):
     )
 
     @classmethod
-    def from_normalized(cls, event, ingest_id: int) -> "Event":
+    def from_normalized(cls, event, ingest_id: int) -> Event:
         return cls(
             ingest_id=ingest_id,
             source_type=str(event.source_type),
@@ -150,7 +150,7 @@ class Event(Base):
             entity_links=[EventEntity(entity_key=k) for k in event.entity_keys()],
         )
 
-    def to_normalized(self) -> "NormalizedEvent":
+    def to_normalized(self) -> NormalizedEvent:
         """Rebuild the schema object detection rules operate on.
 
         The inverse of `from_normalized`, and the reason detection can run over

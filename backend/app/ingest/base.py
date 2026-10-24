@@ -14,9 +14,10 @@ Design notes:
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import ClassVar, Iterator
+from datetime import UTC, datetime, timezone
+from typing import ClassVar
 
 from .schema import NormalizedEvent, SourceType
 
@@ -53,12 +54,12 @@ class ParseContext:
     # Syslog timestamps carry no year. Without this, every December log
     # re-ingested in January lands 12 months in the future.
     default_year: int = field(
-        default_factory=lambda: datetime.now(timezone.utc).year
+        default_factory=lambda: datetime.now(UTC).year
     )
 
     # Syslog also carries no timezone. Assume UTC unless the operator
     # tells us the host's local zone.
-    assume_tz: timezone = timezone.utc
+    assume_tz: timezone = UTC
 
     # Fallback when the payload has no hostname (e.g. a bare sshd log).
     default_host: str | None = None

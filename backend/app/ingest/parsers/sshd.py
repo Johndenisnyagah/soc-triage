@@ -9,8 +9,8 @@ Port of the original LogLens parser, with three fixes:
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from datetime import datetime
-from typing import Iterator
 
 from ..base import BaseParser, ParseContext, register
 from ..schema import ActorType, Category, NormalizedEvent, Outcome, SourceType

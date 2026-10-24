@@ -33,6 +33,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r backend/requirements.txt
 
+      - name: Lint
+        # Pinned so a new ruff release can't turn the build red with no code
+        # change. Config lives in backend/ruff.toml.
+        working-directory: backend
+        run: |
+          pip install ruff==0.17.2
+          ruff check .
+
       - name: Run tests
         # conftest.py points DATABASE_URL at a throwaway SQLite file in a temp
         # directory before any app module is imported, so no service container
@@ -63,3 +71,30 @@ jobs:
       - name: Build
         working-directory: frontend
         run: npm run build
+
+  dependency-audit:
+    name: dependency audit (pip-audit + npm audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Audit Python dependencies
+        # Checks every resolved package against the PyPI advisory database
+        # (OSV). Fails on any known vulnerability.
+        run: |
+          pip install pip-audit
+          pip-audit -r backend/requirements.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Audit npm dependencies
+        # Dev dependencies included: vite runs on a developer's machine, and
+        # that machine is part of the attack surface too.
+        working-directory: frontend
+        run: npm audit --audit-level=high

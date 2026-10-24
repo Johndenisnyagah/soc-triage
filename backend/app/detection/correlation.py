@@ -44,9 +44,10 @@ from __future__ import annotations
 
 import hashlib
 from collections import defaultdict
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
-from typing import Iterable
+from collections.abc import Iterable
+from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
+from itertools import pairwise
 
 from app.detection import attack
 from app.detection.rules import Finding, Severity
@@ -56,7 +57,7 @@ from app.detection.rules import Finding, Severity
 # naive one raises TypeError. Unreachable from engine output -- the engine drops
 # untimestamped events -- but reachable from any hand-built Finding, which is
 # exactly what correlation tests and future callers construct.
-_EPOCH = datetime.min.replace(tzinfo=timezone.utc)
+_EPOCH = datetime.min.replace(tzinfo=UTC)
 
 # Gap beyond which activity on the same entity is a separate story.
 DEFAULT_MAX_GAP = timedelta(hours=1)
@@ -279,7 +280,7 @@ def correlate(
         ordered = sorted(
             indices, key=lambda i: findings[i].first_seen or _EPOCH
         )
-        for a, b in zip(ordered, ordered[1:]):
+        for a, b in pairwise(ordered):
             fa, fb = findings[a], findings[b]
             if fa.last_seen and fb.first_seen and (fb.first_seen - fa.last_seen) > max_gap:
                 continue  # gap breaks the chain; b starts a new story
