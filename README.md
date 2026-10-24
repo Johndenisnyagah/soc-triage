@@ -562,6 +562,20 @@ ATT&CK techniques and, once the playbook library exists, select playbooks. It ne
 decides whether something is an incident. Until a provider is connected, the
 deterministic summary is what every incident ships with.
 
+**Why not Sigma?** Sigma is the standard format for sharing detections, and since
+specification 2.0 (August 2024) its correlation rules — `event_count`, `value_count`,
+`temporal` and `temporal_ordered` — could express most of this project's individual
+detections: the brute-force threshold, the distinct-username count behind enumeration,
+success after repeated failures. What Sigma does not describe is the layer this project
+is about: joining findings from different log sources into one incident by the entities
+they share, deciding which keys are too common to join on, and scoring severity by how
+many ATT&CK tactics an incident spans. The rules here are Python over the normalised
+schema so they run unchanged on every source (decision 5) and are tested directly
+against persisted events (decision 13). Writing detections as Sigma, validating them in
+CI and converting them to KQL and SPL is the subject of a separate detection-as-code
+project; exporting these rules to Sigma is a possible bridge between the two, not
+something built here.
+
 **ATT&CK technique IDs are validated against the real catalog, and constrained to a
 shortlist.** Detection rules map to techniques statically where the mapping is known.
 For unmapped cases the model may propose a technique, but any ID it returns is checked
