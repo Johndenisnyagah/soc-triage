@@ -105,9 +105,21 @@ pytest -q
 uvicorn app.main:app --reload
 ```
 
-Defaults to SQLite, which is also what the test suite runs on. `DATABASE_URL` points
-it at Postgres, the intended production engine, but Postgres is not yet verified — see
-[Known limitations](#known-limitations).
+Defaults to SQLite for quick local work. `DATABASE_URL` points it at Postgres, the
+production engine. CI runs the full suite on both, and `TEST_DATABASE_URL` runs it
+against your own Postgres (every table in it is truncated between tests, which is why
+it is a separately named variable).
+
+**Or run the whole stack** — Postgres, the API, the UI and the sample logs — with one
+command:
+
+```bash
+docker compose up --build        # then open http://localhost:8080
+```
+
+Ports bind to `127.0.0.1` only, and LLM enrichment stays off unless you export
+`SOC_ENRICHMENT_ENABLED=true` and `ANTHROPIC_API_KEY` first. CI starts this exact stack
+on every pull request and checks the UI serves both sample incidents through its proxy.
 
 Ingest a sample file:
 
@@ -611,13 +623,15 @@ signal the project exists to find.
   generator interface avoids a second copy as ORM objects; it does not avoid holding
   the source text. Full streaming means parsers accepting a line iterator, and
   incremental JSON parsing for CloudTrail's bundled form.
-- **Postgres unverified.** The test suite runs on SQLite. The global unique index and
-  the time-window query index are where the two engines could diverge.
+- **Postgres is verified functionally, not under load.** CI runs the full suite on
+  Postgres 16 as well as SQLite, and the incident ids it produces match SQLite's
+  exactly. Nothing has measured it under concurrent writers or at volume — see the
+  single-writer dedup limitation above.
 
 ## Stack
 
-**Backend.** FastAPI, SQLAlchemy 2.0, pytest. SQLite today, for local development
-and the test suite; Postgres is the target engine and is not yet verified.
+**Backend.** FastAPI, SQLAlchemy 2.0, pytest. Postgres 16 in Docker Compose and in CI;
+SQLite for quick local work and the default test run.
 
 **Frontend.** Vite, React 19, TypeScript and Tailwind v4, with react-router for two
 views: the incident queue at `/` and the detail view at `/incidents/:incidentId`. The

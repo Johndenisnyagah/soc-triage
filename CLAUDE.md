@@ -354,9 +354,11 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
   both engines agree — but any code path that persists a non-UTC aware
   datetime without going through `Event.from_normalized` will be wrong on
   SQLite only.
-- **Postgres unverified.** The suite runs on SQLite. The global unique index
-  on `dedup_hash` and the `ix_event_triage` time-window queries are where the
-  engines could still diverge.
+- **Postgres verified functionally, not under load.** CI runs the whole suite
+  on Postgres 16 (`TEST_DATABASE_URL`) as well as SQLite, and content-derived
+  incident ids match across the two. First verified on a server set to
+  Europe/Berlin, so the UTC normalisation holds against a non-UTC server
+  default. Unmeasured: concurrent writers and volume.
 
 ## Build order
 
@@ -377,13 +379,12 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 
 ## Stack
 
-Target: FastAPI, SQLAlchemy, Postgres (not SQLite — the pipeline claim requires it),
+FastAPI, SQLAlchemy, Postgres (not SQLite — the pipeline claim requires it),
 React 19 + TypeScript + Tailwind, Docker Compose.
 
-Current: the suite and local development run on SQLite, and there is no Compose
-file yet. Until both exist, README and repository description must say "target",
-not "uses" — a stack line that the tree cannot back is the first thing a reviewer
-checks. See Known limitations: "Postgres unverified".
+SQLite remains for quick local work and the default test run; CI also runs the
+suite on Postgres 16 and starts the Compose stack on every PR. A stack line the
+tree cannot back is the first thing a reviewer checks — keep it that way.
 
 ## Workflow
 
