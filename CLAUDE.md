@@ -127,8 +127,12 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
     across forty hosts is ambient, `ip:203.0.113.5` across one host and one
     account is identifying however often it appears. Suppressed keys are still
     recorded on the incident: not joining on a key is not the same as
-    discarding it. `MAX_COOCCURRING_KEYS = 12` is an unvalidated guess and the
-    first knob to turn against real data.
+    discarding it. `MAX_COOCCURRING_KEYS = 12` began as an unvalidated guess.
+    Swept against the labelled corpus (`docs/detection-evaluation.md`), values
+    6–12 give identical results and the merges it shows come from `user:`- and
+    `host:`-scoped rule groups, not from this threshold. It is still
+    unvalidated at production scale and still the first knob to turn against
+    real data.
 
     **Severity comes from distinct ATT&CK tactic breadth, not finding count.**
     One step up at three distinct tactics, two at five, over the highest
