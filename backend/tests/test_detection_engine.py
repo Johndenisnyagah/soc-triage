@@ -7,19 +7,16 @@ silently, so the ordering guarantee has to be tested where it is made.
 
 from __future__ import annotations
 
-from datetime import timedelta
-
 from detection_helpers import (
     BASE,
     auth_failure,
-    auth_success,
     event,
     logging_stopped,
 )
 
 from app.detection.engine import group_by_entity, registered_rules, run_rules
-from app.detection.rules import DetectionContext, Finding, Rule, Severity
-from app.ingest.schema import Category, Outcome
+from app.detection.rules import DetectionContext, Rule, Severity
+from app.ingest.schema import Category
 
 
 class _Collector(Rule):

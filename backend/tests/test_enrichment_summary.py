@@ -135,7 +135,7 @@ def test_an_incident_with_no_timestamps_summarizes_without_raising():
     """
     incident = _untimestamped_incident()
 
-    summary = summarize(incident)  # must not raise
+    summarize(incident)  # must not raise
 
     assert incident.first_seen is None
     assert len(incident.findings) == 2

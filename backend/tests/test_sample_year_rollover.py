@@ -19,7 +19,7 @@ import pathlib
 import subprocess
 import sys
 import textwrap
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from app.ingest import base
 
@@ -27,7 +27,7 @@ BACKEND = pathlib.Path(__file__).resolve().parents[1]
 SAMPLE_LOGS = BACKEND.parent / "sample_logs"
 DEMO_SCRIPT = BACKEND / "scripts" / "run_detection.py"
 
-FAKE_NOW = datetime(2027, 1, 15, 9, 0, tzinfo=timezone.utc)
+FAKE_NOW = datetime(2027, 1, 15, 9, 0, tzinfo=UTC)
 
 # The README's demo output: two incidents, with these content-derived ids.
 README_INCIDENT_IDS = ("INC-fe9ac9b7", "INC-27359b57")

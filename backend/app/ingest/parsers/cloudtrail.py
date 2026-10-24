@@ -12,8 +12,9 @@ Accepts either the bundled form ({"Records": [...]}) or JSON Lines.
 from __future__ import annotations
 
 import json
+from collections.abc import Iterator
 from datetime import datetime
-from typing import Any, Iterator
+from typing import Any
 
 from ..base import BaseParser, ParseContext, register
 from ..schema import ActorType, Category, NormalizedEvent, Outcome, SourceType
