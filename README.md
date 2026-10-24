@@ -10,9 +10,15 @@ sources to check whether the same address appears twice, and writing up what hap
 
 This pipeline automates that. It ingests raw logs — Linux `sshd` over syslog and AWS
 CloudTrail today, with Windows Security event logs planned — normalizes them into a
-single event schema, detects incidents with deterministic rules, and uses a language
-model to explain what it found: MITRE ATT&CK mapping, executive summaries, and
-response playbooks.
+single event schema, detects incidents with deterministic rules, correlates them
+across sources, and maps them to MITRE ATT&CK against the real catalog. A language
+model layer then explains what was found.
+
+What runs today: every incident ships with a deterministic, factual summary and a
+statically mapped, catalog-validated ATT&CK technique. The LLM layer — prompt,
+validation gate, evidence framing and candidate shortlists — is built and tested
+against a fake client, but no model provider is connected yet, so no incident text is
+model-written. Executive reports and response playbooks are planned, not built.
 
 The source list is the part worth reading carefully. Two sources are implemented and
 tested; Windows is designed for but not built. Nothing in the detection layer is
@@ -30,6 +36,14 @@ authentication logs. Working on it made the structural limits clear: a schema bu
 around one log format can't normalize a CloudTrail record, and incidents scoped to a
 single uploaded file can't correlate an attacker who appears in two places. This is a
 rewrite that addresses both.
+
+## How it was built
+
+Built with [Claude Code](https://claude.com/claude-code) as a pair programmer. I set
+the scope and direction; every settled design decision, with the alternative it
+rejected and why, is recorded in [`CLAUDE.md`](CLAUDE.md), and the test suite is the
+specification. I'm still working through parts of the implementation in depth, and
+the decision log is where I do it.
 
 ## Status
 
@@ -91,13 +105,20 @@ pytest -q
 uvicorn app.main:app --reload
 ```
 
-Defaults to SQLite for local development. Set `DATABASE_URL` for Postgres.
+Defaults to SQLite, which is also what the test suite runs on. `DATABASE_URL` points
+it at Postgres, the intended production engine, but Postgres is not yet verified — see
+[Known limitations](#known-limitations).
 
 Ingest a sample file:
 
 ```bash
-curl -F "file=@../sample_logs/auth.log" http://localhost:8000/api/ingest
+curl -F "file=@../sample_logs/auth.log" -F default_year=2026 http://localhost:8000/api/ingest
 ```
+
+Syslog lines carry no year, so `default_year` says which year the sample
+describes. Without it the server assumes the current year, and from 2027 the
+sshd sample would land a year away from the CloudTrail sample it is meant to
+correlate with.
 
 The response includes the ingest id and parse statistics — lines read, events
 emitted, lines skipped, and duplicates skipped — so a partially malformed upload
@@ -536,8 +557,10 @@ the list it was shown ([test](backend/tests/test_attack_catalog.py:56)).
 
 ## Design decisions
 
-**Rules detect, AI explains.** The LLM writes summaries, proposes ATT&CK techniques,
-and selects playbooks. It never decides whether something is an incident.
+**Rules detect, AI explains.** The LLM layer is designed to write summaries, propose
+ATT&CK techniques and, once the playbook library exists, select playbooks. It never
+decides whether something is an incident. Until a provider is connected, the
+deterministic summary is what every incident ships with.
 
 **ATT&CK technique IDs are validated against the real catalog, and constrained to a
 shortlist.** Detection rules map to techniques statically where the mapping is known.
@@ -553,9 +576,10 @@ what converts mapping from generation into selection: the wrong answers are boun
 "none of these" is a listed choice, and a selection outside the list is a validation
 failure rather than a plausible answer nobody can check.
 
-**Playbooks are retrieved, not generated.** Response steps come from a local YAML
-library keyed by technique ID. The model selects and contextualizes; it does not
-invent incident response procedures.
+**Playbooks are retrieved, not generated** *(planned, build step 8 — not built
+yet)*. Response steps will come from a local YAML library keyed by technique ID. The model selects and contextualizes; it does not
+invent incident response procedures. The validator already rejects a playbook ID that
+is not shaped like a lookup key; the library it will look up does not exist yet.
 
 **Log content is untrusted input.** User agents, Windows event descriptions, and
 CloudTrail fields are attacker-controllable. Evidence passed to the model is capped
@@ -592,7 +616,8 @@ signal the project exists to find.
 
 ## Stack
 
-**Backend.** FastAPI, SQLAlchemy 2.0, Postgres (SQLite for local development), pytest.
+**Backend.** FastAPI, SQLAlchemy 2.0, pytest. SQLite today, for local development
+and the test suite; Postgres is the target engine and is not yet verified.
 
 **Frontend.** Vite, React 19, TypeScript and Tailwind v4, with react-router for two
 views: the incident queue at `/` and the detail view at `/incidents/:incidentId`. The
