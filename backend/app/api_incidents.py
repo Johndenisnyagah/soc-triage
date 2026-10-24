@@ -33,7 +33,7 @@ from app.detection import attack
 from app.detection.correlation import Incident, correlate
 from app.detection.engine import run_rules
 from app.detection.rules import Finding, Severity
-from app.enrichment.llm import enrich
+from app.enrichment.service import enrichment_for
 from app.ingest.schema import NormalizedEvent
 from app.models import Event
 
@@ -277,12 +277,11 @@ def to_summary(incident: Incident) -> IncidentSummary:
 
 
 def to_detail(incident: Incident) -> IncidentDetail:
-    # `enrich` with no client is the deterministic path by construction, and
-    # returns the same `summarize()` text this endpoint would otherwise call
-    # directly. Going through it means `enrichment_source` is reported by the
-    # stage that decides it rather than hardcoded here -- so wiring a provider
-    # client in later changes one argument, not this response.
-    enrichment = enrich(incident, None)
+    # Only the detail view is enriched, one incident per request; the queue
+    # never calls a model. With enrichment off (the default) or no API key,
+    # `enrichment_for` takes the deterministic path, so `enrichment_source` is
+    # still reported by the stage that decides it rather than hardcoded here.
+    enrichment = enrichment_for(incident)
     return IncidentDetail(
         **to_summary(incident).model_dump(),
         summary=enrichment.summary,

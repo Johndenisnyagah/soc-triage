@@ -333,6 +333,17 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 
 - Windows `logon_type` (3 = network, 10 = RDP) is in `extra`. If a detection
   rule needs it, promote it to a column.
+- **CloudTrail evidence mostly hides the actor from the model.** The parser
+  stores `raw` as key-sorted JSON and `wrap_evidence` cuts each line at
+  `MAX_EVIDENCE_LINE_CHARS` (400). `sourceIPAddress`, `userAgent` and
+  `userIdentity` sort last, so for a typical record the model sees AWS's own
+  fields and not who acted or from where. Found while building the provider
+  client: an injected `userAgent` never reached the model — by truncation, not
+  by any defence. Options: render CloudTrail evidence with actor fields first
+  (reordering, not filtering, so decision 15's "framed, never filtered" holds),
+  or raise the per-line cap for structured records. Undecided; changing it
+  changes what an attacker can place in the prompt, so it wants a deliberate
+  decision and a test of the injection path once made.
 
 ## Known limitations
 
@@ -366,11 +377,13 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 4. Correlation — group incidents by entity key + time window ✅
 5. ATT&CK mapping with catalog validation ✅ (catalog + validator; LLM
    proposal path deliberately not built yet)
-6. LLM enrichment + structurally-validated fallback 🚧 (deterministic summary,
-   validation gate, evidence framing, candidate shortlists, prompt and
-   orchestration done — `enrich()` is off by default and fully exercised
-   through a fake client. Only the provider client behind the `LLMClient`
-   Protocol is left. Not "confidence-gated" — see decision 15)
+6. LLM enrichment + structurally-validated fallback ✅ (deterministic summary,
+   validation gate, evidence framing, candidate shortlists, prompt,
+   orchestration, and an Anthropic provider client over plain `httpx` — no SDK,
+   because an SDK's own retries would double the attempt budget and retry the
+   content failures decision 15 forbids. Off by default; detail view only;
+   cached per incident id. Remaining: a recorded live run via
+   `scripts/enrich_demo.py`. Not "confidence-gated" — see decision 15)
 7. Windows Security parser
 8. Exec reports + playbooks
 9. Continuous ingest endpoint + worker

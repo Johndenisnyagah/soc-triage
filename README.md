@@ -16,9 +16,11 @@ model layer then explains what was found.
 
 What runs today: every incident ships with a deterministic, factual summary and a
 statically mapped, catalog-validated ATT&CK technique. The LLM layer — prompt,
-validation gate, evidence framing and candidate shortlists — is built and tested
-against a fake client, but no model provider is connected yet, so no incident text is
-model-written. Executive reports and response playbooks are planned, not built.
+validation gate, evidence framing and candidate shortlists — is built, with an
+Anthropic provider client behind it. It is **off by default**: a fresh clone makes no
+network calls and every incident ships with the deterministic summary. A live run has
+not been recorded yet ([how to turn it on](#turning-on-llm-enrichment)). Executive
+reports and response playbooks are planned, not built.
 
 The source list is the part worth reading carefully. Two sources are implemented and
 tested; Windows is designed for but not built. Nothing in the detection layer is
@@ -48,10 +50,10 @@ the decision log is where I do it.
 ## Status
 
 In progress. Ingest, persistence, detection, correlation and ATT&CK mapping are
-complete and tested. Enrichment is built and exercised end to end against a fake
-client — deterministic summaries, the validation gate, candidate shortlists and
-orchestration — with only the provider client behind the `LLMClient` protocol left to
-write. The read API and the React frontend are complete on top of that. The Windows
+complete and tested. Enrichment is built — deterministic summaries, the validation
+gate, candidate shortlists, orchestration and an Anthropic provider client — and is off
+by default; every path is tested against fake and mocked clients, and a recorded live
+run is the remaining step. The read API and the React frontend are complete on top of that. The Windows
 parser, reports and playbooks, and the continuous-ingest worker come after.
 
 - [x] **Ingest layer** — normalized event schema, confidence-based parser registry, sshd and CloudTrail parsers
@@ -59,7 +61,7 @@ parser, reports and playbooks, and the continuous-ingest worker come after.
 - [x] **Detection** — source-agnostic rules over event windows
 - [x] **Correlation** — incident grouping by entity key and time window
 - [x] **MITRE ATT&CK mapping** — static rule mapping and catalog validation (LLM proposal path not yet built)
-- [ ] **LLM enrichment** — summaries with structurally-validated deterministic fallback
+- [x] **LLM enrichment** — summaries with structurally-validated deterministic fallback, Anthropic provider, off by default (live run not yet recorded)
 - [x] **Read API** — incidents computed on read, content-derived IDs
 - [x] **Frontend** — queue and detail views, generated types
 - [ ] **Windows Security parser**
@@ -163,6 +165,29 @@ The second is a plain SSH brute force against `backup` on `db02` from
 `198.51.100.77`, hours later. It shares no entity key with the first, so
 correlation must leave the two apart — the sample exercises separation as well as
 joining.
+
+### Turning on LLM enrichment
+
+Off unless both variables are set. Only the incident **detail** view is enriched, one
+incident per request; the queue never calls a model, and results are cached per
+incident id so a reload doesn't call it again.
+
+```bash
+export SOC_ENRICHMENT_ENABLED=true
+export ANTHROPIC_API_KEY=...              # your own key; never commit it
+export SOC_LLM_MODEL=claude-haiku-5-5     # optional; this is the default
+```
+
+When it is on, evidence lines — usernames, addresses, account IDs — are sent to the
+provider. Every response still goes through the validation gate, and anything it
+rejects falls back to the deterministic summary with the reason recorded.
+
+To record what the model actually does with the sample incidents, including an
+optional prompt-injection record:
+
+```bash
+cd backend && python scripts/enrich_demo.py --inject --write   # writes docs/llm-enrichment-run.md
+```
 
 ## What it produces
 
@@ -559,7 +584,7 @@ the list it was shown ([test](backend/tests/test_attack_catalog.py:56)).
 
 **Rules detect, AI explains.** The LLM layer is designed to write summaries, propose
 ATT&CK techniques and, once the playbook library exists, select playbooks. It never
-decides whether something is an incident. Until a provider is connected, the
+decides whether something is an incident. Unless enrichment is switched on, the
 deterministic summary is what every incident ships with.
 
 **ATT&CK technique IDs are validated against the real catalog, and constrained to a

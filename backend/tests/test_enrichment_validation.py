@@ -612,6 +612,32 @@ def test_evidence_is_truncated_at_the_line_limit():
     assert lines[-1] == f"line {MAX_EVIDENCE_LINES - 1}"
 
 
+def test_evidence_shared_between_findings_is_rendered_once():
+    """Findings in one incident share events; repeating them wasted the line
+    budget and pushed unique evidence out of the prompt."""
+    shared = [auth_failure(n) for n in range(3)]
+    for n, event in enumerate(shared):
+        event.raw = f"shared {n}"
+    extra = auth_failure(10)
+    extra.raw = "unique"
+    case = correlate([
+        finding(rule_id="a", evidence=shared),
+        finding(rule_id="b", evidence=[*shared, extra]),
+    ])[0]
+
+    assert sorted(body_lines(wrap_evidence(case))) == [
+        "shared 0", "shared 1", "shared 2", "unique",
+    ]
+
+
+def test_distinct_events_with_identical_timestamps_are_all_kept():
+    """Same-second sshd lines are different events; dedup must not fold them."""
+    events = [auth_failure(0) for _ in range(3)]
+    for n, event in enumerate(events):
+        event.raw = f"sshd[{100 + n}]: Failed password for root from 203.0.113.5"
+    assert len(body_lines(wrap_evidence(correlate([finding(rule_id="a", evidence=events)])[0]))) == 3
+
+
 def test_evidence_is_truncated_at_the_line_length_limit():
     """The other half of the same bound: one enormous line must not defeat the
     line count."""
