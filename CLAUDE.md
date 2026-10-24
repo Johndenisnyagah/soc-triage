@@ -377,8 +377,13 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 
 ## Stack
 
-FastAPI, SQLAlchemy, Postgres (not SQLite — the pipeline claim requires it),
+Target: FastAPI, SQLAlchemy, Postgres (not SQLite — the pipeline claim requires it),
 React 19 + TypeScript + Tailwind, Docker Compose.
+
+Current: the suite and local development run on SQLite, and there is no Compose
+file yet. Until both exist, README and repository description must say "target",
+not "uses" — a stack line that the tree cannot back is the first thing a reviewer
+checks. See Known limitations: "Postgres unverified".
 
 ## Workflow
 
