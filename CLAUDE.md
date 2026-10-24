@@ -331,8 +331,16 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
 
 ## Open questions
 
-- Windows `logon_type` (3 = network, 10 = RDP) is in `extra`. If a detection
-  rule needs it, promote it to a column.
+- Windows `logon_type` (3 = network, 10 = RDP) is in `extra`. The parser uses
+  it to drop service, batch and system logons; no rule reads it yet. If one
+  does, promote it to a column — `invalid_user` is already due for the same
+  promotion now that two parsers set it.
+- **Windows post-exploitation events have no rules yet.** `user_create`,
+  `group_member_add` (Administrators), `audit_log_clear` and `process_create`
+  are parsed and persisted, and nothing reads them. Each new rule needs its
+  ATT&CK mapping checked against the v19 catalog and changelog the way
+  `library.py` documents for the existing ones, so they were not added
+  alongside the parser.
 
 ## Known limitations
 
@@ -371,7 +379,9 @@ ingest → parse (registry) → normalize → detect (rules) → correlate (enti
    orchestration done — `enrich()` is off by default and fully exercised
    through a fake client. Only the provider client behind the `LLMClient`
    Protocol is left. Not "confidence-gated" — see decision 15)
-7. Windows Security parser
+7. Windows Security parser ✅ (Event XML, per-record parsing, DTDs
+   rejected, channel as `target_resource`, no SID principals, service and
+   machine-account logons skipped; existing auth rules fire unchanged)
 8. Exec reports + playbooks
 9. Continuous ingest endpoint + worker
 
