@@ -461,13 +461,23 @@ it resolved to `None`, contributed no tactic, and silently under-escalated every
 incident containing it. Caught by
 [`test_every_rule_technique_resolves`](backend/tests/test_attack_catalog.py:246).
 
-### What is not measured
+### What is measured, and what is not
 
-There is **no false-positive rate and no performance benchmark here**, because neither
-is honestly measurable yet. A false-positive rate requires a labeled corpus — real logs
-with an analyst's ground truth attached — and this project has two synthetic sample
-files written to exercise specific code paths. A rate computed against fixtures
-authored to produce known output would measure the fixtures. Likewise, throughput
+**Detection quality on a labelled corpus.** Sixteen scenarios — ten attacks and six
+pieces of benign activity overlapping in one busy morning — each labelled before
+scoring, run through the real ingest path and scored for hits, misses, false
+positives and whether each attack got a clean incident of its own. At the shipped
+defaults the rules catch **13 of 14** expected detections (the miss is a low-and-slow
+brute force, below the threshold by design), but **4 of 6** benign scenarios produce
+false positives and most attacks on the shared web fleet end up merged into one
+incident. The sweep of `MAX_COOCCURRING_KEYS` shows the merging comes from the rules'
+`user:`/`host:` grouping rather than from that threshold. Full tables, mechanisms and
+limitations: [docs/detection-evaluation.md](docs/detection-evaluation.md).
+
+What that corpus is not: real logs with an analyst's ground truth. It was written to
+probe known behaviours, so it is a regression harness and a design probe, **not a
+real-world false-positive rate** — a rate computed against scenarios the author wrote
+measures the scenarios. Likewise, there is **no performance benchmark**: throughput
 numbers taken against a 43-event SQLite database would say nothing about the Postgres
 deployment the pipeline is designed for.
 
