@@ -22,7 +22,7 @@ jobs:
     name: backend (pytest)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -63,7 +63,7 @@ jobs:
           --health-cmd "pg_isready -U soc -d soc_triage_test"
           --health-interval 2s --health-timeout 3s --health-retries 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -87,7 +87,7 @@ jobs:
     name: docker compose (smoke test)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Start the stack
         run: docker compose up --detach --build --wait db api web
@@ -117,7 +117,7 @@ jobs:
     name: frontend (typecheck + build)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v4
         with:
@@ -141,7 +141,7 @@ jobs:
     name: dependency audit (pip-audit + npm audit)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
