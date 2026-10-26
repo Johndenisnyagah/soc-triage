@@ -10,8 +10,6 @@ auditable answer. A language model is only ever allowed to explain, never to det
 https://github.com/user-attachments/assets/f61b9cb9-d44b-4370-b608-86fc5192ad14
 
 
-[![soc-triage in 22 seconds: 34 alerts at 3 AM become 2 incidents. Click to watch.]](docs/media/soc-triage-teaser.mp4)
-
 ![Incident detail: a CRITICAL incident correlated across sshd and CloudTrail, with its deterministic summary, timeline, ATT&CK tactics and entity keys](docs/screenshots/incident-detail.png)
 
 *Real output from the committed sample logs: one attacker moving from an SSH brute
