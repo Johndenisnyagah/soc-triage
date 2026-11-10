@@ -10,7 +10,7 @@ auditable answer. A language model is only ever allowed to explain, never to det
 https://github.com/user-attachments/assets/f61b9cb9-d44b-4370-b608-86fc5192ad14
 
 
-![Incident detail: a CRITICAL incident correlated across sshd and CloudTrail, with its deterministic summary, timeline, ATT&CK tactics and entity keys](docs/screenshots/incident-detail.png)
+![Incident detail: a CRITICAL incident correlated across sshd and CloudTrail, with its deterministic summary, timeline, ATT&CK tactics and techniques](docs/screenshots/incident-detail.png)
 
 *Real output from the committed sample logs: one attacker moving from an SSH brute
 force on a Linux host to persistence and log tampering in an AWS account, joined into
@@ -24,7 +24,8 @@ python scripts/run_detection.py      # ingests sample_logs/, prints the two inci
 ```
 
 For the UI, run `uvicorn app.main:app --port 8000` in `backend/` and `npm install && npm run dev`
-in `frontend/`, then ingest the samples as shown in [Quick start](#quick-start).
+in `frontend/`, then drop the files from `sample_logs/` onto the UI's **Ingest** view
+(or use `curl` as shown in [Quick start](#quick-start)).
 
 ![Incident queue: two incidents ordered by severity](docs/screenshots/incident-queue.png)
 
