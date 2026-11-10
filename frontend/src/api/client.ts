@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { IncidentDetail, IncidentSummary, SeverityName } from "./schema";
+import type {
+  IncidentDetail,
+  IncidentSummary,
+  IngestResponse,
+  SeverityName,
+} from "./schema";
 
 /**
  * An HTTP failure carrying whatever the backend was willing to say about it.
@@ -11,11 +16,18 @@ import type { IncidentDetail, IncidentSummary, SeverityName } from "./schema";
  */
 export class ApiError extends Error {
   readonly status: number;
+  /**
+   * The response's raw `detail`, kept so a view can read structured fields the
+   * message does not carry -- the ingest 422's `supported_formats`, the 413's
+   * `max_upload_bytes`. `undefined` when there was no JSON body.
+   */
+  readonly detail: unknown;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, detail?: unknown) {
     super(message);
     this.name = "ApiError";
     this.status = status;
+    this.detail = detail;
   }
 }
 
@@ -46,11 +58,21 @@ function messageFromBody(status: number, body: unknown): string {
   return `Request failed with status ${status}.`;
 }
 
-async function getJson<T>(path: string, signal: AbortSignal): Promise<T> {
+function detailOf(body: unknown): unknown {
+  return body && typeof body === "object" && "detail" in body
+    ? (body as { detail: unknown }).detail
+    : undefined;
+}
+
+function getJson<T>(path: string, signal: AbortSignal): Promise<T> {
+  return requestJson<T>(path, { signal });
+}
+
+async function requestJson<T>(path: string, init: RequestInit): Promise<T> {
   let response: Response;
   try {
     response = await fetch(path, {
-      signal,
+      ...init,
       headers: { Accept: "application/json" },
     });
   } catch (cause) {
@@ -71,10 +93,36 @@ async function getJson<T>(path: string, signal: AbortSignal): Promise<T> {
     } catch {
       // Non-JSON error body (a proxy 502, say) -- fall through to the default.
     }
-    throw new ApiError(response.status, messageFromBody(response.status, body));
+    throw new ApiError(
+      response.status,
+      messageFromBody(response.status, body),
+      detailOf(body),
+    );
   }
 
   return (await response.json()) as T;
+}
+
+/**
+ * Upload one log file to `POST /api/ingest` as multipart form data.
+ *
+ * The parser is chosen server-side by content (`sniff()`), so nothing here
+ * inspects the file name or extension. `defaultYear` is the endpoint's own
+ * optional form field: syslog lines carry no year, and without it the server
+ * assumes the current one.
+ */
+export function ingestFile(
+  file: File,
+  defaultYear: number | null,
+): Promise<IngestResponse> {
+  const form = new FormData();
+  form.append("file", file);
+  if (defaultYear !== null) form.append("default_year", String(defaultYear));
+  // No Content-Type header: the browser has to write the multipart boundary.
+  return requestJson<IngestResponse>("/api/ingest", {
+    method: "POST",
+    body: form,
+  });
 }
 
 export function fetchIncidents(

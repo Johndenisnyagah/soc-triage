@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router";
 import type { ApiError } from "../api/client";
 
 /**
@@ -94,6 +95,14 @@ export function EmptyQueue() {
         through <span className="font-mono text-ink-2">POST /api/ingest</span> to
         populate the queue.
       </Note>
+      {/* The way forward, not just a description of it: without this a first
+          visitor would have to leave for a terminal to see anything at all. */}
+      <Link
+        to="/ingest"
+        className="mt-2 inline-flex h-[26px] items-center rounded-control border border-accent bg-accent px-3 text-meta font-medium text-raised transition-colors hover:border-accent-hover hover:bg-accent-hover"
+      >
+        Ingest a log file
+      </Link>
     </Frame>
   );
 }
