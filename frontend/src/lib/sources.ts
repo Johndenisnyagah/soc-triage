@@ -33,9 +33,9 @@ export function sourceKind(sourceType: string): SourceKind {
  * Fill for the duration bar and the row's edge stripe.
  *
  * Host is `text-mid` at 85%, not the 55% the migration spec proposed: at 55%
- * it lands on exactly the accent's luminance (0.190 vs 0.189, 1.00:1), so in
+ * it lands on exactly LogLens's accent luminance (0.190 vs 0.189, 1.00:1), so in
  * greyscale the stripe channel would carry nothing and only marker shape would
- * separate the lanes. At 85% the two stripes sit 1.76:1 apart.
+ * separate the lanes. At 85% the two stripes sit 1.84:1 apart from the current accent.
  */
 export const KIND_BAR: Record<SourceKind, string> = {
   host: "bg-text-mid/85",
