@@ -43,6 +43,7 @@
   --color-accent: #4b6cf6;
   --color-accent-hover: #5b7bff;
   --color-accent-ink: #8299ff;
+  --color-on-accent: #ffffff; /* 4.40:1 on accent: just under AA, see DESIGN.md */
   --color-accent-tint: rgba(75, 108, 246, 0.12);
   --color-accent-wash: rgba(75, 108, 246, 0.08);
   --color-accent-hair: rgba(75, 108, 246, 0.35);
