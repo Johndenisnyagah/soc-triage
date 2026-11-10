@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 /**
  * Icon rail + window toolbar.
@@ -8,10 +8,53 @@ import { Link } from "react-router";
  * shell is presentation chrome for the PNG: here the content fills the viewport
  * and keeps the 1400px ceiling, exactly as DESIGN.md says to.
  *
- * The rail carries the logo tile and a single nav button, because the app has
- * one destination. The mockup's other four icons would be dead controls, and a
- * button that does nothing is worse than an empty rail.
+ * The rail carries the logo tile and one nav link per real destination: the
+ * queue and ingest. The rule was never "one button" -- it was "no dead
+ * controls". The mockup's other four icons would still be dead, so they stay
+ * out.
  */
+
+type Section = "queue" | "ingest";
+
+/**
+ * Which rail item the current route belongs to, derived from the location
+ * rather than passed in by each view. The detail route belongs to the queue --
+ * it is reached from a queue row and its breadcrumb leads back there -- and so
+ * does the `*` fallback, which renders the queue.
+ */
+function sectionFor(pathname: string): Section {
+  return pathname === "/ingest" || pathname.startsWith("/ingest/")
+    ? "ingest"
+    : "queue";
+}
+
+function RailLink({
+  to,
+  label,
+  active,
+  children,
+}: {
+  to: string;
+  label: string;
+  active: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      to={to}
+      aria-label={label}
+      aria-current={active ? "page" : undefined}
+      title={label}
+      className={`flex size-8 items-center justify-center rounded-sunken border transition-colors ${
+        active
+          ? "border-accent-hair bg-accent-tint text-accent"
+          : "border-transparent text-ink-faint hover:border-edge hover:bg-raised hover:text-ink"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+}
 
 function Crumb({ children, muted }: { children: ReactNode; muted?: boolean }) {
   return (
@@ -28,6 +71,8 @@ export function Shell({
   actions?: ReactNode;
   children: ReactNode;
 }) {
+  const section = sectionFor(useLocation().pathname);
+
   return (
     <div className="flex h-full bg-panel">
       {/* Icon rail -- 54px */}
@@ -56,11 +101,7 @@ export function Shell({
         </Link>
 
         <div className="mt-1 flex flex-col gap-1.5">
-          <span
-            aria-current="page"
-            title="Incident queue"
-            className="flex size-8 items-center justify-center rounded-sunken border border-accent-hair bg-accent-tint text-accent"
-          >
+          <RailLink to="/" label="Incident queue" active={section === "queue"}>
             <svg
               viewBox="0 0 24 24"
               className="size-4"
@@ -72,7 +113,27 @@ export function Shell({
             >
               <path d="M4 7h16M4 12h11M4 17h7" />
             </svg>
-          </span>
+          </RailLink>
+          <RailLink
+            to="/ingest"
+            label="Ingest a log file"
+            active={section === "ingest"}
+          >
+            {/* Arrow into a tray: a file going in. */}
+            <svg
+              viewBox="0 0 24 24"
+              className="size-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 4v10M8 10l4 4 4-4" />
+              <path d="M4 14v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4" />
+            </svg>
+          </RailLink>
         </div>
       </nav>
 
