@@ -31,16 +31,16 @@ export function sourceKind(sourceType: string): SourceKind {
 
 /** Fill for the duration bar. */
 export const KIND_BAR: Record<SourceKind, string> = {
-  host: "bg-ink/65",
+  host: "bg-text-mid/55",
   cloud: "bg-accent",
-  other: "bg-ink-faint/60",
+  other: "bg-text-faint/60",
 };
 
 /** Marker colour on the rail. */
 export const KIND_MARK: Record<SourceKind, string> = {
-  host: "bg-ink",
+  host: "bg-text",
   cloud: "bg-accent",
-  other: "bg-ink-faint",
+  other: "bg-text-faint",
 };
 
 /**
@@ -50,7 +50,9 @@ export const KIND_MARK: Record<SourceKind, string> = {
 export const KIND_SHAPE: Record<SourceKind, string> = {
   host: "rounded-[1px]",
   cloud: "rounded-full",
-  other: "rounded-full ring-1 ring-inset ring-ink-faint bg-transparent!",
+  // text-dim rather than text-faint: a 1px ring at 1.81:1 would vanish on
+  // the dark panel, and the hollow ring is the whole signal for this kind.
+  other: "rounded-full ring-1 ring-inset ring-text-dim bg-transparent!",
 };
 
 export const KIND_LABEL: Record<SourceKind, string> = {
