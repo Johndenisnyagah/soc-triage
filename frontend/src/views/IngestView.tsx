@@ -1,9 +1,16 @@
 import { useRef, useState, type DragEvent, type ReactNode } from "react";
-import { Link } from "react-router";
+import { AlertCircle, ArrowRight, Check, Upload } from "lucide-react";
 import { ApiError, ingestFile } from "../api/client";
 import type { IngestResponse } from "../api/schema";
 import { Crumb, Shell } from "../components/Shell";
-import { pluralize } from "../lib/format";
+import {
+  Btn,
+  BtnLink,
+  PageHead,
+  SectionTitle,
+  ViewBody,
+  ViewHeader,
+} from "../components/ui";
 
 /**
  * Ingest: the front door for `POST /api/ingest`.
@@ -18,6 +25,10 @@ import { pluralize } from "../lib/format";
  * Nothing here decides what a file is. The parser is picked server-side by
  * content (`sniff()`), so there is no extension allow-list; an unrecognised
  * file comes back as a 422 and the backend's own explanation is shown as-is.
+ *
+ * Styling follows LogLens's `UploadLogs`; its staged fake-progress checklist is
+ * deliberately not ported. The request is one round trip, and animating steps
+ * that are not happening would be a claim the app cannot back.
  */
 
 type Phase =
@@ -46,17 +57,9 @@ function field(detail: unknown, key: string): unknown {
     : undefined;
 }
 
-function SectionHeader({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex h-section-row items-center gap-3 border-b border-edge">
-      {children}
-    </div>
-  );
-}
-
 function Label({ children }: { children: ReactNode }) {
   return (
-    <span className="font-mono text-label font-medium uppercase text-ink-faintest">
+    <span className="font-mono text-label font-medium uppercase text-text-dim">
       {children}
     </span>
   );
@@ -72,10 +75,10 @@ function Stat({
   note?: ReactNode;
 }) {
   return (
-    <div className="flex min-w-0 flex-col gap-1 border-r border-hair-1 px-4 py-3 last:border-r-0">
+    <div className="flex min-w-0 flex-col gap-1.5 bg-panel px-5 py-4">
       <Label>{label}</Label>
-      <span className="font-mono text-stat text-ink">{value}</span>
-      {note && <span className="text-meta text-ink-faint">{note}</span>}
+      <span className="font-mono text-stat text-text">{value}</span>
+      {note && <span className="text-meta text-text-mid">{note}</span>}
     </div>
   );
 }
@@ -86,44 +89,43 @@ function Result({ result }: { result: IngestResponse }) {
     result.events_persisted === 0 && result.duplicates_skipped > 0;
 
   return (
-    <section aria-labelledby="ingest-result" className="mt-6">
-      <SectionHeader>
-        <h2
-          id="ingest-result"
-          className="font-mono text-label font-medium uppercase text-ink"
-        >
-          Ingested
-        </h2>
-        <span className="truncate font-mono text-meta text-ink-2">
-          {result.filename ?? "unnamed upload"}
-        </span>
-        <span className="ml-auto font-mono text-label font-medium uppercase text-ink-faintest">
-          ingest #{result.ingest_id}
-        </span>
-      </SectionHeader>
-
-      {/* Which parser won, and by how much. Selection is by highest sniff()
-          score (decision 2), so the number is the reason this file was read
-          the way it was. */}
-      <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 border-b border-hair-4 px-4 py-3">
-        <span className="flex items-baseline gap-2">
-          <Label>Detected source</Label>
-          <span className="font-mono text-body text-ink">
-            {result.source_type}
+    <section aria-labelledby="ingest-result" className="flex flex-col gap-3.5">
+      <SectionTitle
+        right={
+          <span className="font-mono text-label uppercase text-text-dim">
+            ingest #{result.ingest_id}
           </span>
-        </span>
-        <span className="flex items-baseline gap-2">
-          <Label>Confidence</Label>
-          <span className="font-mono text-body text-ink">
+        }
+      >
+        <span id="ingest-result">Result</span>
+      </SectionTitle>
+
+      <div className="flex items-center gap-3.5 border-l-2 border-success bg-panel px-5 py-3.5 text-meta text-text-mid">
+        <Check className="size-4 shrink-0 text-success" strokeWidth={3} aria-hidden="true" />
+        <span className="min-w-0">
+          <strong className="mr-1.5 font-semibold text-text">Ingested.</strong>
+          <span className="font-mono text-text">{result.filename ?? "unnamed upload"}</span>
+          {" read as "}
+          <span className="font-mono text-text">{result.source_type}</span>
+          {" at confidence "}
+          {/* Selection is by highest sniff() score (decision 2), so the number
+              is the reason this file was read the way it was. */}
+          <span className="font-mono text-text">
             {result.detected_confidence.toFixed(3)}
           </span>
+          .
         </span>
+        <BtnLink to="/" variant="primary" className="ml-auto">
+          View the queue
+          <ArrowRight className="size-3" strokeWidth={2.5} aria-hidden="true" />
+        </BtnLink>
       </div>
 
       {/* Left to right is the funnel a file goes through: every line read is
           either skipped or emitted, and every emitted event is either a
-          duplicate of one already stored or newly persisted. */}
-      <div className="grid grid-cols-5 border-b border-hair-1">
+          duplicate of one already stored or newly persisted. The 1px gaps
+          over the line colour draw the dividers. */}
+      <div className="grid grid-cols-5 gap-px border border-line bg-line">
         <Stat label="Lines read" value={stats.lines_read} />
         <Stat
           label="Lines skipped"
@@ -140,32 +142,31 @@ function Result({ result }: { result: IngestResponse }) {
       </div>
 
       {allDuplicates && (
-        <p className="border-b border-hair-4 px-4 py-3 text-prose text-ink-muted">
+        <p className="text-prose text-text-mid">
           Every event in this file was already stored. Deduplication is global,
           so re-ingesting a file adds nothing and the queue is unchanged.
         </p>
       )}
 
       {stats.errors.length > 0 && (
-        <div className="border-b border-hair-4 px-4 py-3">
-          <Label>
-            Parse errors · {stats.errors.length}
-            {stats.errors.length >= 100 ? " (capped at 100)" : ""}
-          </Label>
-          <ul className="mt-2 flex flex-col gap-1.5">
+        <div className="border border-line bg-panel p-4">
+          <SectionTitle as="h3" count={stats.errors.length}>
+            Parse errors{stats.errors.length >= 100 ? " · capped at 100" : ""}
+          </SectionTitle>
+          <ul className="mt-3 flex flex-col gap-2">
             {stats.errors.map((e, i) => (
               <li
                 key={`${e.line_no}-${i}`}
                 className="grid grid-cols-[64px_minmax(0,1fr)] gap-x-3"
               >
-                <span className="font-mono text-meta text-ink-faint">
+                <span className="font-mono text-meta text-text-mid">
                   line {e.line_no}
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-meta text-ink-2">{e.reason}</span>
+                  <span className="block text-meta text-text">{e.reason}</span>
                   {/* Log content is untrusted: framed verbatim, never
                       interpreted. */}
-                  <pre className="mt-0.5 overflow-x-auto rounded-chip bg-sunken px-2 py-1 font-mono text-label text-ink-muted">
+                  <pre className="mt-1 overflow-x-auto border border-line-soft bg-bg-app px-2.5 py-1.5 font-mono text-evidence text-text-mid">
                     {e.excerpt}
                   </pre>
                 </span>
@@ -174,18 +175,6 @@ function Result({ result }: { result: IngestResponse }) {
           </ul>
         </div>
       )}
-
-      <div className="flex items-center gap-3 px-4 pt-4">
-        <Link
-          to="/"
-          className="inline-flex h-[26px] items-center rounded-control border border-accent bg-accent px-3 text-meta font-medium text-raised transition-colors hover:border-accent-hover hover:bg-accent-hover"
-        >
-          View the queue →
-        </Link>
-        <span className="text-meta text-ink-faint">
-          Incidents are recomputed from every stored event on each read.
-        </span>
-      </div>
     </section>
   );
 }
@@ -202,55 +191,49 @@ function Failure({ error }: { error: ApiError }) {
   return (
     <section
       role="alert"
-      className="mt-6 rounded-card border border-sev-critical-fill bg-raised"
+      className="flex flex-col gap-3 border-l-2 border-danger bg-panel px-5 py-4"
     >
-      <div className="flex items-center gap-3 border-b border-hair-4 px-4 py-2.5">
-        <span className="rounded-chip bg-sev-critical-fill px-1.5 py-[2px] font-mono text-label font-medium uppercase text-sev-critical">
+      <div className="flex items-center gap-3">
+        <AlertCircle className="size-4 shrink-0 text-danger" strokeWidth={2} aria-hidden="true" />
+        <span className="font-mono text-label font-semibold uppercase text-danger">
           {error.status > 0 ? `Error · ${error.status}` : "Error"}
         </span>
         {typeof heading === "string" && (
-          <span className="font-mono text-meta text-ink-2">{heading}</span>
+          <span className="font-mono text-meta text-text">{heading}</span>
         )}
       </div>
-      <div className="flex flex-col gap-3 px-4 py-3">
-        {/* The backend's own words, not a restatement. */}
-        <p className="max-w-[72ch] text-prose text-ink-2">{error.message}</p>
 
-        {supported && (
-          <div className="flex flex-wrap items-baseline gap-2">
-            <Label>Supported formats</Label>
-            {supported.map((format) => (
-              <span
-                key={format}
-                className="rounded-chip border border-edge bg-sunken px-1.5 py-[1px] font-mono text-meta text-ink-2"
-              >
-                {format}
-              </span>
-            ))}
-          </div>
-        )}
+      {/* The backend's own words, not a restatement. */}
+      <p className="max-w-[72ch] text-prose text-text-mid">{error.message}</p>
 
-        {typeof best === "number" && typeof min === "number" && (
-          <div className="flex items-baseline gap-2">
-            <Label>Best confidence</Label>
-            <span className="font-mono text-meta text-ink-2">
-              {best.toFixed(3)}
+      {supported && (
+        <div className="flex flex-wrap items-center gap-2">
+          <Label>Supported formats</Label>
+          {supported.map((format) => (
+            <span
+              key={format}
+              className="rounded-chip border border-line bg-card px-2 py-0.5 font-mono text-meta text-text"
+            >
+              {format}
             </span>
-            <span className="font-mono text-meta text-ink-faint">
-              needs ≥ {min}
-            </span>
-          </div>
-        )}
+          ))}
+        </div>
+      )}
 
-        {typeof cap === "number" && (
-          <div className="flex items-baseline gap-2">
-            <Label>Upload limit</Label>
-            <span className="font-mono text-meta text-ink-2">
-              {formatBytes(cap)}
-            </span>
-          </div>
-        )}
-      </div>
+      {typeof best === "number" && typeof min === "number" && (
+        <div className="flex items-baseline gap-2">
+          <Label>Best confidence</Label>
+          <span className="font-mono text-meta text-text">{best.toFixed(3)}</span>
+          <span className="font-mono text-meta text-text-mid">needs ≥ {min}</span>
+        </div>
+      )}
+
+      {typeof cap === "number" && (
+        <div className="flex items-baseline gap-2">
+          <Label>Upload limit</Label>
+          <span className="font-mono text-meta text-text">{formatBytes(cap)}</span>
+        </div>
+      )}
     </section>
   );
 }
@@ -310,99 +293,88 @@ export function IngestView() {
         </>
       }
     >
-      <div className="px-10 pb-10 pt-6">
-        <SectionHeader>
-          <h1 className="font-mono text-label font-medium uppercase text-ink">
-            Ingest
-          </h1>
-          <span className="text-meta text-ink-faint">
-            One file per upload. The parser is chosen by content, not by file
-            name.
-          </span>
-        </SectionHeader>
+      <ViewHeader>
+        <PageHead
+          eyebrow="Pipeline · POST /api/ingest"
+          title="Ingest a log file"
+          subtitle="One file per upload. The parser is chosen by content, not by file name, and anything already stored is skipped."
+        />
+      </ViewHeader>
 
-        {/* The whole zone is the file picker's label, so a click anywhere opens
-            the dialog and the hidden input stays keyboard-reachable. */}
-        <label
-          onDragOver={(event) => {
-            event.preventDefault();
-            if (!uploading) setDragging(true);
-          }}
-          onDragLeave={() => setDragging(false)}
-          onDrop={onDrop}
-          className={`mt-6 flex cursor-pointer items-center gap-5 rounded-card border border-dashed px-6 py-6 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent ${
-            dragging
-              ? "border-accent bg-accent-tint"
-              : "border-edge bg-raised hover:border-ink-faint"
-          } ${uploading ? "cursor-default opacity-60" : ""}`}
-        >
-          <input
-            ref={inputRef}
-            type="file"
-            className="sr-only"
-            disabled={uploading}
-            onChange={(event) => choose(event.target.files?.[0])}
-          />
-          <span
-            aria-hidden="true"
-            className="flex size-11 shrink-0 items-center justify-center rounded-control bg-ink text-raised"
+      <ViewBody>
+        <div className="flex flex-col gap-3.5">
+          {/* The whole zone is the file picker's label, so a click anywhere
+              opens the dialog and the hidden input stays keyboard-reachable. */}
+          <label
+            onDragOver={(event) => {
+              event.preventDefault();
+              if (!uploading) setDragging(true);
+            }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={onDrop}
+            className={`flex items-center gap-5 border border-dashed px-8 py-7 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent ${
+              dragging
+                ? "border-accent bg-accent-wash"
+                : "border-line bg-panel hover:border-accent"
+            } ${uploading ? "cursor-default opacity-60" : "cursor-pointer"}`}
           >
-            <svg
-              viewBox="0 0 24 24"
-              className="size-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 4v10M8 10l4 4 4-4" />
-              <path d="M4 14v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4" />
-            </svg>
-          </span>
-          <span className="flex min-w-0 flex-col gap-1">
-            <span className="truncate text-body font-medium text-ink">
-              {file ? file.name : "Drop a log file here, or click to choose one"}
-            </span>
-            <span className="text-meta text-ink-faint">
-              {file
-                ? `${formatBytes(file.size)} · click or drop to replace`
-                : "sshd syslog, Windows Security event XML, or AWS CloudTrail JSON"}
-            </span>
-          </span>
-        </label>
-
-        <div className="mt-4 flex flex-wrap items-end gap-4">
-          <label className="flex flex-col gap-1">
-            <Label>Syslog year · optional</Label>
             <input
-              type="number"
-              inputMode="numeric"
-              value={year}
-              onChange={(event) => setYear(event.target.value)}
-              placeholder={String(new Date().getUTCFullYear())}
+              ref={inputRef}
+              type="file"
+              className="sr-only"
               disabled={uploading}
-              aria-invalid={!yearValid}
-              className="h-control w-[120px] rounded-control border border-edge bg-raised px-2 font-mono text-meta text-ink placeholder:text-ink-faint focus:border-ink focus:outline-none aria-invalid:border-sev-critical"
+              onChange={(event) => choose(event.target.files?.[0])}
             />
+            <span
+              aria-hidden="true"
+              className="flex size-14 shrink-0 items-center justify-center bg-accent text-on-accent"
+            >
+              <Upload className="size-6" strokeWidth={1.8} />
+            </span>
+            <span className="flex min-w-0 flex-col gap-1.5">
+              <span className="truncate text-[16px] font-semibold tracking-[-0.01em] text-text">
+                {file ? file.name : "Drop a log file here, or click to choose one"}
+              </span>
+              <span className="text-meta text-text-mid">
+                {file
+                  ? `${formatBytes(file.size)} · click or drop to replace`
+                  : "sshd syslog, Windows Security event XML, or AWS CloudTrail JSON"}
+              </span>
+            </span>
           </label>
-          <p className="max-w-[52ch] pb-1 text-meta text-ink-faint">
-            Syslog lines carry no year. Left blank, the server assumes the
-            current one; the bundled samples describe 2026.
-          </p>
-          <button
-            type="button"
-            onClick={submit}
-            disabled={!file || uploading || !yearValid}
-            className="ml-auto inline-flex h-[26px] items-center rounded-control border border-accent bg-accent px-3 text-meta font-medium text-raised transition-colors hover:border-accent-hover hover:bg-accent-hover disabled:cursor-not-allowed disabled:border-edge disabled:bg-sunken disabled:text-ink-faint"
-          >
-            {uploading ? "Ingesting…" : "Ingest"}
-          </button>
+
+          <div className="flex flex-wrap items-end gap-5 border border-line bg-panel px-5 py-4">
+            <label className="flex flex-col gap-1.5">
+              <Label>Syslog year · optional</Label>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={year}
+                onChange={(event) => setYear(event.target.value)}
+                placeholder={String(new Date().getUTCFullYear())}
+                disabled={uploading}
+                aria-invalid={!yearValid}
+                className="h-control w-[120px] rounded-control border border-line bg-bg-app px-2 font-mono text-meta text-text placeholder:text-text-dim focus:border-accent focus:outline-none aria-invalid:border-danger"
+              />
+            </label>
+            <p className="max-w-[52ch] pb-1 text-meta text-text-mid">
+              Syslog lines carry no year. Left blank, the server assumes the
+              current one; the bundled samples describe 2026.
+            </p>
+            <Btn
+              variant="primary"
+              onClick={submit}
+              disabled={!file || uploading || !yearValid}
+              className="ml-auto"
+            >
+              {uploading ? "Ingesting…" : "Ingest"}
+            </Btn>
+          </div>
         </div>
 
-        <div aria-live="polite">
+        <div aria-live="polite" className="empty:hidden">
           {phase.state === "uploading" && (
-            <p className="mt-6 border-t border-hair-4 px-4 pt-3 font-mono text-label font-medium uppercase text-ink-faintest">
+            <p className="font-mono text-label font-medium uppercase text-text-dim">
               Parsing {phase.file.name} · {formatBytes(phase.file.size)}
             </p>
           )}
@@ -411,24 +383,25 @@ export function IngestView() {
         </div>
 
         {/* A cold visitor needs something to drop in. */}
-        <div className="mt-10 border-t border-hair-1 pt-4">
-          <Label>Sample files</Label>
-          <p className="mt-2 max-w-[80ch] text-prose text-ink-muted">
-            The repository commits {pluralize(SAMPLE_FILES.length, "sample log")}{" "}
-            under <span className="font-mono text-ink-2">sample_logs/</span>
+        <section className="flex flex-col gap-3.5">
+          <SectionTitle>Sample files</SectionTitle>
+          <p className="max-w-[80ch] text-prose text-text-mid">
+            The repository commits three sample logs under{" "}
+            <span className="font-mono text-text">sample_logs/</span>
             {": "}
             {SAMPLE_FILES.map((name, i) => (
               <span key={name}>
                 {i > 0 && (i === SAMPLE_FILES.length - 1 ? " and " : ", ")}
-                <span className="font-mono text-ink-2">{name}</span>
+                <span className="font-mono text-text">{name}</span>
               </span>
             ))}
-            . The first two describe one attacker moving between a Linux host
-            and an AWS account, and correlate into a single incident; the third
-            is a separate intrusion on a Windows workstation.
+            . Together the first two hold one attacker moving between a Linux
+            host and an AWS account, which correlates into a single incident,
+            and an unrelated SSH brute force that correlation keeps apart. The
+            third is a separate intrusion on a Windows workstation.
           </p>
-        </div>
-      </div>
+        </section>
+      </ViewBody>
     </Shell>
   );
 }
