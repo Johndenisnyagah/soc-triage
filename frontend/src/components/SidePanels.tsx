@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { IncidentDetail } from "../api/schema";
 import { humanizeTactic, shortSource } from "../lib/format";
 import { KIND_MARK, KIND_SHAPE, sourceKind } from "../lib/sources";
+import { SectionTitle } from "./ui";
 
 /**
  * The detail view's right column: compact stacked panels, no charts.
@@ -14,16 +15,9 @@ import { KIND_MARK, KIND_SHAPE, sourceKind } from "../lib/sources";
 
 function Panel({ title, count, children }: { title: string; count?: number; children: ReactNode }) {
   return (
-    <section className="rounded-card border border-hair-1 bg-raised">
-      <div className="flex h-[30px] items-center gap-2 border-b border-hair-2 px-3">
-        <h2 className="font-mono text-label font-medium uppercase text-ink">
-          {title}
-        </h2>
-        {count !== undefined && (
-          <span className="font-mono text-label text-ink-faintest">{count}</span>
-        )}
-      </div>
-      <div className="p-3">{children}</div>
+    <section className="border border-line bg-panel p-4">
+      <SectionTitle count={count}>{title}</SectionTitle>
+      <div className="mt-3.5">{children}</div>
     </section>
   );
 }
@@ -32,13 +26,13 @@ export function TacticsPanel({ tactics }: { tactics: string[] }) {
   return (
     <Panel title="ATT&CK tactics" count={tactics.length}>
       {tactics.length === 0 ? (
-        <p className="text-meta text-ink-faint">No tactics attributed.</p>
+        <p className="text-meta text-text-mid">No tactics attributed.</p>
       ) : (
         <ul className="flex flex-wrap gap-1.5">
           {tactics.map((tactic) => (
             <li
               key={tactic}
-              className="rounded-chip border border-hair-1 bg-sunken px-1.5 py-[3px] font-mono text-label uppercase text-ink-2"
+              className="rounded-chip border border-line bg-card px-2 py-1 font-mono text-label uppercase text-text-mid"
             >
               {humanizeTactic(tactic)}
             </li>
@@ -57,22 +51,22 @@ export function TechniquesPanel({
   return (
     <Panel title="Techniques" count={techniques.length}>
       {techniques.length === 0 ? (
-        <p className="text-meta text-ink-faint">
+        <p className="text-meta text-text-mid">
           No technique resolved against the ATT&CK catalog.
         </p>
       ) : (
-        <ul className="flex flex-col gap-2.5">
+        <ul className="flex flex-col gap-3">
           {techniques.map((technique) => (
             <li key={technique.technique_id}>
               <div className="flex items-baseline gap-2">
-                <span className="font-mono text-body text-accent">
+                <span className="font-mono text-body text-accent-ink">
                   {technique.technique_id}
                 </span>
-                <span className="min-w-0 truncate text-meta text-ink">
+                <span className="min-w-0 truncate text-meta text-text">
                   {technique.name}
                 </span>
               </div>
-              <p className="mt-0.5 font-mono text-label uppercase text-ink-faintest">
+              <p className="mt-0.5 font-mono text-label uppercase text-text-dim">
                 {technique.tactics.map(humanizeTactic).join(" · ")}
               </p>
             </li>
@@ -94,7 +88,7 @@ export function EntityKeysPanel({ entityKeys }: { entityKeys: string[] }) {
         {entityKeys.map((key) => (
           <li
             key={key}
-            className="font-mono text-meta leading-[1.5] break-all text-ink-2"
+            className="font-mono text-meta leading-[1.5] break-all text-text"
           >
             {key}
           </li>
@@ -115,7 +109,7 @@ export function SourcesPanel({ sources }: { sources: IncidentDetail["sources"] }
           return (
             <li
               key={source.source_type}
-              className="flex items-center gap-2 font-mono text-meta text-ink-2"
+              className="flex items-center gap-2 font-mono text-meta text-text"
             >
               {/* Same mark as the timeline rail, so the panel and the
                   chronology are visibly talking about the same thing. */}
@@ -123,16 +117,16 @@ export function SourcesPanel({ sources }: { sources: IncidentDetail["sources"] }
                 aria-hidden="true"
                 className={`size-2 shrink-0 ${KIND_MARK[kind]} ${KIND_SHAPE[kind]}`}
               />
-              <span className="min-w-0 truncate">
+              <span className="min-w-0 truncate" title={source.source_type}>
                 {shortSource(source.source_type)}
               </span>
-              <span className="ml-auto text-ink-muted">{source.event_count}</span>
+              <span className="ml-auto text-text-mid">{source.event_count}</span>
             </li>
           );
         })}
-        <li className="mt-1 flex items-center gap-2 border-t border-hair-2 pt-1.5 font-mono text-label uppercase text-ink-faintest">
+        <li className="mt-1 flex items-center gap-2 border-t border-line-soft pt-2 font-mono text-label uppercase text-text-dim">
           <span>total events</span>
-          <span className="ml-auto">{total}</span>
+          <span className="ml-auto text-text-mid">{total}</span>
         </li>
       </ul>
     </Panel>

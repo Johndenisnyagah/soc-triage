@@ -5,89 +5,105 @@
  * handoff contract, so they live here as named tokens rather than as literals
  * scattered through components -- and nothing in this app should reach for a
  * stock Tailwind scale value (`text-sm`, `slate-500`, `rounded-lg`) for a
- * property DESIGN.md specifies. The spec's type sizes are half-pixel and its
- * greys are warm; the defaults are neither, and mixing them is how the design
- * drifts airy.
+ * property DESIGN.md specifies.
+ *
+ * The palette is LogLens AI's dark blue-grey (docs/UI-MIGRATION.md §2). The
+ * severity ramp is not LogLens's: it is recomputed against `--color-panel`
+ * and has hard acceptance criteria (§3, DESIGN.md).
  */
 @theme {
   /* -- Surfaces ------------------------------------------------------ */
-  --color-desk: #efeeeb;
-  --color-desk-hatch: #eae8e4;
-  --color-panel: #fcfbfa;
-  --color-raised: #ffffff;
-  --color-sunken: #f7f5f3;
-  --color-sunken-deep: #f5f3f0;
-  --color-rail: #f7f5f3;
-  --color-queue: #f9f8f6;
+  --color-bg-app: #1a1f29; /* outermost background; insets go darker */
+  --color-panel: #232a36; /* card / panel surfaces */
+  --color-card: #2a313e; /* inset surfaces inside panels */
+  --color-rail: #161a23; /* icon rail + toolbar */
 
   /* -- Rules --------------------------------------------------------- */
-  --color-edge: #e2dfda; /* border strong */
-  --color-hair-1: #eae7e2;
-  --color-hair-2: #edeae5;
-  --color-hair-3: #f0ede8;
-  --color-hair-4: #f4f1ec; /* row dividers */
+  --color-line: #323a49; /* primary borders */
+  --color-line-soft: #2a313e; /* subtle dividers, row rules */
 
-  /* -- Ink ----------------------------------------------------------- */
-  --color-ink: #1a1a18;
-  --color-ink-2: #4a4843;
-  --color-ink-muted: #6b6862;
-  --color-ink-faint: #8a8781;
-  --color-ink-faintest: #a8a49d; /* mono labels, meta */
+  /* -- Ink ----------------------------------------------------------- *
+   * Contrast on panel: text 11.76 · text-mid 7.41 · text-dim 2.99 ·
+   * text-faint 1.81. So data is `text` or `text-mid`, never dimmer.
+   * `text-dim` is for non-essential labels only (section titles, column
+   * headers, units); `text-faint` is for decoration only (separators,
+   * arrows, rules) and never carries a word that has to be read.
+   */
+  --color-text: #e6e8ec;
+  --color-text-mid: #b5bac4;
+  --color-text-dim: #6b7283;
+  --color-text-faint: #4a5160;
 
-  /* -- Accent -------------------------------------------------------- */
-  --color-accent: #e0620d;
-  --color-accent-hover: #c4520a;
-  --color-accent-link: #b84b06;
-  --color-accent-tint: #fbede1;
-  --color-accent-hair: #f2cbab;
-  --color-positive: #2f7d53;
+  /* -- Accent -------------------------------------------------------- *
+   * The fill is LogLens's. As *text* it measures 3.28:1 on panel, which
+   * fails AA for technique ids -- data, not decoration -- so accent-coloured
+   * text uses `accent-ink` (5.46:1 on panel, 4.95 on card), a lighter step
+   * of the same hue that stays dE 15.9 clear of the LOW chip ink.
+   */
+  --color-accent: #4b6cf6;
+  --color-accent-hover: #5b7bff;
+  --color-accent-ink: #8299ff;
+  --color-on-accent: #ffffff; /* 4.40:1 on accent: just under AA, see DESIGN.md */
+  --color-accent-tint: rgba(75, 108, 246, 0.12);
+  --color-accent-wash: rgba(75, 108, 246, 0.08);
+  --color-accent-hair: rgba(75, 108, 246, 0.35);
+
+  /* -- Status -------------------------------------------------------- */
+  --color-success: #5dd39e;
+  --color-warn: #f9e547;
+  --color-danger: #ef5b6b;
+  --color-danger-tint: rgba(239, 91, 107, 0.12);
+  --color-info: #f08a4b;
+
+  /* -- Interaction --------------------------------------------------- */
+  --color-hover: rgba(255, 255, 255, 0.025); /* row hover */
+  --color-skeleton: rgba(255, 255, 255, 0.04);
 
   /*
    * -- Severity -------------------------------------------------------
    *
-   * Severity is the primary scanning dimension of the queue, so the ramp
-   * spans temperature as well as value: red -> orange -> yellow -> BLUE ->
-   * neutral. The cold rung at LOW is load-bearing. An all-warm ramp puts
-   * MEDIUM, LOW and INFO within a few degrees of hue of each other and they
-   * smear into one warm-neutral band exactly where the column is densest.
+   * The ramp spans temperature as well as value: red -> orange -> yellow ->
+   * BLUE -> neutral. The cold rung at LOW is load-bearing -- an all-warm ramp
+   * smears MEDIUM, LOW and INFO together exactly where the column is densest.
+   * LOW must also not drift toward the accent: #5fb8e8 sits dE 24.5 from it,
+   * so a LOW chip cannot read as a selected state.
    *
-   * Fills are explicit colours, never the ink at low opacity -- tinting one
-   * hue family is what produced the smear in the first place.
+   * Fills are explicit colours, never the ink at low opacity.
    *
-   * Verified, not eyeballed: every ink clears 4.5:1 on its own fill (worst
-   * 5.48, MEDIUM), every adjacent fill pair is dE > 8, and no pair anywhere
-   * in the ramp falls within dE 6. Re-check all three if any value moves.
+   * Verified against #232a36, not eyeballed: ink on own fill 6.55 · 7.35 ·
+   * 8.11 · 6.44 · 5.14; fill vs panel dE 18.05 · 18.62 · 20.93 · 5.27 · 5.85;
+   * adjacent fills dE 15.67 · 9.73 · 22.38 · 8.15. Re-check all three if any
+   * value moves. The light-theme set lives in DESIGN.md.
    */
-  --color-sev-critical: #a61b1b;
-  --color-sev-critical-fill: #fbe3e1;
-  --color-sev-high: #8a4b08;
-  --color-sev-high-fill: #fbebda;
-  --color-sev-medium: #7a5c00;
-  --color-sev-medium-fill: #faf0ce;
-  --color-sev-low: #0a4a8f;
-  --color-sev-low-fill: #dce9f8;
-  --color-sev-info: #5a5a55;
-  --color-sev-info-fill: #eae9e5;
+  --color-sev-critical: #ff8a95;
+  --color-sev-critical-fill: #3d1f27;
+  --color-sev-high: #ffab63;
+  --color-sev-high-fill: #3b2a19;
+  --color-sev-medium: #e9c84a;
+  --color-sev-medium-fill: #343018;
+  --color-sev-low: #5fb8e8;
+  --color-sev-low-fill: #182d3b;
+  --color-sev-info: #a9b0bd;
+  --color-sev-info-fill: #343b4b;
 
   /* -- Type ---------------------------------------------------------- */
-  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono",
     Consolas, monospace;
 
-  /* Mono section labels: 9.5-10.5px / 500 / uppercase / 0.08-0.12em */
+  /* Mono section labels: 10px / 500 / uppercase / 0.1em */
   --text-label: 10px;
   --text-label--line-height: 1.2;
   --text-label--letter-spacing: 0.1em;
 
-  /* Body 11.5-12.5px; row titles 12.5/500 */
   --text-meta: 11.5px;
   --text-meta--line-height: 1.35;
   --text-body: 12.5px;
   --text-body--line-height: 1.45;
 
   --text-prose: 12.5px;
-  --text-prose--line-height: 1.6; /* prose blocks 1.5-1.65 */
+  --text-prose--line-height: 1.6;
 
   --text-h-detail: 21px;
   --text-h-detail--line-height: 1.15;
@@ -102,15 +118,41 @@
   --text-score: 18px;
   --text-score--line-height: 1.1;
 
-  /* -- Geometry ------------------------------------------------------ */
-  --radius-window: 14px;
-  --radius-card: 11px;
-  --radius-sunken: 9px;
-  --radius-control: 8px;
-  --radius-pill: 6px;
-  --radius-chip: 4px;
+  /* LogLens structural type, adopted for view chrome only. */
+  --text-h-page: 32px; /* PageHead title */
+  --text-h-page--line-height: 1.1;
+  --text-h-page--letter-spacing: -0.02em;
+  --text-subtitle: 13px; /* PageHead subtitle */
+  --text-subtitle--line-height: 1.5;
+  --text-eyebrow: 10px; /* PageHead eyebrow */
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.18em;
+  --text-section: 11px; /* SectionTitle */
+  --text-section--line-height: 1.2;
+  --text-section--letter-spacing: 0.16em;
+  --text-btn: 11px; /* Btn */
+  --text-btn--line-height: 1.2;
+  --text-btn--letter-spacing: 0.12em;
+  --text-chip: 10px; /* severity chip */
+  --text-chip--line-height: 1.2;
+  --text-chip--letter-spacing: 0.14em;
+  --text-evidence: 11px; /* raw evidence block */
+  --text-evidence--line-height: 1.65;
 
-  --spacing-rail: 54px;
+  /* -- Geometry ------------------------------------------------------ *
+   * Square. Names kept so component code does not churn; any rounded
+   * corner that survives is a bug, except the timeline marker shapes in
+   * `lib/sources.ts`, which carry information.
+   */
+  --radius-window: 0px;
+  --radius-card: 0px;
+  --radius-sunken: 0px;
+  --radius-control: 0px;
+  --radius-pill: 0px;
+  --radius-chip: 0px;
+
+  --spacing-rail: 69px;
+  --spacing-rail-expanded: 210px;
   --spacing-queue: 274px;
   --spacing-toolbar: 38px;
   --spacing-section-row: 34px;
@@ -127,12 +169,15 @@ body,
 
 body {
   margin: 0;
-  background: var(--color-desk);
-  color: var(--color-ink);
+  background: var(--color-bg-app);
+  color: var(--color-text);
   font-family: var(--font-sans);
   font-size: var(--text-body);
+  font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  color-scheme: dark;
 }
 
 /*
@@ -146,25 +191,32 @@ pre {
   font-feature-settings: "tnum";
 }
 
-/* The hatched desk the mockup's window shell sits on: 135deg, 1px on 9px. */
-.desk-hatch {
-  background-color: var(--color-desk);
-  background-image: repeating-linear-gradient(
-    135deg,
-    var(--color-desk-hatch) 0px,
-    var(--color-desk-hatch) 1px,
-    transparent 1px,
-    transparent 9px
-  );
+/* Square, quiet scrollbars, as LogLens. */
+* {
+  scrollbar-color: var(--color-line) transparent;
 }
-
-/* Tab bodies sit on an 11px radial dot grid. */
-.dot-grid {
-  background-image: radial-gradient(var(--color-hair-1) 1px, transparent 1px);
-  background-size: 11px 11px;
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 1px;
+}
+
+/* The rail's width transition is the one motion in the app. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
 }

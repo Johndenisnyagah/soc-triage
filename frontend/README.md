@@ -41,15 +41,17 @@ a renamed field cannot reach the browser as a silent `undefined`.
 
 ## Design
 
-`DESIGN.md` is the handoff contract and its values are authoritative;
-`screens/` holds the mockups it describes. Every colour, type size, radius and
-column width from that document lives as a named token in `src/index.css`
-under `@theme`.
+`DESIGN.md` is the handoff contract and its values are authoritative. The
+visual language is LogLens AI's (dark blue-grey, Inter, square), adopted per
+`docs/UI-MIGRATION.md`; `screens/` holds the original light-theme mockups, kept
+as design history. Every colour, type size, radius and column width from that
+document lives as a named token in `src/index.css` under `@theme`.
 
 Nothing in this app should reach for a stock Tailwind scale value — `text-sm`,
 `slate-500`, `rounded-lg` — for a property DESIGN.md specifies. The spec's type
-sizes are half-pixel (11.5px, 12.5px), its greys are warm, and its row heights
-are tighter than the defaults. Mixing the two scales is precisely how the
+sizes are half-pixel (11.5px, 12.5px), its greys are LogLens's blue-greys rather
+than Tailwind's, its radii are zero, and its row heights are tighter than the
+defaults. Mixing the two scales is precisely how the
 design drifts airy, which is the one thing this layout cannot survive.
 
 ## Divergences from the mockups

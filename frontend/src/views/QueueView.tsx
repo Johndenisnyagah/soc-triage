@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
+import { Search } from "lucide-react";
 import { fetchIncidents, useResource } from "../api/client";
 import type { IncidentSummary, SeverityName } from "../api/schema";
 import { SeverityPill } from "../components/SeverityPill";
@@ -10,6 +11,7 @@ import {
   LoadingRows,
   NoMatches,
 } from "../components/States";
+import { PageHead, ViewBody, ViewHeader } from "../components/ui";
 import {
   formatShortClock,
   formatSpan,
@@ -35,8 +37,17 @@ import { shortTactic, summarizeTactics } from "../lib/tactics";
 // flexible entity column gets the remainder: a full IAM role ARN is ~50 mono
 // characters and it is the value an analyst actually pivots on, so it is the
 // last thing that should be clipped.
+//
+// Re-measured for Inter and the LogLens chip, under the same rule:
+//   SEV      68 -> 78   CRITICAL chip is 77.2px (8px padding, 0.14em, 1px edge)
+//   TACTICS 178 -> 208  worst label the closed map can produce,
+//                       "defense-imp · resource-dev +13", is 175px in Inter
+//                       11.5px, plus 12px pad, a 2-digit count and the gap
+//   WINDOW  110 -> 100  "04:41 → 04:59" is ~84px; 110 was slack
+// The entity column nets -20px and still holds a 47-character IAM ARN at a
+// 1440px viewport.
 const COLUMNS =
-  "grid grid-cols-[68px_100px_minmax(0,1fr)_62px_178px_166px_110px_62px] items-center gap-x-3.5";
+  "grid grid-cols-[78px_100px_minmax(0,1fr)_62px_208px_166px_100px_62px] items-center gap-x-3.5";
 
 function HeaderCell({
   children,
@@ -46,8 +57,10 @@ function HeaderCell({
   align?: "left" | "right";
 }) {
   return (
+    // text-dim rather than the spec's text-faint: text-faint measures 1.81:1
+    // on the panel, which is decoration-level, and a column header is read.
     <div
-      className={`font-mono text-label font-medium uppercase text-ink-faintest ${
+      className={`font-mono text-label font-medium uppercase text-text-dim ${
         align === "right" ? "text-right" : ""
       }`}
     >
@@ -74,13 +87,13 @@ function QueueRow({ incident }: { incident: IncidentSummary }) {
   return (
     <Link
       to={`/incidents/${encodeURIComponent(incident_id)}`}
-      className={`${COLUMNS} group h-9 border-b border-hair-4 px-4 transition-colors hover:bg-raised`}
+      className={`${COLUMNS} group h-9 border-b border-line-soft px-5 transition-colors last:border-b-0 hover:bg-hover`}
     >
       <div>
         <SeverityPill severity={severity} />
       </div>
 
-      <div className="truncate font-mono text-body text-ink-2 group-hover:text-accent">
+      <div className="truncate font-mono text-body text-text-mid group-hover:text-accent-ink">
         {incident_id}
       </div>
 
@@ -89,7 +102,7 @@ function QueueRow({ incident }: { incident: IncidentSummary }) {
           different destination that does not exist. Mono against the sans of
           the surrounding prose already marks it as a literal value. */}
       <div
-        className="truncate font-mono text-body text-ink"
+        className="truncate font-mono text-body text-text"
         title={primary_entity}
       >
         {primary_entity}
@@ -97,36 +110,34 @@ function QueueRow({ incident }: { incident: IncidentSummary }) {
 
       {/* Bare count: the column header already says what it counts, and an
           abbreviated unit would cost width without adding meaning. */}
-      <div className="text-right font-mono text-body text-ink-2">
+      <div className="text-right font-mono text-body text-text">
         {finding_count}
       </div>
 
-      {/* The tactic count is faint and the labels carry the cell: right-aligned
+      {/* The tactic count is quiet and the labels carry the cell: right-aligned
           findings sits immediately left of this column, and two equally weighted
           digits an em apart read as one two-digit number. */}
       <div className="flex min-w-0 items-baseline gap-1.5 pl-3" title={tacticSummary.title}>
-        <span className="font-mono text-meta text-ink-faintest">
-          {tactic_count}
-        </span>
-        <span className="truncate text-meta text-ink-faint">
+        <span className="font-mono text-meta text-text-dim">{tactic_count}</span>
+        <span className="truncate text-meta text-text-mid">
           {tacticSummary.label}
         </span>
       </div>
 
-      <div className="truncate font-mono text-meta text-ink-muted">
+      <div className="truncate font-mono text-meta text-text-mid">
         {sources.map((s) => `${shortSource(s.source_type)} ${s.event_count}`).join(" · ")}
       </div>
 
       {/* Window and span are two different facts -- when it happened, and how
           long it ran -- so they get two columns. Jammed together they read as
           one run-on string and neither aligns down the queue. */}
-      <div className="text-right font-mono text-meta text-ink-muted">
+      <div className="text-right font-mono text-meta text-text-mid">
         {formatShortClock(first_seen)}
-        <span className="mx-1 text-ink-faintest">→</span>
+        <span className="mx-1 text-text-faint">→</span>
         {formatShortClock(last_seen)}
       </div>
 
-      <div className="text-right font-mono text-meta text-ink-faint">
+      <div className="text-right font-mono text-meta text-text-mid">
         {formatSpan(first_seen, last_seen)}
       </div>
     </Link>
@@ -197,110 +208,118 @@ export function QueueView() {
       actions={
         <label className="relative block w-[230px]">
           <span className="sr-only">Search incidents</span>
-          <svg
-            viewBox="0 0 24 24"
-            className="pointer-events-none absolute left-2 top-1/2 size-[13px] -translate-y-1/2 text-ink-faint"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
+          <Search
+            className="pointer-events-none absolute left-2 top-1/2 size-[13px] -translate-y-1/2 text-text-dim"
+            strokeWidth={2}
             aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="7" />
-            <path d="M20 20l-3.5-3.5" />
-          </svg>
+          />
           <input
             type="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="search entity, rule, tactic"
-            className="h-control w-full rounded-control border border-edge bg-raised pl-7 pr-2 text-meta text-ink placeholder:text-ink-faint focus:border-ink focus:outline-none"
+            className="h-control w-full rounded-control border border-line bg-bg-app pl-7 pr-2 text-meta text-text placeholder:text-text-dim focus:border-accent focus:outline-none"
           />
         </label>
       }
     >
-      <div className="px-10 pb-10 pt-6">
-        {/* Section header row -- 34px */}
-        <div className="flex h-section-row items-center gap-3 border-b border-edge">
-          <h1 className="font-mono text-label font-medium uppercase text-ink">
-            Queue
-          </h1>
-          {queue.state === "ready" && (
-            <span className="rounded-chip bg-accent-tint px-1.5 py-[2px] font-mono text-label font-medium uppercase text-accent">
-              {visible.length}
-            </span>
-          )}
-
-          <div className="ml-auto flex items-center gap-1">
-            <FilterPill
-              label="ALL"
-              active={severity === null}
-              onClick={() => setSeverity(null)}
-            />
-            {SEVERITY_ORDER.map((level) => (
+      <ViewHeader>
+        <PageHead
+          eyebrow={
+            <>
+              <span>Activity</span>
+              <span aria-hidden="true" className="text-text-faint">·</span>
+              <span className="font-mono tracking-[0.08em]">
+                {queue.state === "ready"
+                  ? pluralize(visible.length, "incident")
+                  : "loading"}
+              </span>
+            </>
+          }
+          title="Incident queue"
+          subtitle="Findings from deterministic rules, correlated by shared entity keys. Worst first, in the order the API returns them."
+          right={
+            <div
+              role="group"
+              aria-label="Filter by severity"
+              className="flex items-center gap-1.5"
+            >
               <FilterPill
-                key={level}
-                label={SEVERITY_ABBREV[level]}
-                active={severity === level}
-                onClick={() => setSeverity(severity === level ? null : level)}
+                label="ALL"
+                active={severity === null}
+                onClick={() => setSeverity(null)}
               />
-            ))}
-          </div>
+              {SEVERITY_ORDER.map((level) => (
+                <FilterPill
+                  key={level}
+                  label={SEVERITY_ABBREV[level]}
+                  active={severity === level}
+                  onClick={() => setSeverity(severity === level ? null : level)}
+                />
+              ))}
+            </div>
+          }
+        />
+      </ViewHeader>
+
+      <ViewBody>
+        <div>
+          <section aria-label="Incidents" className="border border-line bg-panel">
+            {/* Column header */}
+            <div className={`${COLUMNS} h-8 border-b border-line-soft px-5`}>
+              <HeaderCell>Sev</HeaderCell>
+              <HeaderCell>Incident</HeaderCell>
+              <HeaderCell>Primary entity</HeaderCell>
+              <HeaderCell align="right">Findings</HeaderCell>
+              <HeaderCell>
+                <span className="pl-3">Tactics</span>
+              </HeaderCell>
+              <HeaderCell>Sources</HeaderCell>
+              <HeaderCell align="right">Window · UTC</HeaderCell>
+              <HeaderCell align="right">Span</HeaderCell>
+            </div>
+
+            {queue.state === "loading" && <LoadingRows />}
+
+            {queue.state === "error" && (
+              <ErrorState error={queue.error} onRetry={queue.reload} />
+            )}
+
+            {queue.state === "ready" && visible.length === 0 && (
+              // Two different nothings: an empty pipeline is a real result, a
+              // filter that excluded everything is a dead end the user can undo.
+              filtered ? <NoMatches onClear={clearFilters} /> : <EmptyQueue />
+            )}
+
+            {queue.state === "ready" &&
+              visible.map((incident) => (
+                <QueueRow key={incident.incident_id} incident={incident} />
+              ))}
+          </section>
+
+          {queue.state === "ready" && visible.length > 0 && (
+            // States the active filters, not just the count. With a queue this
+            // small a search that removes nothing is indistinguishable from a
+            // search that did nothing, so the line names what is being applied.
+            <p className="px-5 pt-3 font-mono text-label font-medium uppercase text-text-dim">
+              {search.trim() && visible.length !== incidents.length
+                ? `${visible.length} of ${pluralize(incidents.length, "incident")}`
+                : pluralize(visible.length, "incident")}
+              {severity ? ` · severity ${severity}` : ""}
+              {search.trim() ? (
+                <>
+                  {" · matching "}
+                  {/* The needle is the user's own text, echoed back. The label
+                      style is uppercase, but forcing case on it would show them
+                      something they did not type. */}
+                  <span className="normal-case text-text-mid">"{search.trim()}"</span>
+                </>
+              ) : null}
+              {" · ordered by severity"}
+            </p>
+          )}
         </div>
-
-        {/* Column header */}
-        <div className={`${COLUMNS} h-7 border-b border-hair-1 px-4`}>
-          <HeaderCell>Sev</HeaderCell>
-          <HeaderCell>Incident</HeaderCell>
-          <HeaderCell>Primary entity</HeaderCell>
-          <HeaderCell align="right">Findings</HeaderCell>
-          <HeaderCell>
-            <span className="pl-3">Tactics</span>
-          </HeaderCell>
-          <HeaderCell>Sources</HeaderCell>
-          <HeaderCell align="right">Window · UTC</HeaderCell>
-          <HeaderCell align="right">Span</HeaderCell>
-        </div>
-
-        {queue.state === "loading" && <LoadingRows />}
-
-        {queue.state === "error" && (
-          <ErrorState error={queue.error} onRetry={queue.reload} />
-        )}
-
-        {queue.state === "ready" && visible.length === 0 && (
-          // Two different nothings: an empty pipeline is a real result, a
-          // filter that excluded everything is a dead end the user can undo.
-          filtered ? <NoMatches onClear={clearFilters} /> : <EmptyQueue />
-        )}
-
-        {queue.state === "ready" &&
-          visible.map((incident) => (
-            <QueueRow key={incident.incident_id} incident={incident} />
-          ))}
-
-        {queue.state === "ready" && visible.length > 0 && (
-          // States the active filters, not just the count. With a queue this
-          // small a search that removes nothing is indistinguishable from a
-          // search that did nothing, so the line names what is being applied.
-          <p className="px-4 pt-3 font-mono text-label font-medium uppercase text-ink-faintest">
-            {search.trim() && visible.length !== incidents.length
-              ? `${visible.length} of ${pluralize(incidents.length, "incident")}`
-              : pluralize(visible.length, "incident")}
-            {severity ? ` · severity ${severity}` : ""}
-            {search.trim() ? (
-              <>
-                {" · matching "}
-                {/* The needle is the user's own text, echoed back. The label
-                    style is uppercase, but forcing case on it would show them
-                    something they did not type. */}
-                <span className="normal-case">"{search.trim()}"</span>
-              </>
-            ) : null}
-            {" · ordered by severity"}
-          </p>
-        )}
-      </div>
+      </ViewBody>
     </Shell>
   );
 }
@@ -319,10 +338,10 @@ function FilterPill({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`h-[22px] rounded-pill border px-2 font-mono text-label font-medium uppercase transition-colors ${
+      className={`h-[22px] rounded-pill border px-2.5 font-mono text-label font-semibold uppercase transition-colors ${
         active
-          ? "border-ink bg-ink text-raised"
-          : "border-edge bg-raised text-ink-muted hover:border-ink hover:text-ink"
+          ? "border-accent bg-accent text-on-accent"
+          : "border-line bg-transparent text-text-mid hover:border-text-dim hover:text-text"
       }`}
     >
       {label}

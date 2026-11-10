@@ -1,7 +1,7 @@
 /**
  * Short labels for ATT&CK tactics.
  *
- * The queue's tactics column is ~190px. Full names ("credential access,
+ * The queue's tactics column is 208px. Full names ("credential access,
  * defense impairment, ...") overflow it and get clipped mid-word, which tells
  * an analyst strictly less than the count sitting next to it already does.
  * Abbreviating means the labels actually fit, so the column carries *which*

@@ -38,11 +38,14 @@ export const SEVERITY_ABBREV: Record<SeverityName, string> = {
  * the three levels an analyst most needs to tell apart at a glance.
  */
 export const SEVERITY_PILL: Record<SeverityName, string> = {
-  CRITICAL: "text-sev-critical bg-sev-critical-fill",
-  HIGH: "text-sev-high bg-sev-high-fill",
-  MEDIUM: "text-sev-medium bg-sev-medium-fill",
-  LOW: "text-sev-low bg-sev-low-fill",
-  INFO: "text-sev-info bg-sev-info-fill",
+  // The 1px border is the chip ink at ~35%: LogLens's badge edge, and it
+  // keeps the two quietest fills (LOW, INFO -- dE 5.3 and 5.9 from the panel)
+  // reading as chips rather than as faint smudges.
+  CRITICAL: "text-sev-critical bg-sev-critical-fill border-sev-critical/35",
+  HIGH: "text-sev-high bg-sev-high-fill border-sev-high/35",
+  MEDIUM: "text-sev-medium bg-sev-medium-fill border-sev-medium/35",
+  LOW: "text-sev-low bg-sev-low-fill border-sev-low/35",
+  INFO: "text-sev-info bg-sev-info-fill border-sev-info/35",
 };
 
 export const SEVERITY_TEXT: Record<SeverityName, string> = {
