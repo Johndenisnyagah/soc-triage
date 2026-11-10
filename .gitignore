@@ -29,3 +29,6 @@ Thumbs.db
 
 # Personal prep material, not project documentation
 NOTES.md
+
+# Rendered brag videos and their Hyperframes projects (build output)
+brag-output-*/

@@ -2,9 +2,10 @@
 
 [![test](https://github.com/Johndenisnyagah/soc-triage/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/Johndenisnyagah/soc-triage/actions/workflows/test.yml)
 
-Turns raw Linux `sshd` and AWS CloudTrail logs into correlated, ATT&CK-mapped
-incidents with deterministic rules — so the same input always gives the same,
-auditable answer. A language model is only ever allowed to explain, never to detect.
+Turns raw Linux `sshd`, AWS CloudTrail and Windows Security logs into correlated,
+ATT&CK-mapped incidents with deterministic rules — so the same input always gives
+the same, auditable answer. A language model is only ever allowed to explain,
+never to detect.
 
 
 
@@ -446,7 +447,7 @@ order, on a database that has never seen it before.
 
 ## Testing
 
-302 tests, all passing, running offline in about three seconds:
+349 tests, all passing, running offline in about four seconds:
 
 ```bash
 cd backend && pytest -q
