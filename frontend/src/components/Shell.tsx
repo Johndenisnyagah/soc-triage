@@ -83,7 +83,7 @@ function RailLink({
         expanded ? "w-full gap-2.5 pl-3.5" : "w-11 gap-0 pl-[11px]"
       } ${
         active
-          ? "bg-accent text-on-accent shadow-[0_6px_16px_-6px_rgba(75,108,246,0.6)]"
+          ? "bg-accent text-on-accent shadow-[0_6px_16px_-6px_rgba(70,104,246,0.6)]"
           : "text-text-dim hover:bg-panel hover:text-text"
       }`}
     >

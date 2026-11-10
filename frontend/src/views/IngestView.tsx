@@ -312,7 +312,7 @@ export function IngestView() {
             }}
             onDragLeave={() => setDragging(false)}
             onDrop={onDrop}
-            className={`flex items-center gap-5 border border-dashed px-8 py-7 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent ${
+            className={`flex items-center gap-5 border border-dashed px-8 py-7 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent-ink ${
               dragging
                 ? "border-accent bg-accent-wash"
                 : "border-line bg-panel hover:border-accent"

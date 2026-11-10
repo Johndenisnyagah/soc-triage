@@ -35,18 +35,24 @@
   --color-text-faint: #4a5160;
 
   /* -- Accent -------------------------------------------------------- *
-   * The fill is LogLens's. As *text* it measures 3.28:1 on panel, which
-   * fails AA for technique ids -- data, not decoration -- so accent-coloured
-   * text uses `accent-ink` (5.46:1 on panel, 4.95 on card), a lighter step
-   * of the same hue that stays dE 15.9 clear of the LOW chip ink.
+   * LogLens's #4b6cf6 darkened by 2% lightness (dE 1.34, not visible) so
+   * white labels on it clear AA: 4.59:1, where the original gave 4.40.
+   * Hover goes *darker* (5.02:1), not lighter as LogLens's #5b7bff did
+   * (3.67:1) -- a lighter hover cannot pass once the base sits at the floor.
+   *
+   * As *text* the accent measures 3.14:1 on panel, which fails AA for
+   * technique ids -- data, not decoration -- so accent-coloured text uses
+   * `accent-ink` (5.46:1 on panel, 4.95 on card), a lighter step of the same
+   * hue that stays dE 15.9 clear of the LOW chip ink. The focus outline uses
+   * it too, so focus visibility does not hang on the fill colour.
    */
-  --color-accent: #4b6cf6;
-  --color-accent-hover: #5b7bff;
+  --color-accent: #4668f6;
+  --color-accent-hover: #3c60f5;
   --color-accent-ink: #8299ff;
-  --color-on-accent: #ffffff; /* 4.40:1 on accent: just under AA, see DESIGN.md */
-  --color-accent-tint: rgba(75, 108, 246, 0.12);
-  --color-accent-wash: rgba(75, 108, 246, 0.08);
-  --color-accent-hair: rgba(75, 108, 246, 0.35);
+  --color-on-accent: #ffffff; /* 4.59:1 on accent, 5.02 on hover */
+  --color-accent-tint: rgba(70, 104, 246, 0.12);
+  --color-accent-wash: rgba(70, 104, 246, 0.08);
+  --color-accent-hair: rgba(70, 104, 246, 0.35);
 
   /* -- Status -------------------------------------------------------- */
   --color-success: #5dd39e;
@@ -65,7 +71,7 @@
    * The ramp spans temperature as well as value: red -> orange -> yellow ->
    * BLUE -> neutral. The cold rung at LOW is load-bearing -- an all-warm ramp
    * smears MEDIUM, LOW and INFO together exactly where the column is densest.
-   * LOW must also not drift toward the accent: #5fb8e8 sits dE 24.5 from it,
+   * LOW must also not drift toward the accent: #5fb8e8 sits dE 25.6 from it,
    * so a LOW chip cannot read as a selected state.
    *
    * Fills are explicit colours, never the ink at low opacity.
@@ -206,8 +212,9 @@ pre {
   background: transparent;
 }
 
+/* accent-ink, not accent: 5.46:1 on panel, 4.95 on card, 6.25 on bg-app. */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-accent-ink);
   outline-offset: 1px;
 }
 

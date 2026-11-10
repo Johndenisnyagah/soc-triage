@@ -89,7 +89,7 @@ reflow between renders.
 | Ink secondary | `text-mid` | `#B5BAC4` |
 | Ink dim | `text-dim` | `#6B7283` |
 | Ink faint | `text-faint` | `#4A5160` |
-| Accent (fill) | `accent` | `#4B6CF6` (hover `#5B7BFF`) |
+| Accent (fill) | `accent` | `#4668F6` (hover `#3C60F5`, darker) |
 | Accent (text) | `accent-ink` | `#8299FF` |
 | On accent | `on-accent` | `#FFFFFF` |
 | Accent tint / wash / hair | `accent-tint` / `accent-wash` / `accent-hair` | accent at 12% / 8% / 35% |
@@ -111,19 +111,25 @@ Measured WCAG 2.x contrast on `panel` / `bg-app`:
 | `text-mid` | 7.41 | 8.48 | Data, prose, labels that are claims |
 | `text-dim` | **2.99** | 3.43 | Non-essential labels only: section titles, column headers, units, eyebrows |
 | `text-faint` | **1.81** | 2.07 | Decoration only: separators, arrows, rules. Never a word that must be read |
-| `accent` as text | **3.28** | 3.75 | Never — use `accent-ink` |
-| `accent-ink` | 5.46 | 6.25 | Technique ids, incident id on row hover, the `llm` label (5.05 on its accent wash) |
+| `accent` as text | **3.14** | 3.59 | Never — use `accent-ink` |
+| `accent-ink` | 5.46 | 6.25 | Technique ids, incident id on row hover, the `llm` label (5.05 on its accent wash), the focus outline (4.95 on `card`) |
 
 Two places this table overrode the migration spec: queue column headers are
 `text-dim`, not `text-faint`; and the deterministic provenance label is
 `text-mid`, not `text-dim`, because that label *is* the claim the architecture
 asks a reader to check.
 
-**Known shortfall:** white on the accent fill is **4.40:1** (3.67 on hover),
-just under AA for the 11px button and active-pill labels. It is LogLens's
-accent unchanged; fixing it means darkening the accent fill for buttons only,
-which would split the accent in two. Recorded here rather than silently
-accepted.
+**Why the accent is not quite LogLens's.** LogLens's `#4B6CF6` puts white at
+**4.40:1** (3.67 on its lighter `#5B7BFF` hover) — just under AA for the 11px
+labels on primary buttons, the active severity pill and the active rail item.
+Rather than split the accent into a separate button shade, the one accent is
+2% darker in lightness: `#4668F6`, ΔE 1.34 from LogLens's, below what the eye
+separates. White on it is **4.59:1**. Hover goes *darker*, to `#3C60F5`
+(**5.02:1**): once the base sits near the floor, a lighter hover cannot pass.
+
+**Focus** is a 2px `accent-ink` outline at 1px offset, not `accent`. The fill
+on panel is 3.14:1 — over the 3:1 a focus indicator needs, but only just, and
+2.84 on `card` — so focus visibility no longer depends on the fill colour.
 
 ## Severity ramp
 
@@ -150,7 +156,7 @@ The chip is LogLens's badge shape: square, 10px mono 700 uppercase at 0.14em,
 77.2 × 22px. Severity is expressed as chip text colour on a tinted chip —
 **never as a filled row**.
 
-**LOW must not read as the accent.** `#5FB8E8` sits ΔE 24.5 from `#4B6CF6`, so a
+**LOW must not read as the accent.** `#5FB8E8` sits ΔE 25.6 from `#4668F6`, so a
 LOW chip cannot be mistaken for a selected state. Do not drift LOW toward
 indigo. (LogLens's own four-level palette was not usable here: it has no INFO
 rung and maps MEDIUM to the accent.)
@@ -410,8 +416,8 @@ and a compressed README screenshot, so it is carried three times over:
 | cloud | `accent` | `accent`, circle |
 | other | `text-faint` at 60% | hollow `text-dim` ring |
 
-**Greyscale, measured.** Host and cloud stripes are 1.76:1 apart in luminance;
-markers 3.59:1. The migration spec proposed host at 55%, which lands on exactly
+**Greyscale, measured.** Host and cloud stripes are 1.84:1 apart in luminance;
+markers 3.74:1. The migration spec proposed host at 55%, which lands on exactly
 the accent's luminance (1.00:1) — the stripe would have carried nothing in
 greyscale and only shape would have separated the lanes. The unclassified ring
 is `text-dim` because a 1px ring at `text-faint` (1.81:1) vanishes.
