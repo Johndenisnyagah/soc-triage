@@ -120,14 +120,26 @@ export function pluralize(count: number, singular: string): string {
 }
 
 /**
- * `syslog_sshd` -> `sshd`, `aws_cloudtrail` -> `cloudtrail`.
+ * `syslog_sshd` -> `sshd`, `aws_cloudtrail` -> `cloudtrail`,
+ * `windows_security` -> `winsec`.
  *
  * Cosmetic only, and deliberately reversible by eye: the queue is tight on
  * width and the vendor prefixes carry no information the row needs. The full
  * `source_type` is what the detail view and the raw evidence show.
+ *
+ * Windows is the exception to prefix-stripping. Its remainder, `security`,
+ * names a log channel rather than a product, and next to `sshd` and
+ * `cloudtrail` it reads as an adjective, not a source. Search still matches
+ * the full `source_type`, so "windows" finds these rows too.
  */
+const SHORT_SOURCE: Record<string, string> = {
+  windows_security: "winsec",
+};
+
 export function shortSource(sourceType: string): string {
-  return sourceType.replace(/^(syslog|aws|windows)_/, "");
+  return (
+    SHORT_SOURCE[sourceType] ?? sourceType.replace(/^(syslog|aws|windows)_/, "")
+  );
 }
 
 /** `credential-access` -> `credential access`, for prose contexts. */
