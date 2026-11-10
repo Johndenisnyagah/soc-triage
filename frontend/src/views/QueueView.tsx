@@ -38,11 +38,16 @@ import { shortTactic, summarizeTactics } from "../lib/tactics";
 // characters and it is the value an analyst actually pivots on, so it is the
 // last thing that should be clipped.
 //
-// SEV is 78px, not the light theme's 68px: the LogLens chip (8px padding,
-// 0.14em tracking, 1px edge) makes CRITICAL 78px wide, and the column's rule
-// is "sized to its own worst case". Every other column is unchanged.
+// Re-measured for Inter and the LogLens chip, under the same rule:
+//   SEV      68 -> 78   CRITICAL chip is 77.2px (8px padding, 0.14em, 1px edge)
+//   TACTICS 178 -> 208  worst label the closed map can produce,
+//                       "defense-imp · resource-dev +13", is 175px in Inter
+//                       11.5px, plus 12px pad, a 2-digit count and the gap
+//   WINDOW  110 -> 100  "04:41 → 04:59" is ~84px; 110 was slack
+// The entity column nets -20px and still holds a 47-character IAM ARN at a
+// 1440px viewport.
 const COLUMNS =
-  "grid grid-cols-[78px_100px_minmax(0,1fr)_62px_178px_166px_110px_62px] items-center gap-x-3.5";
+  "grid grid-cols-[78px_100px_minmax(0,1fr)_62px_208px_166px_100px_62px] items-center gap-x-3.5";
 
 function HeaderCell({
   children,
