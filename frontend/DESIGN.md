@@ -197,9 +197,8 @@ other rounded corner is a bug.
 
 ## Shell
 
-LogLens's collapsible rail. Collapsed by default; the shield logo tile (34px,
-accent fill, square) expands it, and a chevron beside the product name
-collapses it. Width animates over 0.3s `cubic-bezier(0.4,0,0.2,1)`; labels
+LogLens's collapsible rail. Collapsed by default; the logo mark (34px) expands
+it, and a chevron beside the product name collapses it. Width animates over 0.3s `cubic-bezier(0.4,0,0.2,1)`; labels
 fade in after the rail starts opening (0.18s, 0.15s delay) and out before it
 closes (0.08s), so text never wraps inside a half-open rail. This is the one
 motion in the app; under `prefers-reduced-motion` it is instant.
@@ -207,8 +206,15 @@ motion in the app; under `prefers-reduced-motion` it is instant.
 **Two nav links — Queue and Ingest.** Both are real `<Link>`s and
 `aria-current` is derived from the route: the detail route and the `*`
 fallback belong to the queue. Active is accent fill, white icon and label, and
-LogLens's `0 6px 16px -6px` accent glow. The logo is soc-triage's own shield;
-LogLens's mark is not ported.
+LogLens's `0 6px 16px -6px` accent glow.
+
+**Logo.** Two interlocking square blocks, one `text` and one `accent`, drawn
+bare at 34px with `crispEdges` — no tile behind it, because half the mark is
+the accent and would vanish on an accent fill. The fills read the theme
+tokens, so the mark follows the palette. The same mark, with literal hexes, is
+the favicon (`public/favicon.svg`). It replaced the original shield, which the
+migration spec had kept as soc-triage's one piece of brand; the owner chose
+this mark instead.
 
 **Toolbar** keeps the 38px breadcrumb bar on `rail` with a `line-soft` bottom
 rule and the queue's search input on the right. The light theme's window-chrome

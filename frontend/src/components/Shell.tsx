@@ -41,20 +41,20 @@ function labelMotion(expanded: boolean): string {
     : "max-w-0 opacity-0 [transition:opacity_0.08s_ease,max-width_0.3s_cubic-bezier(0.4,0,0.2,1)]";
 }
 
-function ShieldMark() {
-  // The one piece of soc-triage brand: kept, not swapped for LogLens's mark.
+function BrandMark() {
+  // Two interlocking blocks, one ink and one accent. Drawn bare rather than on
+  // a filled tile, because half of it *is* the accent and would vanish on an
+  // accent tile. Fills read the theme tokens so the mark follows the palette.
   return (
     <svg
-      viewBox="0 0 24 24"
-      className="size-[17px]"
+      viewBox="0 0 64 64"
+      className="size-[34px] shrink-0"
       fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      shapeRendering="crispEdges"
       aria-hidden="true"
     >
-      <path d="M12 3l7 3v5.5c0 4.2-2.9 7.9-7 9-4.1-1.1-7-4.8-7-9V6l7-3z" />
+      <path d="M6 6 H22 V40 H40 V54 H6 Z" fill="var(--color-text)" />
+      <path d="M58 58 H42 V24 H24 V10 H58 Z" fill="var(--color-accent)" />
     </svg>
   );
 }
@@ -142,9 +142,7 @@ export function Shell({
               expanded ? "cursor-default" : "cursor-pointer"
             }`}
           >
-            <span className="flex size-[34px] shrink-0 items-center justify-center rounded-control bg-accent text-on-accent">
-              <ShieldMark />
-            </span>
+            <BrandMark />
             <span
               className={`overflow-hidden whitespace-nowrap text-[14px] font-bold tracking-[-0.02em] text-text ${labelMotion(expanded)}`}
             >
