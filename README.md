@@ -7,7 +7,10 @@ incidents with deterministic rules — so the same input always gives the same,
 auditable answer. A language model is only ever allowed to explain, never to detect.
 
 
-https://github.com/user-attachments/assets/f61b9cb9-d44b-4370-b608-86fc5192ad14
+
+
+https://github.com/user-attachments/assets/107909d8-d89c-4505-a5e6-22ae22e53caf
+
 
 
 ![Incident detail: a CRITICAL incident correlated across sshd and CloudTrail, with its deterministic summary, timeline, ATT&CK tactics and techniques](docs/screenshots/incident-detail.png)
