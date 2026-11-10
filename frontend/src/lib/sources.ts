@@ -29,9 +29,16 @@ export function sourceKind(sourceType: string): SourceKind {
   return "other";
 }
 
-/** Fill for the duration bar. */
+/**
+ * Fill for the duration bar and the row's edge stripe.
+ *
+ * Host is `text-mid` at 85%, not the 55% the migration spec proposed: at 55%
+ * it lands on exactly the accent's luminance (0.190 vs 0.189, 1.00:1), so in
+ * greyscale the stripe channel would carry nothing and only marker shape would
+ * separate the lanes. At 85% the two stripes sit 1.76:1 apart.
+ */
 export const KIND_BAR: Record<SourceKind, string> = {
-  host: "bg-text-mid/55",
+  host: "bg-text-mid/85",
   cloud: "bg-accent",
   other: "bg-text-faint/60",
 };

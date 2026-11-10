@@ -8,6 +8,7 @@ import {
   KIND_SHAPE,
   sourceKind,
 } from "../lib/sources";
+import { SectionTitle } from "./ui";
 
 /**
  * The incident timeline: one row per finding, in the order the API returns
@@ -19,7 +20,7 @@ import {
  * was assembled from more than one log source. That is the product's whole
  * claim, so it is carried by three redundant channels --
  *
- *   1. a proportional duration bar, coloured by source kind;
+ *   1. a proportional duration bar and edge stripe, coloured by source kind;
  *   2. a marker on the rail whose *shape* also differs (square/circle);
  *   3. the mono source label in the meta line.
  *
@@ -66,10 +67,9 @@ function Bar({
 }) {
   const kind = sourceKind(entry.source_type);
 
+  // Square track on the darker inset: insets go darker in a dark theme.
   if (!entry.first_seen || !entry.last_seen) {
-    return (
-      <div className="h-1.5 w-full rounded-full bg-hair-3" title="No timestamps" />
-    );
+    return <div className="h-1.5 w-full bg-bg-app" title="No timestamps" />;
   }
 
   const start = Date.parse(entry.first_seen);
@@ -81,9 +81,9 @@ function Bar({
     win.span > 0 ? Math.max(((end - start) / win.span) * 100, MIN_BAR_PERCENT) : 100;
 
   return (
-    <div className="relative h-1.5 w-full rounded-full bg-hair-3">
+    <div className="relative h-1.5 w-full bg-bg-app">
       <div
-        className={`absolute top-0 h-1.5 rounded-full ${KIND_BAR[kind]}`}
+        className={`absolute top-0 h-1.5 ${KIND_BAR[kind]}`}
         style={{
           left: `${offset}%`,
           // Clamped so a finding ending at the window edge cannot overflow the
@@ -107,7 +107,7 @@ function Row({
   const hasEvidence = entry.evidence.length > 0;
 
   return (
-    <div className="relative border-b border-hair-4 last:border-b-0">
+    <div className="relative border-b border-line-soft last:border-b-0">
       {/* Source stripe down the row's leading edge. This is what makes the
           interleaving readable at a glance: scanning the left edge of the
           timeline gives a two-tone bar chart of which source each step came
@@ -121,7 +121,7 @@ function Row({
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         disabled={!hasEvidence}
-        className="grid w-full grid-cols-[14px_176px_minmax(0,1fr)_58px_16px] items-center gap-x-3 py-2.5 pl-4 pr-3 text-left transition-colors hover:bg-raised disabled:cursor-default"
+        className="grid w-full grid-cols-[14px_176px_minmax(0,1fr)_58px_16px] items-center gap-x-3 py-2.5 pl-4 pr-3 text-left transition-colors hover:bg-hover disabled:cursor-default"
       >
         {/* Rail marker -- shape and colour both encode the source kind. */}
         <span
@@ -129,38 +129,38 @@ function Row({
           className={`size-2.5 ${KIND_MARK[kind]} ${KIND_SHAPE[kind]}`}
         />
 
-        {/* 2. Proportional span within the incident window. */}
+        {/* Proportional span within the incident window. */}
         <Bar entry={entry} window={win} />
 
         <span className="min-w-0">
-          <span className="block truncate text-body text-ink">
+          <span className="block truncate text-body text-text">
             {entry.title}
           </span>
-          <span className="mt-0.5 block truncate font-mono text-label text-ink-faint">
-            <span className="text-ink-muted">
+          <span className="mt-0.5 block truncate font-mono text-label text-text-mid">
+            <span>
               {formatClock(entry.first_seen)}
               {entry.last_seen !== entry.first_seen && (
                 <>
-                  <span className="mx-1 text-ink-faintest">→</span>
+                  <span className="mx-1 text-text-faint">→</span>
                   {formatClock(entry.last_seen)}
                 </>
               )}
             </span>
-            <span className="mx-1.5 text-ink-faintest">·</span>
+            <span className="mx-1.5 text-text-faint">·</span>
             {entry.technique_id ? (
               <>
                 {/* Accent marks a technique reference, per DESIGN.md. Present
                     but unresolved means a stale static mapping -- shown, not
                     hidden, so it stays visible as a thing to fix. */}
-                <span className="text-accent">{entry.technique_id}</span>
-                <span className="ml-1.5 font-sans text-meta text-ink-faint">
+                <span className="text-accent-ink">{entry.technique_id}</span>
+                <span className="ml-1.5 font-sans text-meta text-text-mid">
                   {entry.technique_name ?? "unresolved technique"}
                 </span>
               </>
             ) : (
-              <span className="text-ink-faintest">no technique mapped</span>
+              <span className="text-text-dim">no technique mapped</span>
             )}
-            <span className="mx-1.5 text-ink-faintest">·</span>
+            <span className="mx-1.5 text-text-faint">·</span>
             {/* Short form, matching the queue. The kind is already carried by
                 the stripe and the marker, so spelling out `(cloud)` here only
                 bought a truncated line. Full value stays on `title`. */}
@@ -170,21 +170,23 @@ function Row({
           </span>
         </span>
 
-        <span className="text-right font-mono text-meta text-ink-muted">
+        <span className="text-right font-mono text-meta text-text-mid">
           {entry.evidence_count}
-          <span className="ml-1 text-ink-faintest">ev</span>
+          <span className="ml-1 text-text-dim">ev</span>
         </span>
 
-        <span className="text-right font-mono text-meta text-ink-faintest">
+        <span className="text-right font-mono text-meta text-text-dim">
           {hasEvidence ? (open ? "−" : "+") : ""}
         </span>
       </button>
 
       {open && hasEvidence && (
-        <div className="px-3 pb-3">
-          <pre className="overflow-x-auto rounded-sunken bg-sunken p-3 font-mono text-label leading-[1.6] text-ink-2">
-            {/* Raw lines verbatim -- attacker-controlled text is framed, never
-                filtered (decision 10). `pre` means nothing here is interpreted. */}
+        <div className="px-4 pb-3.5">
+          {/* Raw lines verbatim -- attacker-controlled text is framed, never
+              filtered (decision 10). `pre` means nothing here is interpreted.
+              Capped at 220px and scrolled, so one chatty finding cannot push
+              the rest of the chronology off the page. */}
+          <pre className="max-h-[220px] overflow-auto border border-line-soft bg-bg-app p-3 font-mono text-evidence text-text-mid">
             {entry.evidence.join("\n")}
           </pre>
         </div>
@@ -198,7 +200,7 @@ export function Timeline({ entries }: { entries: readonly TimelineEntry[] }) {
 
   if (entries.length === 0) {
     return (
-      <p className="px-3 py-6 text-meta text-ink-muted">
+      <p className="px-3 py-6 text-meta text-text-mid">
         This incident has no timestamped findings.
       </p>
     );
@@ -210,29 +212,27 @@ export function Timeline({ entries }: { entries: readonly TimelineEntry[] }) {
 
   return (
     <section>
-      <div className="flex h-section-row items-center gap-3 border-b border-edge">
-        <h2 className="font-mono text-label font-medium uppercase text-ink">
-          Timeline
-        </h2>
-        <span className="font-mono text-label text-ink-faintest">
-          {entries.length} findings · {totalSpan}
-        </span>
+      <SectionTitle
+        count={`${entries.length} findings · ${totalSpan}`}
+        right={
+          // Legend. Without it the two marks are a pattern; with it they are a
+          // statement about which sources the chronology was built from.
+          <>
+            <span className="flex items-center gap-1.5 font-mono text-label uppercase text-text-mid">
+              <span className="size-2 rounded-[1px] bg-text" aria-hidden="true" />
+              host
+            </span>
+            <span className="flex items-center gap-1.5 font-mono text-label uppercase text-text-mid">
+              <span className="size-2 rounded-full bg-accent" aria-hidden="true" />
+              cloud
+            </span>
+          </>
+        }
+      >
+        Timeline
+      </SectionTitle>
 
-        {/* Legend. Without it the two marks are a pattern; with it they are a
-            statement about which sources the chronology was built from. */}
-        <div className="ml-auto flex items-center gap-3">
-          <span className="flex items-center gap-1.5 font-mono text-label uppercase text-ink-faint">
-            <span className="size-2 rounded-[1px] bg-ink" aria-hidden="true" />
-            host
-          </span>
-          <span className="flex items-center gap-1.5 font-mono text-label uppercase text-ink-faint">
-            <span className="size-2 rounded-full bg-accent" aria-hidden="true" />
-            cloud
-          </span>
-        </div>
-      </div>
-
-      <div className="rounded-card border border-hair-1 bg-panel">
+      <div className="mt-3.5 border border-line bg-panel">
         {win &&
           entries.map((entry, i) => (
             <Row key={`${entry.rule_id}-${i}`} entry={entry} window={win} />
