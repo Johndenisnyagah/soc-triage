@@ -11,19 +11,19 @@
     "gen:api": "python ../backend/scripts/generate_frontend_types.py"
   },
   "dependencies": {
-    "lucide-react": "^0.511.0",
+    "lucide-react": "^1.71.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router": "^8.5.1"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.4",
+    "@tailwindcss/vite": "^4.3.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^6.2.1",
+    "@vitejs/plugin-react": "^6.3.0",
     "tailwindcss": "^4.1.5",
     "typescript": "~7.0.2",
-    "vite": "^8.3.5"
+    "vite": "^8.3.8"
   },
   "allowScripts": {
     "esbuild@0.25.12": true
