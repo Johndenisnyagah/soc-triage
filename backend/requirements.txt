@@ -1,9 +1,9 @@
-fastapi>=0.162.0
+fastapi>=0.162.4
 uvicorn[standard]>=0.54.0
 sqlalchemy>=2.1.8
-pydantic>=2.14.2
+pydantic>=2.14.3
 python-multipart>=0.0.33
-psycopg[binary]>=3.3.7
+psycopg[binary]>=3.3.8
 # LLM provider client (enrichment is off by default; see app/enrichment/providers.py)
 httpx>=0.28.1
 
